@@ -8,8 +8,8 @@ import java.sql.SQLException;
 
 public class CertificateMapper implements RowMapper<Certificate> {
 
-    private static final String CERTIFICATE_ID = "certificate_id";
-    private static final String CERTIFICATE_NAME = "certificate_name";
+    private static final String CERTIFICATE_ID = "id";
+    private static final String CERTIFICATE_NAME = "name";
     private static final String DESCRIPTION = "description";
     private static final String PRICE = "price";
     private static final String DURATION = "duration";

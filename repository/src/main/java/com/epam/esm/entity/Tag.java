@@ -1,10 +1,13 @@
 package com.epam.esm.entity;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class Tag extends BaseEntity {
 
     private String name;
+    private List<Certificate> certificates;
 
     public Tag() {
     }
@@ -12,6 +15,13 @@ public class Tag extends BaseEntity {
     public Tag(Long id, String name) {
         super(id);
         this.name = name;
+    }
+
+    public void addCertificateToCertificates(Certificate certificate) {
+        if (certificates == null) {
+            certificates = new ArrayList<>();
+            certificates.add(certificate);
+        }
     }
 
     public String getName() {

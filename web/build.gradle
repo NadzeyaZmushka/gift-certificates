@@ -2,8 +2,8 @@
 dependencies {
     implementation project(":service")
 
-    implementation group: 'org.springframework', name: 'spring-web', version: '5.3.5'
-    implementation group: 'org.springframework', name: 'spring-webmvc', version: '5.3.5'
+    implementation group: 'org.springframework', name: 'spring-web', version: springVersion
+    implementation group: 'org.springframework', name: 'spring-webmvc', version: springVersion
     compileOnly group: 'javax.servlet', name: 'javax.servlet-api', version: '4.0.1'
     implementation group: 'com.zaxxer', name: 'HikariCP', version: '3.4.5'
     

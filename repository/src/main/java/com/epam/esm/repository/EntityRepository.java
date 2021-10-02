@@ -5,20 +5,17 @@ import com.epam.esm.repository.specification.SqlSpecification;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
-public interface EntityRepository<T extends BaseEntity> {
+public interface EntityRepository<T extends BaseEntity, S extends SqlSpecification> {
 
-    List<T> query(SqlSpecification specification);
+    List<T> queryForList(SqlSpecification specification);
 
-    List<T> findAll();
-
-    Optional<T> findById(Long id);
+    T queryForOne(SqlSpecification specification);
 
     T add(T entity);
 
     boolean update(T entity);
 
-    boolean delete(Long id);
+    boolean remove(T entity);
 }

@@ -2,46 +2,41 @@ package com.epam.esm.repository.impl;
 
 import com.epam.esm.entity.Tag;
 import com.epam.esm.repository.EntityRepository;
-import com.epam.esm.repository.mapper.TagMapper;
 import com.epam.esm.repository.specification.SqlSpecification;
+import com.epam.esm.repository.specification.TagSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
-public class TagRepositoryImpl implements EntityRepository<Tag> {
+public class TagRepositoryImpl implements EntityRepository<Tag, TagSpecification> {
 
     private final JdbcTemplate jdbcTemplate;
 
     private static final String FIND_ALL_TAGS_SQL = "SELECT tag_id, tag_name FROM gift_certificates.tag";
-    private static final String ADD_TAG_SQL = "INSERT INTO gift_certificates.tag (tag_name) VALUES (?)";
+    private static final String ADD_TAG_SQL = "INSERT INTO gift_certificates.tag (name) VALUES (?)";
     private static final String FIND_TAG_BY_ID_SQL = "SELECT tag_id, tag_name FROM gift_certificates.tag WHERE tag_id = ?";
-    private static final String UPDATE_TAG_SQL = "UPDATE gift_certificates.tag SET tag_name = ? WHERE tag_id = ?";
-    private static final String DELETE_TAG_SQL = "DELETE FROM gift_certificates.tag WHERE tag_id = ?";
+    private static final String UPDATE_TAG_SQL = "UPDATE gift_certificates.tag SET name = ? WHERE id = ?";
+    private static final String DELETE_TAG_SQL = "DELETE FROM gift_certificates.tag WHERE id = ?";
 
     @Autowired
     public TagRepositoryImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    //todo:
+    //todo: параметризовать, вынести в абстрактный класс
     @Override
-    public List<Tag> query(SqlSpecification specification) {
-        return null;
+    public List<Tag> queryForList(SqlSpecification specification) {
+        return jdbcTemplate.queryForList(specification.toSql(), Tag.class, specification.getParameters());
     }
 
     @Override
-    public List<Tag> findAll() {
-        return jdbcTemplate.query(FIND_ALL_TAGS_SQL, new TagMapper());
+    public Tag queryForOne(SqlSpecification specification) {
+        return jdbcTemplate.queryForObject(specification.toSql(), Tag.class, specification.getParameters());
     }
 
-    @Override
-    public Optional<Tag> findById(Long id) {
-        return jdbcTemplate.query(FIND_TAG_BY_ID_SQL, new TagMapper()).stream().findFirst();
-    }
 
     @Override
     public Tag add(Tag entity) {
@@ -55,8 +50,8 @@ public class TagRepositoryImpl implements EntityRepository<Tag> {
     }
 
     @Override
-    public boolean delete(Long id) {
-        return jdbcTemplate.update(DELETE_TAG_SQL, id) > 0;
+    public boolean remove(Tag entity) {
+        return jdbcTemplate.update(DELETE_TAG_SQL, entity.getId()) > 0;
     }
 
 }

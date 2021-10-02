@@ -2,6 +2,8 @@ package com.epam.esm.entity;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class Certificate extends BaseEntity {
@@ -12,6 +14,7 @@ public class Certificate extends BaseEntity {
     private int duration;
     private LocalDateTime createDate;
     private LocalDateTime lastUpdateDate;
+    private List<Tag> tags;
 
     public Certificate() {
     }
@@ -26,6 +29,13 @@ public class Certificate extends BaseEntity {
         this.duration = duration;
         this.createDate = createDate;
         this.lastUpdateDate = lastUpdateDate;
+    }
+
+    public void addTagToTags(Tag tag) {
+        if (tags == null) {
+            tags = new ArrayList<>();
+        }
+        tags.add(tag);
     }
 
     public String getName() {

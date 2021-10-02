@@ -1,16 +1,16 @@
 package com.epam.esm.repository.impl;
 
 import com.epam.esm.entity.Certificate;
-import com.epam.esm.entity.Tag;
-import com.epam.esm.repository.CertificateRepository;
+import com.epam.esm.repository.EntityRepository;
+import com.epam.esm.repository.specification.SqlSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Component
-public class CertificateRepositoryImpl implements CertificateRepository {
+@Repository
+public class CertificateRepositoryImpl implements EntityRepository<Certificate, SqlSpecification> {
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -20,22 +20,17 @@ public class CertificateRepositoryImpl implements CertificateRepository {
     }
 
     @Override
-    public List<Tag> findCertificateTags(Long certificateId) {
+    public List<Certificate> queryForList(SqlSpecification specification) {
         return null;
     }
 
     @Override
-    public List<Certificate> findAll() {
+    public Certificate queryForOne(SqlSpecification specification) {
         return null;
     }
 
     @Override
-    public Certificate findById(Long id) {
-        return null;
-    }
-
-    @Override
-    public Certificate create(Certificate entity) {
+    public Certificate add(Certificate entity) {
         return null;
     }
 
@@ -45,7 +40,8 @@ public class CertificateRepositoryImpl implements CertificateRepository {
     }
 
     @Override
-    public boolean delete(Long id) {
+    public boolean remove(Certificate entity) {
         return false;
     }
+
 }

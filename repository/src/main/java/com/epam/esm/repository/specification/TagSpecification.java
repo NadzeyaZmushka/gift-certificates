@@ -1,11 +1,9 @@
 package com.epam.esm.repository.specification;
 
-public class TagSpecification implements SqlSpecification {
-
-    private static final String SELECT_TAGS_SQL = "SELECT tag_id, tag_name FROM gift_certificates.tag";
+public abstract class TagSpecification implements SqlSpecification {
 
     @Override
-    public String toSql() {
-        return null;
+    public String getBaseStatement() {
+        return "SELECT * FROM gift_certificates.tag ";
     }
 }
