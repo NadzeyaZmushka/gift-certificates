@@ -7,6 +7,8 @@ public interface SqlSpecification {
     Object[] getParameters();
 
     //todo: moved to abstract class as protected
-    String getBaseStatement();
+    default String getBaseStatement() {
+        return "SELECT id, name FROM gift_certificates.tag ";
+    }
 
 }

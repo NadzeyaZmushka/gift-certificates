@@ -49,7 +49,6 @@ public class Tag extends BaseEntity {
     public String toString() {
         return "Tag{" +
                 "name='" + name + '\'' +
-                '}';
+                "} " + super.toString();
     }
-
 }

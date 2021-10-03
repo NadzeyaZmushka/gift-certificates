@@ -9,39 +9,39 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Repository
-public class CertificateRepositoryImpl implements EntityRepository<Certificate, SqlSpecification> {
+//@Repository
+public class CertificateRepositoryImpl {
 
-    private final JdbcTemplate jdbcTemplate;
-
-    @Autowired
-    public CertificateRepositoryImpl(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
-
-    @Override
-    public List<Certificate> queryForList(SqlSpecification specification) {
-        return null;
-    }
-
-    @Override
-    public Certificate queryForOne(SqlSpecification specification) {
-        return null;
-    }
-
-    @Override
-    public Certificate add(Certificate entity) {
-        return null;
-    }
-
-    @Override
-    public boolean update(Certificate entity) {
-        return false;
-    }
-
-    @Override
-    public boolean remove(Certificate entity) {
-        return false;
-    }
+//    private final JdbcTemplate jdbcTemplate;
+//
+//    @Autowired
+//    public CertificateRepositoryImpl(JdbcTemplate jdbcTemplate) {
+//        this.jdbcTemplate = jdbcTemplate;
+//    }
+//
+//    @Override
+//    public List<Certificate> queryForList(SqlSpecification specification) {
+//        return null;
+//    }
+//
+//    @Override
+//    public Certificate byId(Long id) {
+//        return null;
+//    }
+//
+//    @Override
+//    public Certificate add(Certificate entity) {
+//        return null;
+//    }
+//
+//    @Override
+//    public boolean update(Certificate entity) {
+//        return false;
+//    }
+//
+//    @Override
+//    public boolean remove(Certificate entity) {
+//        return false;
+//    }
 
 }

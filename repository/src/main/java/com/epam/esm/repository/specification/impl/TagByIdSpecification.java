@@ -1,8 +1,8 @@
 package com.epam.esm.repository.specification.impl;
 
-import com.epam.esm.repository.specification.TagSpecification;
+import com.epam.esm.repository.specification.SqlSpecification;
 
-public class TagByIdSpecification extends TagSpecification {
+public class TagByIdSpecification implements SqlSpecification {
 
     private final Long id;
 
@@ -12,7 +12,7 @@ public class TagByIdSpecification extends TagSpecification {
 
     @Override
     public String toSql() {
-        return getBaseStatement() + "WHERE tag_id = ?";
+        return getBaseStatement() + "WHERE id = ?";
     }
 
     @Override

@@ -1,10 +1,13 @@
+plugins {
+    id 'war'
+}
 
 dependencies {
     implementation project(":service")
+    implementation project(":repository")
 
     implementation group: 'org.springframework', name: 'spring-web', version: springVersion
     implementation group: 'org.springframework', name: 'spring-webmvc', version: springVersion
     compileOnly group: 'javax.servlet', name: 'javax.servlet-api', version: '4.0.1'
-    implementation group: 'com.zaxxer', name: 'HikariCP', version: '3.4.5'
-    
+
 }

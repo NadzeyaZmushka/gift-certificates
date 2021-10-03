@@ -1,9 +1,9 @@
 package com.epam.esm.repository.specification.impl;
 
-import com.epam.esm.repository.specification.TagSpecification;
+import com.epam.esm.repository.specification.SqlSpecification;
 
 //todo: findAll и findById для всех один
-public class TagAllSpecification extends TagSpecification {
+public class TagAllSpecification implements SqlSpecification {
 
     //todo: сделать, чтобы не писать каждый раз getBaseStatement()
     @Override
