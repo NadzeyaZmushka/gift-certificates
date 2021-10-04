@@ -1,10 +1,10 @@
 package com.epam.esm.exception;
 
-public class TagIncorrectData {
+public class ExceptionInfoDTO {
 
     private String info;
 
-    public TagIncorrectData() {
+    public ExceptionInfoDTO() {
     }
 
     public String getInfo() {

@@ -1,7 +1,6 @@
 package com.epam.esm;
 
 import com.epam.esm.entity.BaseEntity;
-import com.epam.esm.entity.Tag;
 
 import java.util.List;
 
@@ -13,5 +12,7 @@ public interface EntityService<T extends BaseEntity> {
 
     T findById(long id);
 
-    boolean delete(T entity);
+    boolean delete(Long id);
+
+    boolean update(T entity);
 }
