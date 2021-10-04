@@ -2,11 +2,13 @@ package com.epam.esm.repository.mapper;
 
 import com.epam.esm.entity.Certificate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class CertificateMapper implements RowMapper<Certificate> {
+@Component
+public class CertificateMapper implements EntityMapper<Certificate> {
 
     private static final String CERTIFICATE_ID = "id";
     private static final String CERTIFICATE_NAME = "name";

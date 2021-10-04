@@ -1,14 +1,11 @@
 package com.epam.esm.repository.specification;
 
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+
 public interface SqlSpecification {
 
     String toSql();
 
-    Object[] getParameters();
-
-    //todo: moved to abstract class as protected
-    default String getBaseStatement() {
-        return "SELECT id, name FROM gift_certificates.tag ";
-    }
+    SqlParameterSource getParameters();
 
 }

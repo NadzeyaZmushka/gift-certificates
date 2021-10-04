@@ -1,54 +1,28 @@
 package com.epam.esm.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+@Data
+@EqualsAndHashCode(callSuper = true)
+@NoArgsConstructor
+@AllArgsConstructor
 public class Tag extends BaseEntity {
 
     private String name;
-    private List<Certificate> certificates;
+//    private List<Certificate> certificates;
+//
+//    public void addCertificate(Certificate certificate) {
+//        if (certificates == null) {
+//            certificates = new ArrayList<>();
+//        }
+//        certificates.add(certificate);
+//    }
 
-    public Tag() {
-    }
-
-    public Tag(Long id, String name) {
-        super(id);
-        this.name = name;
-    }
-
-    public void addCertificateToCertificates(Certificate certificate) {
-        if (certificates == null) {
-            certificates = new ArrayList<>();
-            certificates.add(certificate);
-        }
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Tag tag = (Tag) o;
-        return Objects.equals(name, tag.name);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(name);
-    }
-
-    @Override
-    public String toString() {
-        return "Tag{" +
-                "name='" + name + '\'' +
-                "} " + super.toString();
-    }
 }

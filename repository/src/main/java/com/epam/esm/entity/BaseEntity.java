@@ -1,21 +1,14 @@
 package com.epam.esm.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public abstract class BaseEntity {
 
     private Long id;
 
-    public BaseEntity() {
-    }
-
-    public BaseEntity(Long id) {
-        this.id = id;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 }

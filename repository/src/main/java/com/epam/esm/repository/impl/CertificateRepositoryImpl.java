@@ -1,47 +1,50 @@
 package com.epam.esm.repository.impl;
 
 import com.epam.esm.entity.Certificate;
-import com.epam.esm.repository.EntityRepository;
-import com.epam.esm.repository.specification.SqlSpecification;
+import com.epam.esm.entity.Tag;
+import com.epam.esm.repository.CertificateRepository;
+import com.epam.esm.repository.mapper.EntityMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
+@Repository
+public class CertificateRepositoryImpl extends BaseCrudRepository<Certificate> implements CertificateRepository {
 
-//@Repository
-public class CertificateRepositoryImpl {
 
-//    private final JdbcTemplate jdbcTemplate;
-//
-//    @Autowired
-//    public CertificateRepositoryImpl(JdbcTemplate jdbcTemplate) {
-//        this.jdbcTemplate = jdbcTemplate;
-//    }
-//
-//    @Override
-//    public List<Certificate> queryForList(SqlSpecification specification) {
-//        return null;
-//    }
-//
-//    @Override
-//    public Certificate byId(Long id) {
-//        return null;
-//    }
-//
-//    @Override
-//    public Certificate add(Certificate entity) {
-//        return null;
-//    }
-//
-//    @Override
-//    public boolean update(Certificate entity) {
-//        return false;
-//    }
-//
-//    @Override
-//    public boolean remove(Certificate entity) {
-//        return false;
-//    }
+    @Autowired
+    public CertificateRepositoryImpl(NamedParameterJdbcTemplate jdbcTemplate, EntityMapper<Certificate> mapper) {
+        super(jdbcTemplate, mapper);
+    }
 
+    @Override
+    public void addTagToCertificate(Long certificatedId, Tag tag) {
+
+    }
+
+    @Override
+    protected String getSqlQueryCreate() {
+        return null;
+    }
+
+    @Override
+    protected String getSqlQueryUpdate(Certificate entity) {
+        return null;
+    }
+
+    @Override
+    protected String getSqlQueryDelete() {
+        return null;
+    }
+
+    @Override
+    protected SqlParameterSource getSqlParameterSource(Certificate entity) {
+        return null;
+    }
+
+    @Override
+    protected SqlParameterSource getSqlParameterSourceForUpdate(Certificate entity) {
+        return null;
+    }
 }
