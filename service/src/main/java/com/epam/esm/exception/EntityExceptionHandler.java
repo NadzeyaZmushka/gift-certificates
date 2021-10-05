@@ -1,7 +1,5 @@
-package com.epam.esm.controller;
+package com.epam.esm.exception;
 
-import com.epam.esm.exception.NoSuchEntityException;
-import com.epam.esm.exception.ExceptionInfoDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -14,7 +12,7 @@ public class EntityExceptionHandler {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ExceptionInfoDTO handleNoSuchTagException(NoSuchEntityException exception) {
         ExceptionInfoDTO data = new ExceptionInfoDTO();
-        data.setInfo(exception.getMessage());
+        data.setErrorMessage(exception.getMessage());
 
         return data;
     }

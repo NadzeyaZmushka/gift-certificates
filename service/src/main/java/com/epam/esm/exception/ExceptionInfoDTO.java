@@ -1,17 +1,15 @@
 package com.epam.esm.exception;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class ExceptionInfoDTO {
 
-    private String info;
+    private String errorMessage;
+    private Integer errorCode;
 
-    public ExceptionInfoDTO() {
-    }
-
-    public String getInfo() {
-        return info;
-    }
-
-    public void setInfo(String info) {
-        this.info = info;
-    }
 }

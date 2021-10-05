@@ -20,6 +20,9 @@ subprojects {
 
         implementation group: 'org.springframework', name: 'spring-core', version: springVersion
         implementation group: 'org.springframework', name: 'spring-context', version: springVersion
+        implementation group: 'org.springframework', name: 'spring-web', version: springVersion
+        implementation group: 'org.springframework', name: 'spring-webmvc', version: springVersion
+        compileOnly group: 'javax.servlet', name: 'javax.servlet-api', version: '4.0.1'
 
         implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: jacksonVersion
         implementation group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: jacksonVersion
