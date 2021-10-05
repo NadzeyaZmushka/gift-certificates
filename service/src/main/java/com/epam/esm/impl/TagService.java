@@ -20,9 +20,10 @@ public class TagService implements EntityService<Tag> {
     private final TagRepositoryImpl tagRepository;
 
     @Override
-    public Tag add(Tag entity) {
-        tagRepository.add(entity);
-        return entity;
+    public Tag add(Tag tag) {
+        tagRepository.add(tag);
+        log.info("Tag was added");
+        return tag;
     }
 
     @Override
@@ -33,7 +34,7 @@ public class TagService implements EntityService<Tag> {
     @Override
     public Tag findById(long id) {
         return tagRepository.queryForOne(new FindByIdSpecification("tag", id))
-                .orElseThrow(()-> new NoSuchEntityException("no tag with such id"));
+                .orElseThrow(()-> new NoSuchEntityException("No tag with id = " + id));
     }
 
     @Override
