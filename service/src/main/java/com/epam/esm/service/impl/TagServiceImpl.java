@@ -1,11 +1,12 @@
-package com.epam.esm.impl;
+package com.epam.esm.service.impl;
 
-import com.epam.esm.EntityService;
 import com.epam.esm.entity.Tag;
+import com.epam.esm.exception.CustomErrorCode;
 import com.epam.esm.exception.NoSuchEntityException;
 import com.epam.esm.repository.impl.TagRepositoryImpl;
 import com.epam.esm.repository.specification.impl.FindAllSpecification;
 import com.epam.esm.repository.specification.impl.FindByIdSpecification;
+import com.epam.esm.service.TagService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -15,14 +16,13 @@ import java.util.List;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class TagService implements EntityService<Tag> {
+public class TagServiceImpl implements TagService {
 
     private final TagRepositoryImpl tagRepository;
 
     @Override
     public Tag add(Tag tag) {
         tagRepository.add(tag);
-        log.info("Tag was added");
         return tag;
     }
 
@@ -34,24 +34,17 @@ public class TagService implements EntityService<Tag> {
     @Override
     public Tag findById(long id) {
         return tagRepository.queryForOne(new FindByIdSpecification("tag", id))
-                .orElseThrow(()-> new NoSuchEntityException("No tag with id = " + id));
+                .orElseThrow(() -> new NoSuchEntityException("No tag with id = " + id, CustomErrorCode.TAG_NOT_FOUND.getErrorCode()));
     }
 
     @Override
-    public boolean delete(Long id) {
+    public void delete(Long id) {
         Tag tag = findById(id);
         if (tag == null) {
             log.error("There is no tag with id = " + id);
-            throw new NoSuchEntityException("There is no tag with id = " + id + " in database");
+            throw new NoSuchEntityException("There is no tag with id = " + id + " in database", CustomErrorCode.TAG_NOT_FOUND.getErrorCode());
         }
-        return tagRepository.remove(tag);
+        tagRepository.remove(tag);
     }
-
-    @Override
-    public boolean update(Tag tag) {
-        log.info("Tag was updated");
-        return tagRepository.update(tag);
-    }
-
 
 }

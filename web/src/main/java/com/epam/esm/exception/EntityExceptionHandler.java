@@ -10,11 +10,11 @@ public class EntityExceptionHandler {
 
     @ExceptionHandler(NoSuchEntityException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ExceptionInfoDTO handleNoSuchTagException(NoSuchEntityException exception) {
-        ExceptionInfoDTO data = new ExceptionInfoDTO();
-        data.setErrorMessage(exception.getMessage());
-
-        return data;
+    public ExceptionInfo handleNoSuchEntityException(NoSuchEntityException exception) {
+        ExceptionInfo info = new ExceptionInfo();
+        info.setErrorMessage(exception.getMessage());
+        info.setErrorCode(exception.getErrorCode());
+        return info;
     }
 
 }

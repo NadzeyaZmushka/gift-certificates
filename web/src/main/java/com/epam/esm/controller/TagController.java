@@ -1,7 +1,7 @@
 package com.epam.esm.controller;
 
 import com.epam.esm.entity.Tag;
-import com.epam.esm.impl.TagService;
+import com.epam.esm.service.TagService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -45,18 +44,12 @@ public class TagController {
         return ResponseEntity.created(location).body(tagService.findById(tag.getId()));
     }
 
+    //todo: ничего не возвращать?
     @DeleteMapping("/tags/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public String deleteTag(@PathVariable long id) {
         tagService.delete(id);
         return "Tag with id = " + id + " was deleted";
-    }
-
-    @PutMapping("/tags")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public Tag updateTag(@RequestBody Tag tag){
-        tagService.update(tag);
-        return tag;
     }
 
 }
