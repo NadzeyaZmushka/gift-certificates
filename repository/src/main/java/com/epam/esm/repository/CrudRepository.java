@@ -12,9 +12,9 @@ public interface CrudRepository<T extends BaseEntity> {
 
     Optional<T> queryForOne(SqlSpecification specification);
 
-    T add(T entity);
+    Optional<T> findByName(SqlSpecification specification);
 
-    boolean update(T entity);
+    T add(T entity);
 
     boolean remove(T entity);
 }

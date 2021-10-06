@@ -1,8 +1,5 @@
 package com.epam.esm.repository.specification.impl;
 
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
-
 public class FindByIdSpecification extends EntitySpecification {
 
     private final Long id;
@@ -13,12 +10,12 @@ public class FindByIdSpecification extends EntitySpecification {
     }
 
     @Override
-    public String toSql() {
-        return getBaseStatement() + " WHERE id = :id";
+    public Object[] getParameters() {
+        return new Object[]{id};
     }
 
     @Override
-    public SqlParameterSource getParameters() {
-        return new MapSqlParameterSource().addValue("id", id);
+    protected String getWhereStatement() {
+        return "WHERE id = ?";
     }
 }

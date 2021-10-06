@@ -5,7 +5,10 @@ import com.epam.esm.entity.Tag;
 
 public interface CertificateRepository extends CrudRepository<Certificate> {
 
-    //??
     void addTagToCertificate(Long certificatedId, Tag tag);
+
+    void deleteTagFromCertificate(Long certificatedId, Tag tag);
+
+    Certificate update(Certificate certificate);
 
 }

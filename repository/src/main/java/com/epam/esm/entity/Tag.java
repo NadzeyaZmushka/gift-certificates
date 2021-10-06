@@ -4,25 +4,15 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import lombok.ToString;
 
 @Data
-@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 public class Tag extends BaseEntity {
 
     private String name;
-//    private List<Certificate> certificates;
-//
-//    public void addCertificate(Certificate certificate) {
-//        if (certificates == null) {
-//            certificates = new ArrayList<>();
-//        }
-//        certificates.add(certificate);
-//    }
 
 }

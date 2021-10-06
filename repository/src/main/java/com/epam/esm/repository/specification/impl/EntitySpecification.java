@@ -10,8 +10,15 @@ public abstract class EntitySpecification implements SqlSpecification {
         this.tableName = tableName;
     }
 
-    protected String getBaseStatement() {
-        return "SELECT * FROM gift_certificates." + tableName;
+    @Override
+    public String toSql() {
+        return getBaseStatement() + getWhereStatement();
     }
+
+    protected String getBaseStatement() {
+        return String.format("SELECT * FROM gifts.%s ", tableName);
+    }
+
+    protected abstract String getWhereStatement();
 
 }
