@@ -5,6 +5,7 @@ import com.epam.esm.entity.Tag;
 import com.epam.esm.exception.CustomErrorCode;
 import com.epam.esm.exception.NoSuchEntityException;
 import com.epam.esm.repository.impl.CertificateRepositoryImpl;
+import com.epam.esm.repository.impl.TagToCertificateRepositoryImpl;
 import com.epam.esm.repository.specification.impl.FindAllSpecification;
 import com.epam.esm.repository.specification.impl.FindByIdSpecification;
 import com.epam.esm.service.CertificateService;
@@ -20,6 +21,7 @@ import java.util.List;
 public class CertificateServiceImpl implements CertificateService {
 
     private final CertificateRepositoryImpl certificateRepository;
+    private final TagToCertificateRepositoryImpl tagToCertificateRepository;
 
     @Override
     public Certificate add(Certificate certificate) {
@@ -52,12 +54,12 @@ public class CertificateServiceImpl implements CertificateService {
     //???
     @Override
     public void addTagToCertificate(Long certificateId, Tag tag) {
-        certificateRepository.addTagToCertificate(certificateId, tag);
+        tagToCertificateRepository.addTagToCertificate(certificateId, tag);
     }
 
     @Override
     public void deleteTagFromCertificate(Long certificateId, Tag tag) {
-        certificateRepository.deleteTagFromCertificate(certificateId, tag);
+        tagToCertificateRepository.deleteTagFromCertificate(certificateId, tag);
     }
 
 }

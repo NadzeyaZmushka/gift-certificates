@@ -3,8 +3,9 @@ package com.epam.esm.repository.impl;
 import com.epam.esm.entity.Certificate;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.repository.CertificateRepository;
+import com.epam.esm.repository.TagToCertificateRepository;
 import com.epam.esm.repository.mapper.EntityMapper;
-import com.epam.esm.repository.specification.impl.FindByNameSpecification;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -24,16 +25,13 @@ public class CertificateRepositoryImpl extends BaseCrudRepository<Certificate> i
     private static final String UPDATE_CERTIFICATE_SQL = "UPDATE gifts.certificate SET name = ?" +
             ", description = ?, price = ?, duration = ?" +
             ", create_date = ?, last_update_date = ? WHERE id = ?";
-    private static final String CREATE_CERTIFICATE_TAG_SQL = "INSERT INTO gifts.certificate_tag " +
-            "(certificate_id, tag_id) VALUES (?, ?)";
-    private static final String DELETE_CERTIFICATE_TAG_SQL = "DELETE FROM gifts.certificate_tag " +
-            "WHERE tag_id = ? AND certificate_id = ?";
 
-    private final TagRepositoryImpl tagRepository;
+    private final TagToCertificateRepository tagToCertificateRepository;
 
-    public CertificateRepositoryImpl(JdbcTemplate jdbcTemplate, EntityMapper<Certificate> mapper, TagRepositoryImpl tagRepository) {
+    @Autowired
+    public CertificateRepositoryImpl(JdbcTemplate jdbcTemplate, EntityMapper<Certificate> mapper, TagToCertificateRepository tagToCertificateRepository) {
         super(jdbcTemplate, mapper);
-        this.tagRepository = tagRepository;
+        this.tagToCertificateRepository = tagToCertificateRepository;
     }
 
     @Override
@@ -53,7 +51,7 @@ public class CertificateRepositoryImpl extends BaseCrudRepository<Certificate> i
         certificate.setId(id);
         List<Tag> tags = certificate.getTags();
         for (Tag tag : tags) {
-            addTagToCertificate(certificate.getId(), tag);
+            tagToCertificateRepository.addTagToCertificate(certificate.getId(), tag);
         }
         return certificate;
     }
@@ -61,26 +59,6 @@ public class CertificateRepositoryImpl extends BaseCrudRepository<Certificate> i
     @Override
     protected String getTableName() {
         return "certificate";
-    }
-
-    //?? в новый репозиторий
-    @Override
-    public void addTagToCertificate(Long certificatedId, Tag tag) {
-        Tag existTag = tagRepository.findByName(
-                new FindByNameSpecification("tag", tag.getName()))
-                .orElse(null);
-        if (existTag == null) {
-            existTag = tagRepository.add(tag);
-        } else {
-            tag.setId(existTag.getId());
-        }
-        jdbcTemplate.update(CREATE_CERTIFICATE_TAG_SQL, certificatedId, existTag.getId());
-    }
-
-    //todo в новый репозиторий
-    @Override
-    public void deleteTagFromCertificate(Long certificatedId, Tag tag) {
-        jdbcTemplate.update(DELETE_CERTIFICATE_TAG_SQL, tag.getId(), certificatedId);
     }
 
     //todo try-catch
@@ -95,7 +73,7 @@ public class CertificateRepositoryImpl extends BaseCrudRepository<Certificate> i
                 certificate.getId());
         List<Tag> tags = certificate.getTags();
         for (Tag tag : tags) {
-            addTagToCertificate(certificate.getId(), tag);
+            tagToCertificateRepository.addTagToCertificate(certificate.getId(), tag);
         }
         return certificate;
     }

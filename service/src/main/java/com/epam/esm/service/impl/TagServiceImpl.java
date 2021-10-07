@@ -7,6 +7,7 @@ import com.epam.esm.repository.impl.TagRepositoryImpl;
 import com.epam.esm.repository.specification.impl.FindAllSpecification;
 import com.epam.esm.repository.specification.impl.FindByIdSpecification;
 import com.epam.esm.service.TagService;
+import com.epam.esm.validator.TagValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -19,10 +20,13 @@ import java.util.List;
 public class TagServiceImpl implements TagService {
 
     private final TagRepositoryImpl tagRepository;
+    private final TagValidator tagValidator;
 
     @Override
     public Tag add(Tag tag) {
-        tagRepository.add(tag);
+        if (tagValidator.validName(tag.getName())) {
+            tagRepository.add(tag);
+        }
         return tag;
     }
 
