@@ -1,10 +1,11 @@
 package com.epam.esm.validator;
 
-import com.epam.esm.entity.Certificate;
 import com.epam.esm.exception.CustomErrorCode;
 import com.epam.esm.exception.IncorrectDataException;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Component;
 
+@Component
 public class CertificateValidator {
 
     //todo дописать регулярку

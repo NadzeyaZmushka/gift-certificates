@@ -1,7 +1,7 @@
 package com.epam.esm.controller;
 
-import com.epam.esm.entity.Certificate;
-import com.epam.esm.entity.Tag;
+import com.epam.esm.dto.CertificateDTO;
+import com.epam.esm.dto.TagDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -20,15 +20,15 @@ public interface CertificateController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    List<Certificate> findAll();
+    List<CertificateDTO> findAll();
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    Certificate findOne(@PathVariable Long id);
+    CertificateDTO findOne(@PathVariable Long id);
 
     @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)
-    ResponseEntity<Certificate> add(@RequestBody Certificate certificate);
+    ResponseEntity<CertificateDTO> add(@RequestBody CertificateDTO certificateDTO);
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -36,10 +36,10 @@ public interface CertificateController {
 
     @PutMapping("/certificates")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    Certificate update(@RequestBody Certificate certificate);
+    CertificateDTO update(@RequestBody CertificateDTO certificateDTO);
 
     @PutMapping("/certificates/{id}/tags")
     @ResponseStatus(HttpStatus.OK)
-    String add(@PathVariable Long id, @RequestBody Tag tag);
+    String addTag(@PathVariable Long id, @RequestBody TagDTO tagDTO);
 
 }

@@ -8,11 +8,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class TagValidator {
 
-    public boolean validName(String name) {
+    public void validName(String name) {
         if (StringUtils.isBlank(name)) {
             throw new IncorrectDataException("Incorrect name ", CustomErrorCode.TAG_INCORRECT_DATA.getErrorCode());
         }
-        return true;
     }
 
 }

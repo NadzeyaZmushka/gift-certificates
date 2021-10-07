@@ -1,8 +1,8 @@
 package com.epam.esm.controller.impl;
 
 import com.epam.esm.controller.CertificateController;
-import com.epam.esm.entity.Certificate;
-import com.epam.esm.entity.Tag;
+import com.epam.esm.dto.CertificateDTO;
+import com.epam.esm.dto.TagDTO;
 import com.epam.esm.service.impl.CertificateServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,20 +18,20 @@ public class CertificatesControllerImpl implements CertificateController {
     private final CertificateServiceImpl certificateService;
 
     @Override
-    public List<Certificate> findAll() {
+    public List<CertificateDTO> findAll() {
         return certificateService.findAll();
     }
 
     @Override
-    public Certificate findOne(Long id) {
+    public CertificateDTO findOne(Long id) {
         return certificateService.findById(id);
     }
 
     @Override
-    public ResponseEntity<Certificate> add(Certificate certificate) {
-        certificateService.add(certificate);
-        URI location = URI.create(String.format("/certificates/%s", certificate.getId()));
-        return ResponseEntity.created(location).body(certificateService.findById(certificate.getId()));
+    public ResponseEntity<CertificateDTO> add(CertificateDTO certificateDTO) {
+        certificateService.add(certificateDTO);
+        URI location = URI.create(String.format("/certificates/%s", certificateDTO.getId()));
+        return ResponseEntity.created(location).body(certificateService.findById(certificateDTO.getId()));
     }
 
     @Override
@@ -41,17 +41,17 @@ public class CertificatesControllerImpl implements CertificateController {
 
     // пока не работает ..
     @Override
-    public Certificate update(Certificate certificate) {
-        certificateService.update(certificate);
-        return certificate;
+    public CertificateDTO update(CertificateDTO certificateDTO) {
+        certificateService.update(certificateDTO);
+        return certificateDTO;
     }
 
     // добавляет, только если такой тэг существует
     // Post Put??
     //todo: добавить TagNameDTO или List<String> tags
     @Override
-    public String add(Long id, Tag tag) {
-        certificateService.addTagToCertificate(id, tag);
+    public String addTag(Long id, TagDTO tagDTO) {
+        certificateService.addTagToCertificate(id, tagDTO);
         return "Tag was added to certificate";
     }
 //    @PatchMapping("/certificates/{id}")

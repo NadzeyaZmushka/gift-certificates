@@ -1,5 +1,7 @@
 package com.epam.esm.service.impl;
 
+import com.epam.esm.dto.TagDTO;
+import com.epam.esm.dto.mapper.TagDTOMapper;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.exception.CustomErrorCode;
 import com.epam.esm.exception.NoSuchEntityException;
@@ -13,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -21,33 +24,38 @@ public class TagServiceImpl implements TagService {
 
     private final TagRepositoryImpl tagRepository;
     private final TagValidator tagValidator;
+    private final TagDTOMapper mapper;
 
     @Override
-    public Tag add(Tag tag) {
-        if (tagValidator.validName(tag.getName())) {
-            tagRepository.add(tag);
-        }
-        return tag;
+    public TagDTO add(TagDTO tag) {
+        tagValidator.validName(tag.getName());
+        return mapper.toDTO(tagRepository.add(mapper.toEntity(tag)));
     }
 
     @Override
-    public List<Tag> findAll() {
-        return tagRepository.queryForList(new FindAllSpecification("tag"));
+    public List<TagDTO> findAll() {
+        return tagRepository.queryForList(new FindAllSpecification("tag"))
+                .stream()
+                .map(mapper::toDTO)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public Tag findById(long id) {
-        return tagRepository.queryForOne(new FindByIdSpecification("tag", id))
-                .orElseThrow(() -> new NoSuchEntityException("No tag with id = " + id, CustomErrorCode.TAG_NOT_FOUND.getErrorCode()));
+    public TagDTO findById(long id) {
+        return mapper.toDTO(tagRepository.queryForOne(new FindByIdSpecification("tag", id))
+                .orElseThrow(() -> new NoSuchEntityException("No tag with id = " + id
+                        , CustomErrorCode.TAG_NOT_FOUND.getErrorCode())));
     }
 
     @Override
     public void delete(Long id) {
-        Tag tag = findById(id);
-        if (tag == null) {
+        TagDTO tagDTO = findById(id);
+        if (tagDTO == null) {
             log.error("There is no tag with id = " + id);
-            throw new NoSuchEntityException("There is no tag with id = " + id + " in database", CustomErrorCode.TAG_NOT_FOUND.getErrorCode());
+            throw new NoSuchEntityException("There is no tag with id = " + id + " in database"
+                    , CustomErrorCode.TAG_NOT_FOUND.getErrorCode());
         }
+        Tag tag = mapper.toEntity(tagDTO);
         tagRepository.remove(tag);
     }
 

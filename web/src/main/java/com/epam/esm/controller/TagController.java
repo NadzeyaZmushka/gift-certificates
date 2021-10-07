@@ -1,6 +1,6 @@
 package com.epam.esm.controller;
 
-import com.epam.esm.entity.Tag;
+import com.epam.esm.dto.TagDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,15 +18,15 @@ public interface TagController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    List<Tag> findAll();
+    List<TagDTO> findAll();
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    Tag findOne(@PathVariable Long id);
+    TagDTO findOne(@PathVariable Long id);
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    ResponseEntity<Tag> add(@RequestBody Tag tag);
+    ResponseEntity<TagDTO> add(@RequestBody TagDTO tag);
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
