@@ -3,6 +3,7 @@ package com.epam.esm.repository.specification.impl;
 public class TagByCertificateIdSpecification extends EntitySpecification{
 
     private final Long certificateId;
+    private static final String JOIN_BLOCK = "JOIN gifts.certificate_tag ct ON tag.id = ct.tag_id WHERE ct.certificate_id = ?";
 
     public TagByCertificateIdSpecification(Long certificateId) {
         super("tag");
@@ -16,6 +17,6 @@ public class TagByCertificateIdSpecification extends EntitySpecification{
 
     @Override
     protected String getWhereStatement() {
-        return "JOIN gifts.certificate_tag ct ON tag.id = ct.tag_id WHERE ct.certificate_id = ?";
+        return JOIN_BLOCK;
     }
 }

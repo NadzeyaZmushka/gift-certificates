@@ -3,6 +3,7 @@ package com.epam.esm.repository.specification.impl;
 public class TagFindByNameSpecification extends EntitySpecification {
 
     private final String name;
+    private static final String WHERE_NAME_STATEMENT = "WHERE name = ?";
 
     public TagFindByNameSpecification(String name) {
         super("tag");
@@ -16,6 +17,6 @@ public class TagFindByNameSpecification extends EntitySpecification {
 
     @Override
     protected String getWhereStatement() {
-        return "WHERE name = ?";
+        return WHERE_NAME_STATEMENT;
     }
 }

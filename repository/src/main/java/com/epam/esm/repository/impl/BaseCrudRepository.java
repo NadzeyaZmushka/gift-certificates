@@ -55,8 +55,6 @@ public abstract class BaseCrudRepository<T extends BaseEntity> implements CrudRe
         return entity;
     }
 
-
-    // не правильно сделали?
     @Override
     public T update(T entity) {
         jdbcTemplate.update(getUpdateSql(), getParam(entity));

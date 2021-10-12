@@ -27,6 +27,7 @@ public interface CertificateController {
     @ResponseStatus(HttpStatus.OK)
     CertificateDTO findOne(@PathVariable Long id);
 
+    // не работает
     @GetMapping("/")
     @ResponseStatus(HttpStatus.OK)
     List<CertificateDTO> findAllByCriteria(@RequestParam(name = "tagName", required = false) String tagName,

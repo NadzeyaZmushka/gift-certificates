@@ -3,6 +3,7 @@ package com.epam.esm.repository.specification.impl;
 public class FindByIdSpecification extends EntitySpecification {
 
     private final Long id;
+    private static final String WHERE_ID_STATEMENT = "WHERE id = ?";
 
     public FindByIdSpecification(String tableName, Long id) {
         super(tableName);
@@ -16,6 +17,6 @@ public class FindByIdSpecification extends EntitySpecification {
 
     @Override
     protected String getWhereStatement() {
-        return "WHERE id = ?";
+        return WHERE_ID_STATEMENT;
     }
 }

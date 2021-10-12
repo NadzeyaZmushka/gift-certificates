@@ -3,6 +3,7 @@ package com.epam.esm.service.impl;
 import com.epam.esm.dto.TagDTO;
 import com.epam.esm.dto.mapper.TagDTOMapper;
 import com.epam.esm.entity.Tag;
+import com.epam.esm.exception.ErrorConstants;
 import com.epam.esm.exception.NoSuchEntityException;
 import com.epam.esm.repository.impl.TagRepositoryImpl;
 import com.epam.esm.repository.specification.impl.FindAllSpecification;
@@ -24,6 +25,8 @@ import static com.epam.esm.exception.CustomErrorCode.TAG_NOT_FOUND;
 @RequiredArgsConstructor
 public class TagServiceImpl implements TagService {
 
+    private static final String TABLE = "tag";
+
     private final TagRepositoryImpl tagRepository;
     private final TagValidator tagValidator;
     private final TagDTOMapper mapper;
@@ -36,7 +39,7 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public List<TagDTO> findAll() {
-        return tagRepository.queryForList(new FindAllSpecification("tag"))
+        return tagRepository.queryForList(new FindAllSpecification(TABLE))
                 .stream()
                 .map(mapper::toDTO)
                 .collect(Collectors.toList());
@@ -44,8 +47,8 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public TagDTO findById(long id) {
-        return mapper.toDTO(tagRepository.queryForOne(new FindByIdSpecification("tag", id))
-                .orElseThrow(() -> new NoSuchEntityException("No tag with id = " + id
+        return mapper.toDTO(tagRepository.queryForOne(new FindByIdSpecification(TABLE, id))
+                .orElseThrow(() -> new NoSuchEntityException(ErrorConstants.NO_TAG_WITH_ID + id
                         , TAG_NOT_FOUND.getErrorCode())));
     }
 
@@ -53,9 +56,8 @@ public class TagServiceImpl implements TagService {
     public void delete(Long id) {
         TagDTO tagDTO = findById(id);
         if (tagDTO == null) {
-            log.error("There is no tag with id = " + id);
-            throw new NoSuchEntityException("There is no tag with id = " + id + " in database"
-                    , TAG_NOT_FOUND.getErrorCode());
+            log.error(ErrorConstants.NO_TAG_WITH_ID + id);
+            throw new NoSuchEntityException(ErrorConstants.NO_TAG_WITH_ID + id, TAG_NOT_FOUND.getErrorCode());
         }
         Tag tag = mapper.toEntity(tagDTO);
         tagRepository.remove(tag);
@@ -64,7 +66,7 @@ public class TagServiceImpl implements TagService {
     @Override
     public TagDTO findByName(String name) {
         return mapper.toDTO(tagRepository.queryForOne(new TagFindByNameSpecification(name))
-        .orElseThrow(() -> new NoSuchEntityException("No tag with name: " + name
+        .orElseThrow(() -> new NoSuchEntityException(ErrorConstants.NO_TAG_WITH_NAME + name
                 , TAG_NOT_FOUND.getErrorCode())));
     }
 

@@ -52,7 +52,6 @@ public class CertificatesControllerImpl implements CertificateController {
     }
 
     // не добавялет
-    //todo: добавить TagNameDTO или List<String> tags
     @Override
     public String addTag(Long id, AddTagToCertificateDTO tags) {
         certificateService.addTagsToCertificate(id, tags);

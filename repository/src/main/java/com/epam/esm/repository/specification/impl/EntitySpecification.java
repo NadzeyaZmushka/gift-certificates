@@ -5,6 +5,7 @@ import com.epam.esm.repository.specification.SqlSpecification;
 public abstract class EntitySpecification implements SqlSpecification {
 
     private final String tableName;
+    private static final String SELECT_ALL = "SELECT * FROM gifts.%s ";
 
     public EntitySpecification(String tableName) {
         this.tableName = tableName;
@@ -16,7 +17,7 @@ public abstract class EntitySpecification implements SqlSpecification {
     }
 
     protected String getBaseStatement() {
-        return String.format("SELECT * FROM gifts.%s ", tableName);
+        return String.format(SELECT_ALL, tableName);
     }
 
     protected abstract String getWhereStatement();
