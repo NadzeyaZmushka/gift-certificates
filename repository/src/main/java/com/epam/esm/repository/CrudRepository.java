@@ -1,20 +1,26 @@
 package com.epam.esm.repository;
 
-import com.epam.esm.entity.BaseEntity;
+import com.epam.esm.entity.Entity;
 import com.epam.esm.repository.specification.SqlSpecification;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface CrudRepository<T extends BaseEntity> {
+public interface CrudRepository<T extends Entity> {
 
     List<T> queryForList(SqlSpecification specification);
 
-    Optional<T> queryForOne(SqlSpecification specification);
+//    List<T> queryForList(SqlSpecification specification, ByCriteriaSpecification options);
 
-    Optional<T> findByName(SqlSpecification specification);
+    Optional<T> queryForOne(SqlSpecification specification);
 
     T add(T entity);
 
+    T update(T entity);
+
     boolean remove(T entity);
+
+    void addAll(List<T> tagCertificateList);
+
+    void removeAll(List<T> tagCertificateList);
 }

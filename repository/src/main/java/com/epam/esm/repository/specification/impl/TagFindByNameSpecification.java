@@ -1,11 +1,11 @@
 package com.epam.esm.repository.specification.impl;
 
-public class FindByNameSpecification extends EntitySpecification {
+public class TagFindByNameSpecification extends EntitySpecification {
 
     private final String name;
 
-    public FindByNameSpecification(String tableName, String name) {
-        super(tableName);
+    public TagFindByNameSpecification(String name) {
+        super("tag");
         this.name = name;
     }
 
