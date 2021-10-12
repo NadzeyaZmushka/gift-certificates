@@ -1,24 +1,33 @@
 package com.epam.esm.service.impl;
 
+import com.epam.esm.dto.AddTagToCertificateDTO;
 import com.epam.esm.dto.CertificateDTO;
-import com.epam.esm.dto.TagDTO;
 import com.epam.esm.dto.mapper.CertificateDTOMapper;
-import com.epam.esm.dto.mapper.TagDTOMapper;
 import com.epam.esm.entity.Certificate;
 import com.epam.esm.entity.Tag;
-import com.epam.esm.exception.CustomErrorCode;
+import com.epam.esm.entity.TagAndCertificate;
 import com.epam.esm.exception.NoSuchEntityException;
 import com.epam.esm.repository.impl.CertificateRepositoryImpl;
+import com.epam.esm.repository.impl.TagRepositoryImpl;
 import com.epam.esm.repository.impl.TagToCertificateRepositoryImpl;
+import com.epam.esm.repository.specification.ByCriteriaSpecification;
+import com.epam.esm.repository.specification.SqlSpecification;
 import com.epam.esm.repository.specification.impl.FindAllSpecification;
 import com.epam.esm.repository.specification.impl.FindByIdSpecification;
+import com.epam.esm.repository.specification.impl.TagByCertificateIdSpecification;
+import com.epam.esm.repository.specification.impl.TagFindByNameSpecification;
+import com.epam.esm.repository.specification.impl.TagFindByNamesSpecification;
 import com.epam.esm.service.CertificateService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static com.epam.esm.exception.CustomErrorCode.CERTIFICATE_NOT_FOUND;
+import static com.epam.esm.exception.CustomErrorCode.TAG_NOT_FOUND;
 
 @Slf4j
 @Service
@@ -26,9 +35,10 @@ import java.util.stream.Collectors;
 public class CertificateServiceImpl implements CertificateService {
 
     private final CertificateRepositoryImpl certificateRepository;
+    private final TagRepositoryImpl tagRepository;
     private final TagToCertificateRepositoryImpl tagToCertificateRepository;
     private final CertificateDTOMapper mapper;
-    private final TagDTOMapper tagDTOMapper;
+//    private final TagDTOMapper tagDTOMapper;
 
     @Override
     public CertificateDTO add(CertificateDTO certificateDTO) {
@@ -37,17 +47,31 @@ public class CertificateServiceImpl implements CertificateService {
 
     @Override
     public List<CertificateDTO> findAll() {
-        return certificateRepository.queryForList(new FindAllSpecification("certificate"))
+        List<CertificateDTO> certificateDTOList = certificateRepository.queryForList(new FindAllSpecification("certificate"))
                 .stream()
                 .map(mapper::toDTO)
                 .collect(Collectors.toList());
+        for (CertificateDTO certificateDTO : certificateDTOList) {
+            certificateDTO.setTags(tagRepository.queryForList(new TagByCertificateIdSpecification(certificateDTO.getId()))
+                    .stream()
+                    .map(Tag::getName)
+                    .collect(Collectors.toList()));
+
+        }
+        return certificateDTOList;
     }
 
+    //добавила лист тэгов
     @Override
     public CertificateDTO findById(long id) {
-        return mapper.toDTO(certificateRepository.queryForOne(new FindByIdSpecification("certificate", id))
+        CertificateDTO certificateDTO = mapper.toDTO(certificateRepository.queryForOne(new FindByIdSpecification("certificate", id))
                 .orElseThrow(() -> new NoSuchEntityException("No certificate with id = " + id
-                        , CustomErrorCode.CERTIFICATE_NOT_FOUND.getErrorCode())));
+                        , CERTIFICATE_NOT_FOUND.getErrorCode())));
+        certificateDTO.setTags(tagRepository.queryForList(new TagByCertificateIdSpecification(certificateDTO.getId()))
+                .stream()
+                .map(Tag::getName)
+                .collect(Collectors.toList()));
+        return certificateDTO;
     }
 
     @Override
@@ -55,7 +79,7 @@ public class CertificateServiceImpl implements CertificateService {
         CertificateDTO certificateDTO = findById(id);
         if (certificateDTO == null) {
             throw new NoSuchEntityException("There is no certificate with id = " + id
-                    , CustomErrorCode.CERTIFICATE_NOT_FOUND.getErrorCode());
+                    , CERTIFICATE_NOT_FOUND.getErrorCode());
         }
         Certificate certificate = mapper.toEntity(certificateDTO);
         certificateRepository.remove(certificate);
@@ -66,17 +90,72 @@ public class CertificateServiceImpl implements CertificateService {
         return mapper.toDTO(certificateRepository.update(mapper.toEntity(certificateDTO)));
     }
 
-    //???
     @Override
-    public void addTagToCertificate(Long certificateId, TagDTO tagDTO) {
-        Tag tag = tagDTOMapper.toEntity(tagDTO);
-        tagToCertificateRepository.addTagToCertificate(certificateId, tag);
+    public List<CertificateDTO> findByCriteria(String tagName, String namePart, String orderBy) {
+        ByCriteriaSpecification specification = new ByCriteriaSpecification(tagName, namePart, orderBy);
+
+        //todo:
+
+        return certificateRepository.queryForList(specification)
+                .stream()
+                .map(mapper::toDTO)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public void deleteTagFromCertificate(Long certificateId, TagDTO tagDTO) {
-        Tag tag = tagDTOMapper.toEntity(tagDTO);
-        tagToCertificateRepository.deleteTagFromCertificate(certificateId, tag);
+    @Transactional
+    public void addTagsToCertificate(Long certificateId, AddTagToCertificateDTO tagToCertificateDTO) {
+        SqlSpecification specification = new FindByIdSpecification("certificate", certificateId);
+        Certificate certificate = certificateRepository.queryForOne(specification)
+                .orElseThrow(() -> new NoSuchEntityException("//", CERTIFICATE_NOT_FOUND.getErrorCode()));
+        List<Tag> tags = tagRepository.queryForList(new TagFindByNamesSpecification(tagToCertificateDTO.getTagNames()));
+        List<TagAndCertificate> tagCertificateList = tags
+                .stream()
+                .map(tag -> new TagAndCertificate(certificate.getId(), tag.getId()))
+                .collect(Collectors.toList());
+        tagToCertificateRepository.addAll(tagCertificateList);
+        certificateRepository.queryForOne(specification)
+                .map(mapper::toDTO)
+                .orElseThrow(() -> new NoSuchEntityException("//", CERTIFICATE_NOT_FOUND.getErrorCode()));
+    }
+
+//    @Override
+//    public void addTagsToCertificate(Long certificateId, AddTagToCertificateDTO tagToCertificateDTO) {
+//        SqlSpecification specification = new FindByIdSpecification("certificate", certificateId);
+//        Certificate certificate = certificateRepository.queryForOne(specification)
+//                .orElseThrow(() -> new NoSuchEntityException("Certificate was not found", CERTIFICATE_NOT_FOUND.getErrorCode()));
+//        List<String> tags = tagToCertificateDTO.getTagNames();
+//        tags.stream()
+//                .distinct()
+//                .forEach(tagName -> {
+//                    Tag tag = tagRepository.queryForOne(new TagFindByNameSpecification(tagName)).orElseGet(() -> {
+//                        Tag tag1 = new Tag();
+//                        tag1.setName(tagName);
+//                        return tagRepository.add(tag1);
+//                    });
+//                    tagToCertificateRepository.add(new TagAndCertificate(certificate.getId(), tag.getId()));
+//                });
+//    }
+
+    @Override
+    public void deleteTagFromCertificate(Long certificateId, AddTagToCertificateDTO tagToCertificateDTO) {
+        SqlSpecification specification = new FindByIdSpecification("certificate", certificateId);
+        Certificate certificate = certificateRepository.queryForOne(specification)
+                .orElseThrow(() -> new NoSuchEntityException("Certificate was not found", CERTIFICATE_NOT_FOUND.getErrorCode()));
+        List<String> tags1 = tagToCertificateDTO.getTagNames();
+        tags1.stream().distinct().forEach(tagName -> {
+            Tag tag = tagRepository.queryForOne(new TagFindByNameSpecification(tagName)).orElseThrow(() -> new NoSuchEntityException("Tag was not found", TAG_NOT_FOUND.getErrorCode()));
+            tagToCertificateRepository.remove(new TagAndCertificate(certificate.getId(), tag.getId()));
+        });
+
+
+//        List<Tag> tags = tagRepository.queryForList(new TagFindByNamesSpecification(tagToCertificateDTO.getTagNames()));
+//        List<TagAndCertificate> tagCertificateList = tags.stream()
+//                .map(tag -> new TagAndCertificate(certificate.getId(), tag.getId()))
+//                .collect(Collectors.toList());
+////        Tag tag = tagDTOMapper.toEntity(tagDTO);
+////        TagAndCertificate tagAndCertificate = new TagAndCertificate(certificate.getId(), tag.getId());
+//        tagToCertificateRepository.removeAll(tagCertificateList);
     }
 
 }
