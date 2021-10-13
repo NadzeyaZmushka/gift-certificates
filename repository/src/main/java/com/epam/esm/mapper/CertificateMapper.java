@@ -1,4 +1,4 @@
-package com.epam.esm.repository.mapper;
+package com.epam.esm.mapper;
 
 import com.epam.esm.entity.Certificate;
 import org.springframework.stereotype.Component;

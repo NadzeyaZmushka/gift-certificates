@@ -1,4 +1,4 @@
-package com.epam.esm.repository.specification;
+package com.epam.esm.specification;
 
 public interface SqlSpecification {
 

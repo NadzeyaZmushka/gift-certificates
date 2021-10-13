@@ -1,6 +1,8 @@
-package com.epam.esm.repository.specification.impl;
+package com.epam.esm.specification.impl.tag;
 
-public class TagFindByNameSpecification extends EntitySpecification {
+import com.epam.esm.specification.BaseSpecification;
+
+public class TagFindByNameSpecification extends BaseSpecification {
 
     private final String name;
     private static final String WHERE_NAME_STATEMENT = "WHERE name = ?";

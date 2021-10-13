@@ -1,6 +1,8 @@
-package com.epam.esm.repository.specification.impl;
+package com.epam.esm.specification.impl;
 
-public class FindAllSpecification extends EntitySpecification {
+import com.epam.esm.specification.BaseSpecification;
+
+public class FindAllSpecification extends BaseSpecification {
 
     public FindAllSpecification(String tableName) {
         super(tableName);

@@ -2,7 +2,8 @@ package com.epam.esm.repository.impl;
 
 import com.epam.esm.entity.TagAndCertificate;
 import com.epam.esm.repository.CrudRepository;
-import com.epam.esm.repository.specification.SqlSpecification;
+import com.epam.esm.repository.QueryOptions;
+import com.epam.esm.specification.SqlSpecification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -27,10 +28,10 @@ public class TagToCertificateRepositoryImpl implements CrudRepository<TagAndCert
         throw new UnsupportedOperationException();
     }
 
-//    @Override
-//    public List<TagAndCertificate> queryForList(SqlSpecification specification, ByCriteriaSpecification options) {
-//        return null;
-//    }
+    @Override
+    public List<TagAndCertificate> queryForList(SqlSpecification specification, QueryOptions options) {
+        throw new UnsupportedOperationException();
+    }
 
     @Override
     public Optional<TagAndCertificate> queryForOne(SqlSpecification specification) {

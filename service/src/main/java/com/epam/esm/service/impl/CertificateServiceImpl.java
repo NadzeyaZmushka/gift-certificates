@@ -8,15 +8,14 @@ import com.epam.esm.entity.Tag;
 import com.epam.esm.entity.TagAndCertificate;
 import com.epam.esm.exception.ErrorConstants;
 import com.epam.esm.exception.NoSuchEntityException;
-import com.epam.esm.repository.impl.CertificateRepositoryImpl;
+import com.epam.esm.repository.impl.CertificateRepository;
 import com.epam.esm.repository.impl.TagRepositoryImpl;
 import com.epam.esm.repository.impl.TagToCertificateRepositoryImpl;
-import com.epam.esm.repository.specification.ByCriteriaSpecification;
-import com.epam.esm.repository.specification.SqlSpecification;
-import com.epam.esm.repository.specification.impl.FindAllSpecification;
-import com.epam.esm.repository.specification.impl.FindByIdSpecification;
-import com.epam.esm.repository.specification.impl.TagByCertificateIdSpecification;
-import com.epam.esm.repository.specification.impl.TagFindByNamesSpecification;
+import com.epam.esm.specification.SqlSpecification;
+import com.epam.esm.specification.impl.FindAllSpecification;
+import com.epam.esm.specification.impl.FindByIdSpecification;
+import com.epam.esm.specification.impl.tag.TagByCertificateIdSpecification;
+import com.epam.esm.specification.impl.tag.TagFindByNamesSpecification;
 import com.epam.esm.service.CertificateService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,7 +35,7 @@ public class CertificateServiceImpl implements CertificateService {
 
     private static final String TABLE = "certificate";
 
-    private final CertificateRepositoryImpl certificateRepository;
+    private final CertificateRepository certificateRepository;
     private final TagRepositoryImpl tagRepository;
     private final TagToCertificateRepositoryImpl tagToCertificateRepository;
     private final CertificateDTOMapper mapper;
@@ -103,14 +102,8 @@ public class CertificateServiceImpl implements CertificateService {
 
     @Override
     public List<CertificateDTO> findByCriteria(String tagName, String namePart, String orderBy) {
-        ByCriteriaSpecification specification = new ByCriteriaSpecification(tagName, namePart, orderBy);
 
-        //todo:
-
-        return certificateRepository.queryForList(specification)
-                .stream()
-                .map(mapper::toDTO)
-                .collect(Collectors.toList());
+        return null;
     }
 
     @Override

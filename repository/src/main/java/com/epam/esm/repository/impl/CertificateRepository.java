@@ -1,7 +1,8 @@
 package com.epam.esm.repository.impl;
 
 import com.epam.esm.entity.Certificate;
-import com.epam.esm.repository.mapper.EntityMapper;
+import com.epam.esm.mapper.EntityMapper;
+import com.epam.esm.repository.BaseCrudRepository;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -12,7 +13,7 @@ import java.sql.Statement;
 import java.util.List;
 
 @Repository
-public class CertificateRepositoryImpl extends BaseCrudRepository<Certificate> {
+public class CertificateRepository extends BaseCrudRepository<Certificate> {
 
     private static final String ADD_CERTIFICATE_SQL = "INSERT INTO gifts.certificate (name, description, price" +
             ", duration, create_date, last_update_date) " +
@@ -21,7 +22,7 @@ public class CertificateRepositoryImpl extends BaseCrudRepository<Certificate> {
             ", description = ?, price = ?, duration = ?" +
             ", create_date = ?, last_update_date = ? WHERE id = ?";
 
-    public CertificateRepositoryImpl(JdbcTemplate jdbcTemplate, EntityMapper<Certificate> mapper) {
+    public CertificateRepository(JdbcTemplate jdbcTemplate, EntityMapper<Certificate> mapper) {
         super(jdbcTemplate, mapper);
     }
 

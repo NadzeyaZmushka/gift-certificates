@@ -1,7 +1,7 @@
 package com.epam.esm.repository;
 
 import com.epam.esm.entity.Entity;
-import com.epam.esm.repository.specification.SqlSpecification;
+import com.epam.esm.specification.SqlSpecification;
 
 import java.util.List;
 import java.util.Optional;
@@ -10,7 +10,7 @@ public interface CrudRepository<T extends Entity> {
 
     List<T> queryForList(SqlSpecification specification);
 
-//    List<T> queryForList(SqlSpecification specification, ByCriteriaSpecification options);
+    List<T> queryForList(SqlSpecification specification, QueryOptions options);
 
     Optional<T> queryForOne(SqlSpecification specification);
 

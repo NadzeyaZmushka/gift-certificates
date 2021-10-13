@@ -1,7 +1,8 @@
 package com.epam.esm.repository.impl;
 
 import com.epam.esm.entity.Tag;
-import com.epam.esm.repository.mapper.EntityMapper;
+import com.epam.esm.mapper.EntityMapper;
+import com.epam.esm.repository.BaseCrudRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;

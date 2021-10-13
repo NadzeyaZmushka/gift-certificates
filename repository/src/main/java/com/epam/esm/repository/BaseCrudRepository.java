@@ -1,9 +1,8 @@
-package com.epam.esm.repository.impl;
+package com.epam.esm.repository;
 
 import com.epam.esm.entity.BaseEntity;
-import com.epam.esm.repository.CrudRepository;
-import com.epam.esm.repository.mapper.EntityMapper;
-import com.epam.esm.repository.specification.SqlSpecification;
+import com.epam.esm.mapper.EntityMapper;
+import com.epam.esm.specification.SqlSpecification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -16,6 +15,9 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
+import static java.util.Optional.*;
 
 @RequiredArgsConstructor
 public abstract class BaseCrudRepository<T extends BaseEntity> implements CrudRepository<T> {
@@ -32,17 +34,35 @@ public abstract class BaseCrudRepository<T extends BaseEntity> implements CrudRe
         return jdbcTemplate.query(specification.toSql(), mapper, specification.getParameters());
     }
 
-//    @Override
-//    public List<T> queryForList(SqlSpecification specification, ByCriteriaSpecification options) {
-//        return null;
-//    }
+    @Override
+    public List<T> queryForList(SqlSpecification specification, QueryOptions options) {
+        if (options == null) {
+            return this.queryForList(specification);
+        }
+        StringBuilder queryBuilder = new StringBuilder(specification.toSql());
+        ofNullable(options.getOrder())
+                .ifPresent(order -> {
+                    String parameters = order.entrySet().stream()
+                            .map(e -> String.format("%s %s", e.getKey(), e.getValue()))
+                            .collect(Collectors.joining(","));
+                    queryBuilder.append(String.format(" ORDER BY %s", parameters));
+                });
+        ofNullable(options.getLimit())
+                .ifPresent(limit -> {
+                    queryBuilder.append(" limit ").append(limit);
+                    ofNullable(options.getOffset())
+                            .ifPresent(offset -> queryBuilder.append(" offset ").append(offset));
+                });
+
+        return jdbcTemplate.query(queryBuilder.toString(), mapper, specification.getParameters());
+    }
 
     @Override
     public Optional<T> queryForOne(SqlSpecification specification) {
         try {
-            return Optional.ofNullable(jdbcTemplate.queryForObject(specification.toSql(), mapper, specification.getParameters()));
+            return ofNullable(jdbcTemplate.queryForObject(specification.toSql(), mapper, specification.getParameters()));
         } catch (EmptyResultDataAccessException e) {
-            return Optional.empty();
+            return empty();
         }
     }
 

@@ -1,6 +1,5 @@
-package com.epam.esm.repository.mapper;
+package com.epam.esm.mapper;
 
-import com.epam.esm.entity.BaseEntity;
 import com.epam.esm.entity.Entity;
 import org.springframework.jdbc.core.RowMapper;
 

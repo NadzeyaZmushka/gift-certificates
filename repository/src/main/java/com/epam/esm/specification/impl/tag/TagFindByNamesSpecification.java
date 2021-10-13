@@ -1,13 +1,12 @@
-package com.epam.esm.repository.specification.impl;
+package com.epam.esm.specification.impl.tag;
 
-import com.epam.esm.repository.specification.SqlSpecification;
+import com.epam.esm.specification.BaseSpecification;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 //todo ???
-public class TagFindByNamesSpecification extends EntitySpecification {
+public class TagFindByNamesSpecification extends BaseSpecification {
 
     private final List<String> tagNames;
 

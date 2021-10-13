@@ -1,6 +1,8 @@
-package com.epam.esm.repository.specification.impl;
+package com.epam.esm.specification.impl;
 
-public class FindByIdSpecification extends EntitySpecification {
+import com.epam.esm.specification.BaseSpecification;
+
+public class FindByIdSpecification extends BaseSpecification {
 
     private final Long id;
     private static final String WHERE_ID_STATEMENT = "WHERE id = ?";

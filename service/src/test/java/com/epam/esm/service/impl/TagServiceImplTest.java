@@ -3,49 +3,45 @@ package com.epam.esm.service.impl;
 import com.epam.esm.dto.mapper.TagDTOMapper;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.repository.impl.TagRepositoryImpl;
-import com.epam.esm.repository.specification.SqlSpecification;
-import com.epam.esm.repository.specification.impl.FindAllSpecification;
-import com.epam.esm.validator.TagValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.modelmapper.ModelMapper;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 class TagServiceImplTest {
 
+    @Mock
     private TagRepositoryImpl tagRepository;
+    @InjectMocks
     private TagServiceImpl tagService;
-    private List<Tag> testTags;
-    private Tag testTag;
+    private TagDTOMapper mapper;
+//    private List<Tag> testTags;
+//    private Tag testTag;
 
     @BeforeEach
     void setUp() {
-        testTags = new ArrayList<>();
-        testTags.add(new Tag(1L,"one"));
-        testTags.add(new Tag(2L,"two"));
-        testTags.add(new Tag(3L,"three"));
-        tagRepository = mock(TagRepositoryImpl.class);
-        tagService = mock(TagServiceImpl.class);
+        MockitoAnnotations.initMocks(this);
     }
 
     @Test
     void add() {
+        Tag tag = new Tag("Test tag");
+        when(tagRepository.add(tag)).thenReturn(tag);
+
+        tagService.add(mapper.toDTO(tag));
+
+        verify(tagRepository, times(1)).add(tag);
     }
 
     @Test
     void findAll() {
-        SqlSpecification specification = new FindAllSpecification("tag");
-        TagDTOMapper mapper = new TagDTOMapper(new ModelMapper());
-        when(tagRepository.queryForList(specification)).thenReturn(testTags);
-        List<Tag> actual = tagService.findAll().stream().map(mapper::toEntity).collect(Collectors.toList());
-        assertEquals(testTags, actual);
     }
 
     @Test
