@@ -1,4 +1,4 @@
-package com.epam.esm.dto.mapper;
+package com.epam.esm.mapper;
 
 import com.epam.esm.dto.TagDTO;
 import com.epam.esm.entity.Tag;
@@ -10,7 +10,7 @@ import java.util.Objects;
 
 @Component
 @RequiredArgsConstructor
-public class TagDTOMapper {
+public class TagConvertor {
 
     private final ModelMapper modelMapper;
 

@@ -2,8 +2,8 @@ package com.epam.esm.controller;
 
 import com.epam.esm.dto.AddTagToCertificateDTO;
 import com.epam.esm.dto.CertificateDTO;
+import com.epam.esm.entity.Certificate;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,13 +30,13 @@ public interface CertificateController {
     // не работает
     @GetMapping("/")
     @ResponseStatus(HttpStatus.OK)
-    List<CertificateDTO> findAllByCriteria(@RequestParam(name = "tagName", required = false) String tagName,
+    List<Certificate> findAllByCriteria(@RequestParam(name = "tagName", required = false) String tagName,
                                            @RequestParam(name = "namePart", required = false) String namePart,
                                            @RequestParam(name = "orderBy", required = false, defaultValue = "id") String orderBy);
 
     @PostMapping("/")
     @ResponseStatus(HttpStatus.CREATED)
-    ResponseEntity<CertificateDTO> add(@RequestBody CertificateDTO certificateDTO);
+    void add(@RequestBody CertificateDTO certificateDTO);
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -44,11 +44,11 @@ public interface CertificateController {
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    CertificateDTO update(@PathVariable Long id, @RequestBody CertificateDTO certificateDTO);
+    void update(@PathVariable Long id, @RequestBody CertificateDTO certificateDTO);
 
     @PostMapping("/{id}/tags")
     @ResponseStatus(HttpStatus.CREATED)
-    String addTag(@PathVariable Long id, @RequestBody AddTagToCertificateDTO tags);
+    void addTag(@PathVariable Long id, @RequestBody List<String> tagsNames);
 
     @DeleteMapping("/{id}/tags")
     @ResponseStatus(HttpStatus.NO_CONTENT)

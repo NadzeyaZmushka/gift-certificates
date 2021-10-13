@@ -3,40 +3,43 @@ package com.epam.esm.controller.impl;
 import com.epam.esm.controller.CertificateController;
 import com.epam.esm.dto.AddTagToCertificateDTO;
 import com.epam.esm.dto.CertificateDTO;
+import com.epam.esm.entity.Certificate;
+import com.epam.esm.mapper.CertificateConverter;
 import com.epam.esm.service.impl.CertificateServiceImpl;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
 public class CertificatesControllerImpl implements CertificateController {
 
     private final CertificateServiceImpl certificateService;
+    private final CertificateConverter mapper;
 
     @Override
     public List<CertificateDTO> findAll() {
-        return certificateService.findAll();
+        return certificateService.findAll()
+                .stream()
+                .map(mapper::toDTO)
+                .collect(Collectors.toList());
     }
 
     @Override
     public CertificateDTO findOne(Long id) {
-        return certificateService.findById(id);
+        return mapper.toDTO(certificateService.findById(id));
     }
 
     @Override
-    public List<CertificateDTO> findAllByCriteria(String tagName, String namePart, String orderBy) {
+    public List<Certificate> findAllByCriteria(String tagName, String namePart, String orderBy) {
         return certificateService.findByCriteria(tagName, namePart, orderBy);
     }
 
     @Override
-    public ResponseEntity<CertificateDTO> add(CertificateDTO certificateDTO) {
-        CertificateDTO newCertificate = certificateService.add(certificateDTO);
-        URI location = URI.create(String.format("/certificates/%d", newCertificate.getId()));
-        return ResponseEntity.created(location).build();
+    public void add(CertificateDTO certificateDTO) {
+       certificateService.add(mapper.toEntity(certificateDTO));
     }
 
     @Override
@@ -45,17 +48,15 @@ public class CertificatesControllerImpl implements CertificateController {
     }
 
     @Override
-    public CertificateDTO update(Long id, CertificateDTO certificateDTO) {
+    public void update(Long id, CertificateDTO certificateDTO) {
         certificateDTO.setId(id);
-        certificateService.update(certificateDTO);
-        return certificateDTO;
+        certificateService.update(mapper.toEntity(certificateDTO));
     }
 
     // не добавялет
     @Override
-    public String addTag(Long id, AddTagToCertificateDTO tags) {
-        certificateService.addTagsToCertificate(id, tags);
-        return "Tag was added to certificate";
+    public void addTag(Long id, List<String> tagsNames) {
+        certificateService.addTagsToCertificate(id, tagsNames);
     }
 
     @Override

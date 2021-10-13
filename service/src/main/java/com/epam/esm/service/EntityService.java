@@ -1,10 +1,11 @@
 package com.epam.esm.service;
 
 import com.epam.esm.dto.BaseEntityDTO;
+import com.epam.esm.entity.BaseEntity;
 
 import java.util.List;
 
-public interface EntityService<T extends BaseEntityDTO> {
+public interface EntityService<T extends BaseEntity> {
 
     T add(T entity);
 

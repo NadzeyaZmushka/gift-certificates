@@ -1,4 +1,4 @@
-package com.epam.esm.dto.mapper;
+package com.epam.esm.mapper;
 
 import com.epam.esm.dto.CertificateDTO;
 import com.epam.esm.entity.Certificate;
@@ -10,7 +10,7 @@ import java.util.Objects;
 
 @Component
 @RequiredArgsConstructor
-public class CertificateDTOMapper {
+public class CertificateConverter {
 
     private final ModelMapper modelMapper;
 

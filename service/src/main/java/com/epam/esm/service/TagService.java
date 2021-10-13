@@ -1,9 +1,9 @@
 package com.epam.esm.service;
 
-import com.epam.esm.dto.TagDTO;
+import com.epam.esm.entity.Tag;
 
-public interface TagService extends EntityService<TagDTO> {
+public interface TagService extends EntityService<Tag> {
 
-    TagDTO findByName(String name);
+    Tag findByName(String name);
 
 }
