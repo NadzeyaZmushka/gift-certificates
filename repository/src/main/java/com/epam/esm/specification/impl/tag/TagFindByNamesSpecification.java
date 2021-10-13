@@ -1,30 +1,33 @@
 package com.epam.esm.specification.impl.tag;
 
-import com.epam.esm.specification.BaseSpecification;
+import com.epam.esm.entity.Tag;
+import com.epam.esm.specification.BaseSqlSpecification;
 
 import java.util.List;
-import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.joining;
 
 //todo ???
-public class TagFindByNamesSpecification extends BaseSpecification {
+public class TagFindByNamesSpecification extends BaseSqlSpecification<Tag> {
 
     private final List<String> tagNames;
-
     public TagFindByNamesSpecification(List<String> tagNames) {
-        super("tag");
         this.tagNames = tagNames;
     }
 
-    //
     @Override
-    protected String getWhereStatement() {
-        return String.format("WHERE name IN (%s)", tagNames.stream()
-                .collect(Collectors.joining("','", "'", "'")));
+    public String getBaseStatement() {
+        return "SELECT * FROM gifts.tag ";
+    }
+
+    @Override
+    public String getWhereCondition() {
+        return String.format("name IN (%s)", tagNames.stream()
+                .collect(joining("','", "'", "'")));
     }
 
     @Override
     public Object[] getParameters() {
         return tagNames.toArray();
     }
-
 }

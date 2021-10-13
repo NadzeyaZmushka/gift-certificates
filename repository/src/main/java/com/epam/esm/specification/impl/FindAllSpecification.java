@@ -1,16 +1,18 @@
 package com.epam.esm.specification.impl;
 
-import com.epam.esm.specification.BaseSpecification;
+import com.epam.esm.specification.BaseSqlSpecification;
 
-public class FindAllSpecification extends BaseSpecification {
+public class FindAllSpecification extends BaseSqlSpecification {
+
+    private final String tableName;
 
     public FindAllSpecification(String tableName) {
-        super(tableName);
+        this.tableName = tableName;
     }
 
     @Override
-    protected String getWhereStatement() {
-        return "";
+    public String getBaseStatement() {
+        return String.format("SELECT * from gifts.%s", tableName);
     }
 
     @Override

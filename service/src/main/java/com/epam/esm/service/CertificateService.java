@@ -1,18 +1,20 @@
 package com.epam.esm.service;
 
 import com.epam.esm.dto.AddTagToCertificateDTO;
-import com.epam.esm.dto.CertificateDTO;
+import com.epam.esm.entity.Certificate;
 
 import java.util.List;
 
-public interface CertificateService extends EntityService<CertificateDTO> {
+public interface CertificateService extends EntityService<Certificate> {
 
-    void addTagsToCertificate(Long certificateId, AddTagToCertificateDTO tagToCertificateDTO);
+    //todo
+    void addTagsToCertificate(Long certificateId, List<String> tagsNames);
 
+    //todo
     void deleteTagFromCertificate(Long certificateId, AddTagToCertificateDTO tagToCertificateDTO);
 
-    CertificateDTO update(CertificateDTO entity);
+    Certificate update(Certificate entity);
 
-    List<CertificateDTO> findByCriteria(String tagName, String namePart, String orderBy);
+    List<Certificate> findByCriteria(String tagName, String namePart, String orderBy);
 
 }

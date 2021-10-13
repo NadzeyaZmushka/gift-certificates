@@ -1,24 +1,29 @@
 package com.epam.esm.specification.impl;
 
-import com.epam.esm.specification.BaseSpecification;
+import com.epam.esm.specification.BaseSqlSpecification;
 
-public class FindByIdSpecification extends BaseSpecification {
+public class FindByIdSpecification extends BaseSqlSpecification {
 
+    private final String tableName;
     private final Long id;
-    private static final String WHERE_ID_STATEMENT = "WHERE id = ?";
 
     public FindByIdSpecification(String tableName, Long id) {
-        super(tableName);
+        this.tableName = tableName;
         this.id = id;
+    }
+
+    @Override
+    public String getBaseStatement() {
+        return String.format("SELECT * from gifts.%s", tableName);
+    }
+
+    @Override
+    public String getWhereCondition() {
+        return "id = ?";
     }
 
     @Override
     public Object[] getParameters() {
         return new Object[]{id};
-    }
-
-    @Override
-    protected String getWhereStatement() {
-        return WHERE_ID_STATEMENT;
     }
 }
