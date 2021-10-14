@@ -5,8 +5,8 @@ import com.epam.esm.exception.ErrorConstants;
 import com.epam.esm.exception.NoSuchEntityException;
 import com.epam.esm.repository.impl.TagRepositoryImpl;
 import com.epam.esm.service.TagService;
-import com.epam.esm.specification.impl.FindAllSpecification;
-import com.epam.esm.specification.impl.FindByIdSpecification;
+import com.epam.esm.specification.impl.tag.TagFindAllSpecification;
+import com.epam.esm.specification.impl.tag.TagFindByIdSpecification;
 import com.epam.esm.specification.impl.tag.TagFindByNameSpecification;
 import com.epam.esm.validator.TagValidator;
 import lombok.RequiredArgsConstructor;
@@ -35,12 +35,12 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public List<Tag> findAll() {
-        return tagRepository.queryForList(new FindAllSpecification(TABLE));
+        return tagRepository.queryForList(new TagFindAllSpecification());
     }
 
     @Override
-    public Tag findById(long id) {
-        return tagRepository.queryForOne(new FindByIdSpecification(TABLE, id))
+    public Tag findById(Long id) {
+        return tagRepository.queryForOne(new TagFindByIdSpecification(id))
                 .orElseThrow(() -> new NoSuchEntityException(ErrorConstants.NO_TAG_WITH_ID + id
                         , TAG_NOT_FOUND.getErrorCode()));
     }

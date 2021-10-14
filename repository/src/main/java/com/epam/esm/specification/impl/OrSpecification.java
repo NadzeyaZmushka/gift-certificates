@@ -16,8 +16,9 @@ import java.util.stream.Stream;
 
 public class OrSpecification<T extends BaseEntity> implements SqlSpecification<T> {
 
-    private List<BaseSqlSpecification<T>> specifications;
+    private final List<BaseSqlSpecification<T>> specifications;
 
+    @SafeVarargs
     public OrSpecification(BaseSqlSpecification<T>... specifications) {
         if (specifications.length <= 0) {
             throw new IllegalArgumentException("");
@@ -33,12 +34,15 @@ public class OrSpecification<T extends BaseEntity> implements SqlSpecification<T
         //взять все joins cond. и слить их в одну мапу
         specifications.forEach(spec -> joins.putAll(spec.getJoinConditions()));
         //общую мапу сджойнили как BaseSqlSpec.
-        Optional.of(joins).ifPresent(join -> join.forEach(
+        Optional.ofNullable(joins).ifPresent(join -> join.forEach(
                 (key, value) -> query.append(String.format("JOIN %s ON %s ", key, value))
         ));
         //взять со всех спец. where cond. и объеденить через OR
         List<String> wheres = new ArrayList<>();
         specifications.forEach(spec -> Collections.addAll(wheres, spec.getWhereCondition()));
+        Optional.ofNullable(wheres).ifPresent(spec -> spec.forEach(
+                cond -> query.append(" WHERE ").append(cond)
+        ));
         //...
         return query.toString();
     }

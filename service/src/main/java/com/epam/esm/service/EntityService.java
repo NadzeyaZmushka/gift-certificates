@@ -1,6 +1,5 @@
 package com.epam.esm.service;
 
-import com.epam.esm.dto.BaseEntityDTO;
 import com.epam.esm.entity.BaseEntity;
 
 import java.util.List;
@@ -11,7 +10,7 @@ public interface EntityService<T extends BaseEntity> {
 
     List<T> findAll();
 
-    T findById(long id);
+    T findById(Long id);
 
     void delete(Long id);
 

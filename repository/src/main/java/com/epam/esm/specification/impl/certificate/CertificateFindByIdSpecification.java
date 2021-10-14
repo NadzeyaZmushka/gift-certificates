@@ -1,20 +1,19 @@
-package com.epam.esm.specification.impl;
+package com.epam.esm.specification.impl.certificate;
 
+import com.epam.esm.entity.Certificate;
 import com.epam.esm.specification.BaseSqlSpecification;
 
-public class FindByIdSpecification extends BaseSqlSpecification {
+public class CertificateFindByIdSpecification extends BaseSqlSpecification<Certificate> {
 
-    private final String tableName;
     private final Long id;
 
-    public FindByIdSpecification(String tableName, Long id) {
-        this.tableName = tableName;
+    public CertificateFindByIdSpecification(Long id) {
         this.id = id;
     }
 
     @Override
     public String getBaseStatement() {
-        return String.format("SELECT * from gifts.%s", tableName);
+        return "SELECT * FROM gifts.certificate ";
     }
 
     @Override
@@ -26,4 +25,5 @@ public class FindByIdSpecification extends BaseSqlSpecification {
     public Object[] getParameters() {
         return new Object[]{id};
     }
+
 }
