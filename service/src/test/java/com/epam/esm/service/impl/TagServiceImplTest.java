@@ -1,6 +1,5 @@
 package com.epam.esm.service.impl;
 
-import com.epam.esm.mapper.TagConvertor;
 import com.epam.esm.repository.impl.TagRepositoryImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,7 +17,6 @@ class TagServiceImplTest {
     private TagRepositoryImpl tagRepository;
     @InjectMocks
     private TagServiceImpl tagService;
-    private TagConvertor mapper;
 //    private List<Tag> testTags;
 //    private Tag testTag;
 

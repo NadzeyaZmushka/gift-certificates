@@ -1,9 +1,9 @@
 package com.epam.esm.service.impl;
 
+import com.epam.esm.config.Translator;
 import com.epam.esm.entity.Certificate;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.entity.TagAndCertificate;
-import com.epam.esm.exception.ErrorConstants;
 import com.epam.esm.exception.NoSuchEntityException;
 import com.epam.esm.repository.QueryOptions;
 import com.epam.esm.repository.impl.CertificateRepository;
@@ -41,6 +41,7 @@ public class CertificateServiceImpl implements CertificateService {
     private final CertificateRepository certificateRepository;
     private final TagRepositoryImpl tagRepository;
     private final TagToCertificateRepositoryImpl tagToCertificateRepository;
+    private final Translator translator;
 
     @Override
     public Certificate add(Certificate certificate) {
@@ -49,6 +50,17 @@ public class CertificateServiceImpl implements CertificateService {
         return certificateRepository.add(certificate);
     }
 
+    //    @Override
+//    public List<Certificate> findAll() {
+//        List<Certificate> certificateList = certificateRepository.queryForList(new CertificateFindAllSpecification());
+//        for (Certificate certificate : certificateList) {
+//            certificate.setTags(tagRepository.queryForList(new TagFindByCertificateIdSpecification(certificate.getId()))
+//                    .stream()
+//                    .map(Tag::getName)
+//                    .collect(Collectors.toList()));
+//        }
+//        return certificateList;
+//    }
     @Override
     public List<Certificate> findAll() {
         List<Certificate> certificateList = certificateRepository.queryForList(new CertificateFindAllSpecification());
@@ -64,7 +76,7 @@ public class CertificateServiceImpl implements CertificateService {
     @Override
     public Certificate findById(Long id) {
         Certificate certificate = certificateRepository.queryForOne(new CertificateFindByIdSpecification(id))
-                .orElseThrow(() -> new NoSuchEntityException(ErrorConstants.NO_CERTIFICATE_WITH_ID + id
+                .orElseThrow(() -> new NoSuchEntityException(String.format(translator.toLocale("certificate.withIdNotFound"), id)
                         , CERTIFICATE_NOT_FOUND.getErrorCode()));
         certificate.setTags(tagRepository.queryForList(new TagFindByCertificateIdSpecification(certificate.getId()))
                 .stream()
@@ -77,7 +89,7 @@ public class CertificateServiceImpl implements CertificateService {
     public void delete(Long id) {
         Certificate certificate = findById(id);
         if (certificate == null) {
-            throw new NoSuchEntityException(ErrorConstants.NO_CERTIFICATE_WITH_ID + id
+            throw new NoSuchEntityException(String.format(translator.toLocale("certificate.withIdNotFound"), id)
                     , CERTIFICATE_NOT_FOUND.getErrorCode());
         }
         certificateRepository.remove(certificate);
@@ -105,12 +117,7 @@ public class CertificateServiceImpl implements CertificateService {
         Optional.ofNullable(partName)
                 .map(CertificateLikeNameSpecification::new)
                 .ifPresent(specifications::add);
-//        BaseSqlSpecification<Certificate> specByTagName = new CertificateByTagNameSpecification(tagName);
-//        BaseSqlSpecification<Certificate> specByPartOfName = new CertificateLikeNameSpecification(partName);
-//        specifications.add(specByTagName);
-//        specifications.add(specByPartOfName);
         AndSpecification<Certificate> specification = new AndSpecification<>(specifications);
-
 
         return certificateRepository.queryForList(specification, options);
     }
@@ -121,7 +128,8 @@ public class CertificateServiceImpl implements CertificateService {
     public void addTagsToCertificate(Long certificateId, List<String> tagsNames) {
         CertificateFindByIdSpecification specification = new CertificateFindByIdSpecification(certificateId);
         Certificate certificate = certificateRepository.queryForOne(specification)
-                .orElseThrow(() -> new NoSuchEntityException(ErrorConstants.NO_CERTIFICATE_WITH_ID + certificateId, CERTIFICATE_NOT_FOUND.getErrorCode()));
+                .orElseThrow(() -> new NoSuchEntityException(String.format(translator.toLocale("certificate.withIdNotFound"), certificateId),
+                        CERTIFICATE_NOT_FOUND.getErrorCode()));
 
         List<Tag> tags = tagRepository.queryForList(new TagFindByNamesSpecification(tagsNames));
         List<TagAndCertificate> tagCertificateList = tags
@@ -130,7 +138,7 @@ public class CertificateServiceImpl implements CertificateService {
                 .collect(Collectors.toList());
         tagToCertificateRepository.addAll(tagCertificateList);
         certificateRepository.queryForOne(specification)
-                .orElseThrow(() -> new NoSuchEntityException(ErrorConstants.NO_CERTIFICATE_WITH_ID + certificateId, CERTIFICATE_NOT_FOUND.getErrorCode()));
+                .orElseThrow(() -> new NoSuchEntityException(String.format(translator.toLocale("certificate.withIdNotFound"), certificateId), CERTIFICATE_NOT_FOUND.getErrorCode()));
     }
 
 //    @Override
@@ -155,7 +163,8 @@ public class CertificateServiceImpl implements CertificateService {
     public void deleteTagFromCertificate(Long certificateId, List<String> tagsNames) {
         CertificateFindByIdSpecification specification = new CertificateFindByIdSpecification(certificateId);
         Certificate certificate = certificateRepository.queryForOne(specification)
-                .orElseThrow(() -> new NoSuchEntityException(ErrorConstants.NO_CERTIFICATE_WITH_ID + certificateId, CERTIFICATE_NOT_FOUND.getErrorCode()));
+                .orElseThrow(() -> new NoSuchEntityException(String.format(translator.toLocale("certificate.withIdNotFound"), certificateId),
+                        CERTIFICATE_NOT_FOUND.getErrorCode()));
 //        List<String> tags1 = tagToCertificateDTO.getTagNames();
 //        tags1.stream().distinct().forEach(tagName -> {
 //            Tag tag = tagRepository.queryForOne(new TagFindByNameSpecification(tagName)).orElseThrow(() -> new NoSuchEntityException("Tag was not found", TAG_NOT_FOUND.getErrorCode()));
