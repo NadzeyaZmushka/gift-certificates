@@ -2,6 +2,7 @@ package com.epam.esm.controller.impl;
 
 import com.epam.esm.controller.CertificateController;
 import com.epam.esm.dto.CertificateDTO;
+import com.epam.esm.entity.Certificate;
 import com.epam.esm.mapper.CertificateConverter;
 import com.epam.esm.service.impl.CertificateServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -42,8 +43,9 @@ public class CertificatesControllerImpl implements CertificateController {
 
     @Override
     public ResponseEntity<Void> add(CertificateDTO certificateDTO) {
-       certificateService.add(mapper.toEntity(certificateDTO));
-       return null;
+       Certificate certificate = certificateService.add(mapper.toEntity(certificateDTO));
+       URI location = URI.create(String.format("/certificates/%d", certificate.getId()));
+       return ResponseEntity.created(location).build();
     }
 
     @Override
@@ -57,7 +59,6 @@ public class CertificatesControllerImpl implements CertificateController {
         certificateService.update(mapper.toEntity(certificateDTO));
     }
 
-    // не добавялет
     @Override
     public void addTag(Long id, List<String> tagsNames) {
         certificateService.addTagsToCertificate(id, tagsNames);

@@ -2,11 +2,14 @@ package com.epam.esm.controller.impl;
 
 import com.epam.esm.controller.TagController;
 import com.epam.esm.dto.TagDTO;
+import com.epam.esm.entity.Tag;
 import com.epam.esm.mapper.TagConvertor;
 import com.epam.esm.service.impl.TagServiceImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,8 +34,10 @@ public class TagControllerImpl implements TagController {
     }
 
     @Override
-    public void add(TagDTO tagDTO) {
-        tagService.add(mapper.toEntity(tagDTO));
+    public ResponseEntity<Void> add(TagDTO tagDTO) {
+        Tag tag = tagService.add(mapper.toEntity(tagDTO));
+        URI location = URI.create(String.format("/tags/%d", tag.getId()));
+        return ResponseEntity.created(location).build();
     }
 
     @Override
