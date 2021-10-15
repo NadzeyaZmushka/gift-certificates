@@ -23,7 +23,7 @@ public class Certificate extends BaseEntity {
     private Integer duration;
     private LocalDateTime createDate;
     private LocalDateTime lastUpdateDate;
-    private List<Tag> tags;
+    private List<String> tags;
 
     public Certificate(Long id, String name, String description
             , BigDecimal price, Integer duration
@@ -38,8 +38,8 @@ public class Certificate extends BaseEntity {
         this.tags = new ArrayList<>();
     }
 
-    public void addTags(List<Tag> tags) {
-        tags.addAll(tags);
+    public void addTags(String tag) {
+        tags.add(tag);
     }
 
 }

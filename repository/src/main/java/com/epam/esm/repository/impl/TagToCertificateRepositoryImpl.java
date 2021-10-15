@@ -24,17 +24,17 @@ public class TagToCertificateRepositoryImpl implements CrudRepository<TagAndCert
     private final JdbcTemplate jdbcTemplate;
 
     @Override
-    public List<TagAndCertificate> queryForList(SqlSpecification specification) {
+    public List<TagAndCertificate> queryForList(SqlSpecification<TagAndCertificate> specification) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public List<TagAndCertificate> queryForList(SqlSpecification specification, QueryOptions options) {
+    public List<TagAndCertificate> queryForList(SqlSpecification<TagAndCertificate> specification, QueryOptions options) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public Optional<TagAndCertificate> queryForOne(SqlSpecification specification) {
+    public Optional<TagAndCertificate> queryForOne(SqlSpecification<TagAndCertificate> specification) {
         throw new UnsupportedOperationException();
     }
 

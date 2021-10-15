@@ -27,6 +27,7 @@ public class CertificateMapper implements EntityMapper<Certificate> {
         certificate.setDuration(rs.getInt(DURATION));
         certificate.setCreateDate(rs.getTimestamp(CREATE_DATE).toLocalDateTime());
         certificate.setLastUpdateDate(rs.getTimestamp(LAST_UPDATE_DATE).toLocalDateTime());
+
         return certificate;
     }
 

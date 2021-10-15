@@ -1,9 +1,8 @@
 package com.epam.esm.controller;
 
-import com.epam.esm.dto.AddTagToCertificateDTO;
 import com.epam.esm.dto.CertificateDTO;
-import com.epam.esm.entity.Certificate;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,16 +26,16 @@ public interface CertificateController {
     @ResponseStatus(HttpStatus.OK)
     CertificateDTO findOne(@PathVariable Long id);
 
-    // не работает
-    @GetMapping("/")
+    @GetMapping("/param")
     @ResponseStatus(HttpStatus.OK)
-    List<Certificate> findAllByCriteria(@RequestParam(name = "tagName", required = false) String tagName,
-                                           @RequestParam(name = "namePart", required = false) String namePart,
-                                           @RequestParam(name = "orderBy", required = false, defaultValue = "id") String orderBy);
+    List<CertificateDTO> findAllByCriteria(@RequestParam(required = false, name = "tagName") String tagName,
+                                           @RequestParam(required = false, name = "partName") String partName,
+                                           @RequestParam(required = false, defaultValue = "certificate.id", name = "sortBy") String sortBy,
+                                           @RequestParam(required = false, defaultValue = "ASC", name = "order") String order);
 
     @PostMapping("/")
     @ResponseStatus(HttpStatus.CREATED)
-    void add(@RequestBody CertificateDTO certificateDTO);
+    ResponseEntity<Void> add(@RequestBody CertificateDTO certificateDTO);
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -52,6 +51,6 @@ public interface CertificateController {
 
     @DeleteMapping("/{id}/tags")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    void deleteTag(@PathVariable Long id, @RequestBody AddTagToCertificateDTO tags);
+    void deleteTag(@PathVariable Long id, @RequestBody List<String> tagNames);
 
 }

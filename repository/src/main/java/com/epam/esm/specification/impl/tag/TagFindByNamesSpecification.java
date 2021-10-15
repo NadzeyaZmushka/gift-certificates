@@ -7,10 +7,10 @@ import java.util.List;
 
 import static java.util.stream.Collectors.joining;
 
-//todo ???
 public class TagFindByNamesSpecification extends BaseSqlSpecification<Tag> {
 
     private final List<String> tagNames;
+
     public TagFindByNamesSpecification(List<String> tagNames) {
         this.tagNames = tagNames;
     }
@@ -22,8 +22,9 @@ public class TagFindByNamesSpecification extends BaseSqlSpecification<Tag> {
 
     @Override
     public String getWhereCondition() {
-        return String.format("name IN (%s)", tagNames.stream()
-                .collect(joining("','", "'", "'")));
+        return String.format("tag.name IN (%s)", tagNames.stream()
+                .map(tName -> "?")
+                .collect(joining(",")));
     }
 
     @Override

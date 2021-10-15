@@ -4,6 +4,7 @@ import com.epam.esm.entity.Certificate;
 import com.epam.esm.specification.BaseSqlSpecification;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class CertificateByTagNameSpecification extends BaseSqlSpecification<Certificate> {
@@ -21,7 +22,7 @@ public class CertificateByTagNameSpecification extends BaseSqlSpecification<Cert
 
     @Override
     public Map<String, String> getJoinConditions() {
-        Map<String, String> joinConditions = new HashMap<>();
+        Map<String, String> joinConditions = new LinkedHashMap<>();
         joinConditions.put("gifts.certificate_tag", "certificate.id = certificate_tag.certificate_id");
         joinConditions.put("gifts.tag", "certificate_tag.tag_id = tag.id");
 

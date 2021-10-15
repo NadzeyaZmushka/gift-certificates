@@ -17,6 +17,7 @@ public class TagMapper implements EntityMapper<Tag> {
         Tag tag = new Tag();
         tag.setId(rs.getLong(TAG_ID));
         tag.setName(rs.getString(TAG_NAME));
+
         return tag;
     }
 

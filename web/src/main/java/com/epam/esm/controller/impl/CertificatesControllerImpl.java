@@ -1,14 +1,14 @@
 package com.epam.esm.controller.impl;
 
 import com.epam.esm.controller.CertificateController;
-import com.epam.esm.dto.AddTagToCertificateDTO;
 import com.epam.esm.dto.CertificateDTO;
-import com.epam.esm.entity.Certificate;
 import com.epam.esm.mapper.CertificateConverter;
 import com.epam.esm.service.impl.CertificateServiceImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,13 +33,17 @@ public class CertificatesControllerImpl implements CertificateController {
     }
 
     @Override
-    public List<Certificate> findAllByCriteria(String tagName, String namePart, String orderBy) {
-        return certificateService.findByCriteria(tagName, namePart, orderBy);
+    public List<CertificateDTO> findAllByCriteria(String tagName, String partName, String sortBy, String order) {
+        return certificateService.findByCriteria(tagName, partName, sortBy, order)
+                .stream()
+                .map(mapper::toDTO)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public void add(CertificateDTO certificateDTO) {
+    public ResponseEntity<Void> add(CertificateDTO certificateDTO) {
        certificateService.add(mapper.toEntity(certificateDTO));
+       return null;
     }
 
     @Override
@@ -60,8 +64,8 @@ public class CertificatesControllerImpl implements CertificateController {
     }
 
     @Override
-    public void deleteTag(Long id, AddTagToCertificateDTO tags) {
-        certificateService.deleteTagFromCertificate(id, tags);
+    public void deleteTag(Long id, List<String> tagNames) {
+        certificateService.deleteTagFromCertificate(id, tagNames);
     }
 
 }

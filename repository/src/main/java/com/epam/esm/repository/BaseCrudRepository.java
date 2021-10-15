@@ -30,12 +30,12 @@ public abstract class BaseCrudRepository<T extends BaseEntity> implements CrudRe
     protected abstract String getTableName();
 
     @Override
-    public List<T> queryForList(SqlSpecification specification) {
+    public List<T> queryForList(SqlSpecification<T> specification) {
         return jdbcTemplate.query(specification.toSql(), mapper, specification.getParameters());
     }
 
     @Override
-    public List<T> queryForList(SqlSpecification specification, QueryOptions options) {
+    public List<T> queryForList(SqlSpecification<T> specification, QueryOptions options) {
         if (options == null) {
             return this.queryForList(specification);
         }
@@ -58,7 +58,7 @@ public abstract class BaseCrudRepository<T extends BaseEntity> implements CrudRe
     }
 
     @Override
-    public Optional<T> queryForOne(SqlSpecification specification) {
+    public Optional<T> queryForOne(SqlSpecification<T> specification) {
         try {
             return ofNullable(jdbcTemplate.queryForObject(specification.toSql(), mapper, specification.getParameters()));
         } catch (EmptyResultDataAccessException e) {
@@ -72,16 +72,17 @@ public abstract class BaseCrudRepository<T extends BaseEntity> implements CrudRe
         jdbcTemplate.update(con -> prepareAddStatement(con, entity), keyHolder);
         Long id = (Long) Objects.requireNonNull(keyHolder.getKeys()).get("id");
         entity.setId(id);
+
         return entity;
     }
 
     @Override
     public T update(T entity) {
         jdbcTemplate.update(getUpdateSql(), getParam(entity));
+
         return entity;
     }
 
-    //todo try-catch
     @Override
     public boolean remove(T entity) {
         return jdbcTemplate.update(String.format(DELETE_SQL, getTableName()), entity.getId()) != 0;
@@ -92,4 +93,5 @@ public abstract class BaseCrudRepository<T extends BaseEntity> implements CrudRe
     protected abstract String getUpdateSql();
 
     protected abstract Object[] getParam(T entity);
+
 }

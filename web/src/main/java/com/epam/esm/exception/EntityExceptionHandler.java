@@ -26,7 +26,6 @@ public class EntityExceptionHandler {
         return info;
     }
 
-    // ?
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ExceptionInfo handleException(Exception exception) {
