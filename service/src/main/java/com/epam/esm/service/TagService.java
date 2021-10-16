@@ -4,6 +4,6 @@ import com.epam.esm.entity.Tag;
 
 public interface TagService extends EntityService<Tag> {
 
-    Tag findByName(String name);
+//    Tag findByName(String name);
 
 }

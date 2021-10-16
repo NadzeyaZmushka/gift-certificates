@@ -54,11 +54,11 @@ public class TagServiceImpl implements TagService {
         tagRepository.remove(tag);
     }
 
-    @Override
-    public Tag findByName(String name) {
-        return tagRepository.queryForOne(new TagFindByNameSpecification(name))
-                .orElseThrow(() -> new NoSuchEntityException(String.format(translator.toLocale("tag.withNameNotFound"), name),
-                        TAG_NOT_FOUND.getErrorCode()));
-    }
+//    @Override
+//    public Tag findByName(String name) {
+//        return tagRepository.queryForOne(new TagFindByNameSpecification(name))
+//                .orElseThrow(() -> new NoSuchEntityException(String.format(translator.toLocale("tag.withNameNotFound"), name),
+//                        TAG_NOT_FOUND.getErrorCode()));
+//    }
 
 }

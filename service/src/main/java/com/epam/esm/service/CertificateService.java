@@ -6,12 +6,12 @@ import java.util.List;
 
 public interface CertificateService extends EntityService<Certificate> {
 
-    void addTagsToCertificate(Long certificateId, List<String> tagsNames);
-
-    void deleteTagFromCertificate(Long certificateId, List<String> tagsNames);
+    List<Certificate> findAllByCriteria(String tagName, String partName, String sortBy, String order);
 
     Certificate update(Certificate entity);
 
-    List<Certificate> findByCriteria(String tagName, String partName, String sortBy, String order);
+    void addTagsToCertificate(Long certificateId, List<String> tagsNames);
+
+    void deleteTagFromCertificate(Long certificateId, List<String> tagsNames);
 
 }

@@ -8,7 +8,6 @@ public interface EntityService<T extends BaseEntity> {
 
     T add(T entity);
 
-    //    List<T> findAll();
     List<T> findAll();
 
     T findById(Long id);

@@ -21,24 +21,25 @@ public class CertificatesControllerImpl implements CertificateController {
     private final CertificateConverter mapper;
 
     @Override
-    public List<CertificateDTO> findAll() {
-        return certificateService.findAll()
-                .stream()
-                .map(mapper::toDTO)
-                .collect(Collectors.toList());
+    public List<CertificateDTO> findAll(String tagName, String partName, String sortBy, String order) {
+        List<CertificateDTO> certificateDTOList;
+        if (tagName == null && partName == null) {
+            certificateDTOList = certificateService.findAll()
+                    .stream()
+                    .map(mapper::toDTO)
+                    .collect(Collectors.toList());
+        } else {
+            certificateDTOList = certificateService.findAllByCriteria(tagName, partName, sortBy, order)
+                    .stream()
+                    .map(mapper::toDTO)
+                    .collect(Collectors.toList());
+        }
+        return certificateDTOList;
     }
 
     @Override
     public CertificateDTO findOne(Long id) {
         return mapper.toDTO(certificateService.findById(id));
-    }
-
-    @Override
-    public List<CertificateDTO> findAllByCriteria(String tagName, String partName, String sortBy, String order) {
-        return certificateService.findByCriteria(tagName, partName, sortBy, order)
-                .stream()
-                .map(mapper::toDTO)
-                .collect(Collectors.toList());
     }
 
     @Override

@@ -44,26 +44,45 @@ public class CertificateServiceImpl implements CertificateService {
     private final Translator translator;
 
     @Override
+
     public Certificate add(Certificate certificate) {
         certificate.setCreateDate(LocalDateTime.now());
         certificate.setLastUpdateDate(LocalDateTime.now());
         return certificateRepository.add(certificate);
     }
 
-    //    @Override
-//    public List<Certificate> findAll() {
-//        List<Certificate> certificateList = certificateRepository.queryForList(new CertificateFindAllSpecification());
-//        for (Certificate certificate : certificateList) {
-//            certificate.setTags(tagRepository.queryForList(new TagFindByCertificateIdSpecification(certificate.getId()))
-//                    .stream()
-//                    .map(Tag::getName)
-//                    .collect(Collectors.toList()));
-//        }
-//        return certificateList;
-//    }
     @Override
     public List<Certificate> findAll() {
-        List<Certificate> certificateList = certificateRepository.queryForList(new CertificateFindAllSpecification());
+        List<Certificate> certificateList;
+        certificateList = certificateRepository.queryForList(new CertificateFindAllSpecification());
+        for (Certificate certificate : certificateList) {
+            certificate.setTags(tagRepository.queryForList(new TagFindByCertificateIdSpecification(certificate.getId()))
+                    .stream()
+                    .map(Tag::getName)
+                    .collect(Collectors.toList()));
+        }
+        return certificateList;
+    }
+
+    @Override
+    public List<Certificate> findAllByCriteria(String tagName, String partName, String sortBy, String order) {
+        QueryOptions options = new QueryOptions();
+        Map<String, QueryOptions.Ordering> orderingMap = new HashMap<>();
+        orderingMap.put(sortBy, QueryOptions.Ordering.valueOf(order.toUpperCase()));
+        options.setOrder(orderingMap);
+
+        List<BaseSqlSpecification<Certificate>> specifications = new ArrayList<>();
+        Optional.ofNullable(tagName)
+                .map(CertificateByTagNameSpecification::new)
+                .ifPresent(specifications::add);
+
+        Optional.ofNullable(partName)
+                .map(CertificateLikeNameSpecification::new)
+                .ifPresent(specifications::add);
+        AndSpecification<Certificate> specification = new AndSpecification<>(specifications);
+
+        List<Certificate> certificateList = certificateRepository.queryForList(specification, options);
+
         for (Certificate certificate : certificateList) {
             certificate.setTags(tagRepository.queryForList(new TagFindByCertificateIdSpecification(certificate.getId()))
                     .stream()
@@ -102,36 +121,16 @@ public class CertificateServiceImpl implements CertificateService {
 
     }
 
-    @Override
-    public List<Certificate> findByCriteria(String tagName, String partName, String sortBy, String order) {
-        QueryOptions options = new QueryOptions();
-        Map<String, QueryOptions.Ordering> orderingMap = new HashMap<>();
-        orderingMap.put(sortBy, QueryOptions.Ordering.valueOf(order.toUpperCase()));
-        options.setOrder(orderingMap);
-
-        List<BaseSqlSpecification<Certificate>> specifications = new ArrayList<>();
-        Optional.ofNullable(tagName)
-                .map(CertificateByTagNameSpecification::new)
-                .ifPresent(specifications::add);
-
-        Optional.ofNullable(partName)
-                .map(CertificateLikeNameSpecification::new)
-                .ifPresent(specifications::add);
-        AndSpecification<Certificate> specification = new AndSpecification<>(specifications);
-
-        return certificateRepository.queryForList(specification, options);
-    }
-
     //todo
     @Override
     @Transactional
-    public void addTagsToCertificate(Long certificateId, List<String> tagsNames) {
+    public void addTagsToCertificate(Long certificateId, List<String> tagsName) {
         CertificateFindByIdSpecification specification = new CertificateFindByIdSpecification(certificateId);
         Certificate certificate = certificateRepository.queryForOne(specification)
                 .orElseThrow(() -> new NoSuchEntityException(String.format(translator.toLocale("certificate.withIdNotFound"), certificateId),
                         CERTIFICATE_NOT_FOUND.getErrorCode()));
 
-        List<Tag> tags = tagRepository.queryForList(new TagFindByNamesSpecification(tagsNames));
+        List<Tag> tags = tagRepository.queryForList(new TagFindByNamesSpecification(tagsName));
         List<TagAndCertificate> tagCertificateList = tags
                 .stream()
                 .map(tag -> new TagAndCertificate(certificate.getId(), tag.getId()))
@@ -165,13 +164,7 @@ public class CertificateServiceImpl implements CertificateService {
         Certificate certificate = certificateRepository.queryForOne(specification)
                 .orElseThrow(() -> new NoSuchEntityException(String.format(translator.toLocale("certificate.withIdNotFound"), certificateId),
                         CERTIFICATE_NOT_FOUND.getErrorCode()));
-//        List<String> tags1 = tagToCertificateDTO.getTagNames();
-//        tags1.stream().distinct().forEach(tagName -> {
-//            Tag tag = tagRepository.queryForOne(new TagFindByNameSpecification(tagName)).orElseThrow(() -> new NoSuchEntityException("Tag was not found", TAG_NOT_FOUND.getErrorCode()));
-//            tagToCertificateRepository.remove(new TagAndCertificate(certificate.getId(), tag.getId()));
-//        });
         List<Tag> tags = tagRepository.queryForList(new TagFindByNamesSpecification(tagsNames));
-        log.info(String.valueOf(tags));
         List<TagAndCertificate> tagCertificateList = tags.stream()
                 .map(tag -> new TagAndCertificate(certificate.getId(), tag.getId()))
                 .collect(Collectors.toList());

@@ -18,20 +18,20 @@ import java.util.List;
 @RequestMapping("/api/certificates")
 public interface CertificateController {
 
-    @GetMapping
-    @ResponseStatus(HttpStatus.OK)
-    List<CertificateDTO> findAll();
+//    @GetMapping
+//    @ResponseStatus(HttpStatus.OK)
+//    List<CertificateDTO> findAll();
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     CertificateDTO findOne(@PathVariable Long id);
 
-    @GetMapping("/param")
+    @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    List<CertificateDTO> findAllByCriteria(@RequestParam(required = false, name = "tagName") String tagName,
-                                           @RequestParam(required = false, name = "partName") String partName,
-                                           @RequestParam(required = false, defaultValue = "certificate.id", name = "sortBy") String sortBy,
-                                           @RequestParam(required = false, defaultValue = "ASC", name = "order") String order);
+    List<CertificateDTO> findAll(@RequestParam(required = false, name = "tagName") String tagName,
+                                 @RequestParam(required = false, name = "partName") String partName,
+                                 @RequestParam(required = false, defaultValue = "certificate.id", name = "sortBy") String sortBy,
+                                 @RequestParam(required = false, defaultValue = "ASC", name = "order") String order);
 
     @PostMapping("/")
     @ResponseStatus(HttpStatus.CREATED)
