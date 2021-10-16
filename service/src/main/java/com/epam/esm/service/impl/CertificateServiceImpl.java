@@ -17,6 +17,7 @@ import com.epam.esm.specification.impl.certificate.CertificateFindAllSpecificati
 import com.epam.esm.specification.impl.certificate.CertificateFindByIdSpecification;
 import com.epam.esm.specification.impl.certificate.CertificateLikeNameSpecification;
 import com.epam.esm.specification.impl.tag.TagFindByCertificateIdSpecification;
+import com.epam.esm.specification.impl.tag.TagFindByNameSpecification;
 import com.epam.esm.specification.impl.tag.TagFindByNamesSpecification;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -44,7 +45,7 @@ public class CertificateServiceImpl implements CertificateService {
     private final Translator translator;
 
     @Override
-
+    @Transactional
     public Certificate add(Certificate certificate) {
         certificate.setCreateDate(LocalDateTime.now());
         certificate.setLastUpdateDate(LocalDateTime.now());
@@ -121,16 +122,22 @@ public class CertificateServiceImpl implements CertificateService {
 
     }
 
-    //todo
     @Override
     @Transactional
-    public void addTagsToCertificate(Long certificateId, List<String> tagsName) {
+    public void addTagsToCertificate(Long certificateId, List<String> tagsNames) {
         CertificateFindByIdSpecification specification = new CertificateFindByIdSpecification(certificateId);
         Certificate certificate = certificateRepository.queryForOne(specification)
                 .orElseThrow(() -> new NoSuchEntityException(String.format(translator.toLocale("certificate.withIdNotFound"), certificateId),
                         CERTIFICATE_NOT_FOUND.getErrorCode()));
-
-        List<Tag> tags = tagRepository.queryForList(new TagFindByNamesSpecification(tagsName));
+        tagsNames.stream().distinct()
+                .forEach(tagName ->
+                        tagRepository.queryForOne(new TagFindByNameSpecification(tagName)).orElseGet(() -> {
+                            Tag tag = new Tag();
+                            tag.setName(tagName);
+                            return tagRepository.add(tag);
+                        })
+                );
+        List<Tag> tags = tagRepository.queryForList(new TagFindByNamesSpecification(tagsNames));
         List<TagAndCertificate> tagCertificateList = tags
                 .stream()
                 .map(tag -> new TagAndCertificate(certificate.getId(), tag.getId()))
@@ -140,25 +147,8 @@ public class CertificateServiceImpl implements CertificateService {
                 .orElseThrow(() -> new NoSuchEntityException(String.format(translator.toLocale("certificate.withIdNotFound"), certificateId), CERTIFICATE_NOT_FOUND.getErrorCode()));
     }
 
-//    @Override
-//    public void addTagsToCertificate(Long certificateId, AddTagToCertificateDTO tagToCertificateDTO) {
-//        SqlSpecification specification = new FindByIdSpecification("certificate", certificateId);
-//        Certificate certificate = certificateRepository.queryForOne(specification)
-//                .orElseThrow(() -> new NoSuchEntityException("Certificate was not found", CERTIFICATE_NOT_FOUND.getErrorCode()));
-//        List<String> tags = tagToCertificateDTO.getTagNames();
-//        tags.stream()
-//                .distinct()
-//                .forEach(tagName -> {
-//                    Tag tag = tagRepository.queryForOne(new TagFindByNameSpecification(tagName)).orElseGet(() -> {
-//                        Tag tag1 = new Tag();
-//                        tag1.setName(tagName);
-//                        return tagRepository.add(tag1);
-//                    });
-//                    tagToCertificateRepository.add(new TagAndCertificate(certificate.getId(), tag.getId()));
-//                });
-//    }
-
     @Override
+    @Transactional
     public void deleteTagFromCertificate(Long certificateId, List<String> tagsNames) {
         CertificateFindByIdSpecification specification = new CertificateFindByIdSpecification(certificateId);
         Certificate certificate = certificateRepository.queryForOne(specification)
