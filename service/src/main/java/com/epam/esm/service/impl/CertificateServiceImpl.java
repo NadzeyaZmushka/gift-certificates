@@ -34,6 +34,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.epam.esm.exception.CustomErrorCode.CERTIFICATE_NOT_FOUND;
+import static com.epam.esm.exception.CustomErrorCode.TAG_NOT_FOUND;
 
 @Slf4j
 @Service
@@ -126,6 +127,9 @@ public class CertificateServiceImpl implements CertificateService {
                         CERTIFICATE_NOT_FOUND.getErrorCode()));
         certificate.setTags(tagRepository.queryForList(new TagFindByCertificateIdSpecification(certificate.getId())));
         List<String> uniqueTags = getUniqueTags(certificate.getTags(), tagsNames);
+        if (uniqueTags.isEmpty()) {
+            throw new NoSuchEntityException(translator.toLocale("tag.noTagsToBeAdded"), TAG_NOT_FOUND.getErrorCode());
+        }
         List<Tag> tags = tagRepository.queryForList(new TagFindByNamesSpecification(uniqueTags));
         List<TagAndCertificate> tagCertificateList = tags
                 .stream()
