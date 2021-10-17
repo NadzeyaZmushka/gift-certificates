@@ -19,6 +19,7 @@ import com.epam.esm.specification.impl.certificate.CertificateLikeNameSpecificat
 import com.epam.esm.specification.impl.tag.TagFindByCertificateIdSpecification;
 import com.epam.esm.specification.impl.tag.TagFindByNameSpecification;
 import com.epam.esm.specification.impl.tag.TagFindByNamesSpecification;
+import com.epam.esm.validator.CertificateValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -43,10 +44,12 @@ public class CertificateServiceImpl implements CertificateService {
     private final TagRepositoryImpl tagRepository;
     private final TagToCertificateRepositoryImpl tagToCertificateRepository;
     private final Translator translator;
+    private final CertificateValidator validator;
 
     @Override
     @Transactional
     public Certificate add(Certificate certificate) {
+        validator.validCertificate(certificate);
         certificate.setCreateDate(LocalDateTime.now());
         certificate.setLastUpdateDate(LocalDateTime.now());
         return certificateRepository.add(certificate);
@@ -57,10 +60,7 @@ public class CertificateServiceImpl implements CertificateService {
         List<Certificate> certificateList;
         certificateList = certificateRepository.queryForList(new CertificateFindAllSpecification());
         for (Certificate certificate : certificateList) {
-            certificate.setTags(tagRepository.queryForList(new TagFindByCertificateIdSpecification(certificate.getId()))
-                    .stream()
-                    .map(Tag::getName)
-                    .collect(Collectors.toList()));
+            certificate.setTags(tagRepository.queryForList(new TagFindByCertificateIdSpecification(certificate.getId())));
         }
         return certificateList;
     }
@@ -85,10 +85,7 @@ public class CertificateServiceImpl implements CertificateService {
         List<Certificate> certificateList = certificateRepository.queryForList(specification, options);
 
         for (Certificate certificate : certificateList) {
-            certificate.setTags(tagRepository.queryForList(new TagFindByCertificateIdSpecification(certificate.getId()))
-                    .stream()
-                    .map(Tag::getName)
-                    .collect(Collectors.toList()));
+            certificate.setTags(tagRepository.queryForList(new TagFindByCertificateIdSpecification(certificate.getId())));
         }
         return certificateList;
     }
@@ -98,25 +95,23 @@ public class CertificateServiceImpl implements CertificateService {
         Certificate certificate = certificateRepository.queryForOne(new CertificateFindByIdSpecification(id))
                 .orElseThrow(() -> new NoSuchEntityException(String.format(translator.toLocale("certificate.withIdNotFound"), id)
                         , CERTIFICATE_NOT_FOUND.getErrorCode()));
-        certificate.setTags(tagRepository.queryForList(new TagFindByCertificateIdSpecification(certificate.getId()))
-                .stream()
-                .map(Tag::getName)
-                .collect(Collectors.toList()));
+        certificate.setTags(tagRepository.queryForList(new TagFindByCertificateIdSpecification(certificate.getId())));
         return certificate;
     }
 
     @Override
-    public void delete(Long id) {
+    public boolean delete(Long id) {
         Certificate certificate = findById(id);
         if (certificate == null) {
             throw new NoSuchEntityException(String.format(translator.toLocale("certificate.withIdNotFound"), id)
                     , CERTIFICATE_NOT_FOUND.getErrorCode());
         }
-        certificateRepository.remove(certificate);
+        return certificateRepository.remove(certificate);
     }
 
     @Override
     public Certificate update(Certificate certificate) {
+        validator.validCertificate(certificate);
         certificate.setLastUpdateDate(LocalDateTime.now());
         return certificateRepository.update(certificate);
 
@@ -129,15 +124,9 @@ public class CertificateServiceImpl implements CertificateService {
         Certificate certificate = certificateRepository.queryForOne(specification)
                 .orElseThrow(() -> new NoSuchEntityException(String.format(translator.toLocale("certificate.withIdNotFound"), certificateId),
                         CERTIFICATE_NOT_FOUND.getErrorCode()));
-        tagsNames.stream().distinct()
-                .forEach(tagName ->
-                        tagRepository.queryForOne(new TagFindByNameSpecification(tagName)).orElseGet(() -> {
-                            Tag tag = new Tag();
-                            tag.setName(tagName);
-                            return tagRepository.add(tag);
-                        })
-                );
-        List<Tag> tags = tagRepository.queryForList(new TagFindByNamesSpecification(tagsNames));
+        certificate.setTags(tagRepository.queryForList(new TagFindByCertificateIdSpecification(certificate.getId())));
+        List<String> uniqueTags = getUniqueTags(certificate.getTags(), tagsNames);
+        List<Tag> tags = tagRepository.queryForList(new TagFindByNamesSpecification(uniqueTags));
         List<TagAndCertificate> tagCertificateList = tags
                 .stream()
                 .map(tag -> new TagAndCertificate(certificate.getId(), tag.getId()))
@@ -159,6 +148,26 @@ public class CertificateServiceImpl implements CertificateService {
                 .map(tag -> new TagAndCertificate(certificate.getId(), tag.getId()))
                 .collect(Collectors.toList());
         tagToCertificateRepository.removeAll(tagCertificateList);
+    }
+
+    private List<String> getUniqueTags(List<Tag> tags, List<String> tagNames) {
+        List<String> uniqueTags;
+        List<String> certificatesTag = tags
+                .stream()
+                .map(Tag::getName)
+                .collect(Collectors.toList());
+        uniqueTags = tagNames.stream()
+                .distinct()
+                .filter(name -> !certificatesTag.contains(name))
+                .collect(Collectors.toList());
+        uniqueTags.forEach(tagName ->
+                tagRepository.queryForOne(new TagFindByNameSpecification(tagName)).orElseGet(() -> {
+                    Tag tag = new Tag();
+                    tag.setName(tagName);
+                    return tagRepository.add(tag);
+                })
+        );
+        return uniqueTags;
     }
 
 }
