@@ -6,6 +6,10 @@ import org.springframework.stereotype.Component;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * Class responsible for mapping information about {@link Tag} from
+ * result set row to the {@link Tag}
+ */
 @Component
 public class TagMapper implements EntityMapper<Tag> {
 

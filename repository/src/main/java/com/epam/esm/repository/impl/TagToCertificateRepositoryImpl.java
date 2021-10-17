@@ -1,6 +1,7 @@
 package com.epam.esm.repository.impl;
 
 import com.epam.esm.entity.TagAndCertificate;
+import com.epam.esm.repository.BaseCrudRepository;
 import com.epam.esm.repository.CrudRepository;
 import com.epam.esm.repository.QueryOptions;
 import com.epam.esm.specification.SqlSpecification;
@@ -12,6 +13,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+/**
+ * Implementation of the {@link BaseCrudRepository}
+ *
+ * @author Nadzeya Zmushka
+ */
 @Repository
 @RequiredArgsConstructor
 public class TagToCertificateRepositoryImpl implements CrudRepository<TagAndCertificate> {
@@ -56,15 +62,13 @@ public class TagToCertificateRepositoryImpl implements CrudRepository<TagAndCert
 
     @Override
     public void addAll(List<TagAndCertificate> tagCertificateList) {
-//        tagCertificateList.forEach(this::add);
         jdbcTemplate.batchUpdate(CREATE_CERTIFICATE_TAG_SQL, tagCertificateList.stream()
-        .map(tc -> new Object[]{tc.getCertificateId(), tc.getTagId()})
+                .map(tc -> new Object[]{tc.getCertificateId(), tc.getTagId()})
                 .collect(Collectors.toList()));
     }
 
     @Override
     public void removeAll(List<TagAndCertificate> tagCertificateList) {
-//        tagCertificateList.forEach(this::remove);
         jdbcTemplate.batchUpdate(DELETE_CERTIFICATE_TAG_SQL, tagCertificateList.stream()
                 .map(tc -> new Object[]{tc.getCertificateId(), tc.getTagId()})
                 .collect(Collectors.toList()));

@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode (callSuper = true)
+@EqualsAndHashCode(callSuper = true)
 public class TagDTO extends BaseEntityDTO {
 
     private String name;

@@ -4,6 +4,11 @@ import lombok.Data;
 
 import java.util.Map;
 
+/**
+ * Class with options and ordering for query
+ *
+ * @author Nadzeya Zmushka
+ */
 @Data
 public class QueryOptions {
 

@@ -18,10 +18,6 @@ import java.util.List;
 @RequestMapping("/api/certificates")
 public interface CertificateController {
 
-//    @GetMapping
-//    @ResponseStatus(HttpStatus.OK)
-//    List<CertificateDTO> findAll();
-
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     CertificateDTO findOne(@PathVariable Long id);

@@ -28,7 +28,7 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public Tag add(Tag tag) {
-        tagValidator.validName(tag.getName());
+        tagValidator.validTag(tag);
         return tagRepository.add(tag);
     }
 
@@ -45,20 +45,20 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public void delete(Long id) {
+    public boolean delete(Long id) {
         Tag tag = findById(id);
         if (tag == null) {
             throw new NoSuchEntityException(String.format(translator.toLocale("tag.withIdNotFound"), id),
                     TAG_NOT_FOUND.getErrorCode());
         }
-        tagRepository.remove(tag);
+        return tagRepository.remove(tag);
     }
 
-//    @Override
-//    public Tag findByName(String name) {
-//        return tagRepository.queryForOne(new TagFindByNameSpecification(name))
-//                .orElseThrow(() -> new NoSuchEntityException(String.format(translator.toLocale("tag.withNameNotFound"), name),
-//                        TAG_NOT_FOUND.getErrorCode()));
-//    }
+    @Override
+    public Tag findByName(String name) {
+        return tagRepository.queryForOne(new TagFindByNameSpecification(name))
+                .orElseThrow(() -> new NoSuchEntityException(String.format(translator.toLocale("tag.withNameNotFound"), name),
+                        TAG_NOT_FOUND.getErrorCode()));
+    }
 
 }

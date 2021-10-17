@@ -13,6 +13,11 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 
+/**
+ * Implementation of the {@link BaseCrudRepository}
+ *
+ * @author Nadzeya Zmushka
+ */
 @Repository
 public class TagRepositoryImpl extends BaseCrudRepository<Tag> {
 
@@ -49,7 +54,7 @@ public class TagRepositoryImpl extends BaseCrudRepository<Tag> {
     @Override
     protected Object[] getParam(Tag entity) {
         return new Object[]{entity.getName(),
-        entity.getId()};
+                entity.getId()};
     }
 
     @Override

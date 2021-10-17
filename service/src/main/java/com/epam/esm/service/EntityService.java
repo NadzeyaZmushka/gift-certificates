@@ -12,6 +12,6 @@ public interface EntityService<T extends BaseEntity> {
 
     T findById(Long id);
 
-    void delete(Long id);
+    boolean delete(Long id);
 
 }

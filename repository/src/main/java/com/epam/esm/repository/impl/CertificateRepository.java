@@ -12,6 +12,11 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 
+/**
+ * Implementation of the {@link BaseCrudRepository}
+ *
+ * @author Nadzeya Zmushka
+ */
 @Repository
 public class CertificateRepository extends BaseCrudRepository<Certificate> {
 
@@ -40,24 +45,25 @@ public class CertificateRepository extends BaseCrudRepository<Certificate> {
 
     @Override
     protected String getUpdateSql() {
-       return UPDATE_CERTIFICATE_SQL;
+        return UPDATE_CERTIFICATE_SQL;
     }
 
     @Override
     protected Object[] getParam(Certificate entity) {
         return new Object[]{entity.getName(),
-        entity.getDescription(),
-        entity.getPrice(),
-        entity.getDuration(),
-        entity.getCreateDate(),
-        entity.getLastUpdateDate(),
-        entity.getId()};
+                entity.getDescription(),
+                entity.getPrice(),
+                entity.getDuration(),
+                entity.getCreateDate(),
+                entity.getLastUpdateDate(),
+                entity.getId()};
     }
 
     @Override
     protected String getTableName() {
         return "certificate";
     }
+
     @Override
     public void addAll(List<Certificate> tagCertificateList) {
         throw new UnsupportedOperationException();

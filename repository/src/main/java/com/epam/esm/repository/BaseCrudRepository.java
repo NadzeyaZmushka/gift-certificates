@@ -17,8 +17,15 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static java.util.Optional.*;
+import static java.util.Optional.empty;
+import static java.util.Optional.ofNullable;
 
+/**
+ * Implementation of the {@link CrudRepository} class uses JDBC to interact with database
+ *
+ * @param <T> entities which repository operates with
+ * @author Nadzeya Zmushka
+ */
 @RequiredArgsConstructor
 public abstract class BaseCrudRepository<T extends BaseEntity> implements CrudRepository<T> {
 
@@ -88,10 +95,28 @@ public abstract class BaseCrudRepository<T extends BaseEntity> implements CrudRe
         return jdbcTemplate.update(String.format(DELETE_SQL, getTableName()), entity.getId()) != 0;
     }
 
+    /**
+     * Build prepared statement for query
+     *
+     * @param connection connection
+     * @param entity     entity
+     * @return prepared statement
+     */
     protected abstract PreparedStatement prepareAddStatement(Connection connection, T entity) throws SQLException;
 
+    /**
+     * Gets sql query for update operation
+     *
+     * @return string sql
+     */
     protected abstract String getUpdateSql();
 
+    /**
+     * Gets parameters for query
+     *
+     * @param entity entity
+     * @return Object[] with parameters
+     */
     protected abstract Object[] getParam(T entity);
 
 }

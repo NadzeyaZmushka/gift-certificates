@@ -3,7 +3,6 @@ package com.epam.esm.specification.impl.certificate;
 import com.epam.esm.entity.Certificate;
 import com.epam.esm.specification.BaseSqlSpecification;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 

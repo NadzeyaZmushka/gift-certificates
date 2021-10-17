@@ -1,6 +1,5 @@
 package com.epam.esm.entity;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -23,7 +22,7 @@ public class Certificate extends BaseEntity {
     private Integer duration;
     private LocalDateTime createDate;
     private LocalDateTime lastUpdateDate;
-    private List<String> tags;
+    private List<Tag> tags;
 
     public Certificate(Long id, String name, String description
             , BigDecimal price, Integer duration
@@ -38,7 +37,7 @@ public class Certificate extends BaseEntity {
         this.tags = new ArrayList<>();
     }
 
-    public void addTags(String tag) {
+    public void addTags(Tag tag) {
         tags.add(tag);
     }
 

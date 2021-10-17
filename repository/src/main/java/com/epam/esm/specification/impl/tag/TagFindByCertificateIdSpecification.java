@@ -1,4 +1,5 @@
 package com.epam.esm.specification.impl.tag;
+
 import com.epam.esm.entity.Tag;
 import com.epam.esm.specification.BaseSqlSpecification;
 

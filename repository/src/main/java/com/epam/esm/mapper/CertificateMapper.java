@@ -6,6 +6,10 @@ import org.springframework.stereotype.Component;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * Class for mapping information about {@link Certificate} from
+ * result set row to the {@link Certificate}
+ */
 @Component
 public class CertificateMapper implements EntityMapper<Certificate> {
 

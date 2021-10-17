@@ -31,7 +31,7 @@ public class AndSpecification<T extends BaseEntity> extends BaseSqlSpecification
     @Override
     public Map<String, String> getJoinConditions() {
         Map<String, String> joins = new LinkedHashMap<>();
-        for (BaseSqlSpecification<T> specification: specifications){
+        for (BaseSqlSpecification<T> specification : specifications) {
             Optional.ofNullable(specification.getJoinConditions())
                     .ifPresent(cond -> cond.forEach(joins::put));
         }
