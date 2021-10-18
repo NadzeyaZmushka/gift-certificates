@@ -3,6 +3,12 @@ package com.epam.esm.specification.impl.tag;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.specification.BaseSqlSpecification;
 
+/**
+ * Implementation of the {@link BaseSqlSpecification}
+ * Specification for query a tag by its name in database
+ *
+ * @author Nadzeya Zmushka
+ */
 public class TagFindByNameSpecification extends BaseSqlSpecification<Tag> {
 
     private final String name;

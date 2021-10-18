@@ -15,6 +15,7 @@ import java.util.List;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
+@AllArgsConstructor
 public class Certificate extends BaseEntity {
 
     private String name;
@@ -38,9 +39,10 @@ public class Certificate extends BaseEntity {
         this.tags = new ArrayList<>();
     }
 
-    public Certificate(String name, String description, BigDecimal price,
-                       Integer duration, LocalDateTime createDate,
-                       LocalDateTime lastUpdateDate, List<Tag> tags) {
+    public Certificate(Long id, String name, String description, BigDecimal price,
+                       Integer duration, LocalDateTime createDate, LocalDateTime lastUpdateDate,
+                       List<Tag> tags) {
+        super(id);
         this.name = name;
         this.description = description;
         this.price = price;

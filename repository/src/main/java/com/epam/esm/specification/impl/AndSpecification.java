@@ -12,6 +12,13 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+/**
+ * Implementation of the {@link BaseSqlSpecification}
+ * Specification for query a collection of objects by multiple criteria in database
+ *
+ * @param <T> entities which repository operates with
+ * @author Nadzeya Zmushka
+ */
 public class AndSpecification<T extends BaseEntity> extends BaseSqlSpecification<T> {
 
     private final List<BaseSqlSpecification<T>> specifications;

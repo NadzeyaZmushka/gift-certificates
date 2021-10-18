@@ -7,6 +7,12 @@ import java.util.List;
 
 import static java.util.stream.Collectors.joining;
 
+/**
+ * Implementation of the {@link BaseSqlSpecification}
+ * Specification for query a collection of tags by multiple names in database
+ *
+ * @author Nadzeya Zmushka
+ */
 public class TagFindByNamesSpecification extends BaseSqlSpecification<Tag> {
 
     private final List<String> tagNames;

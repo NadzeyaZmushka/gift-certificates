@@ -1,11 +1,18 @@
 package com.epam.esm.specification.impl.certificate;
 
 import com.epam.esm.entity.Certificate;
+import com.epam.esm.repository.CrudRepository;
 import com.epam.esm.specification.BaseSqlSpecification;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * Implementation of the {@link BaseSqlSpecification}
+ * Specification for query a collection of certificates by tag name
+ *
+ * @author Nadzeya Zmushka
+ */
 public class CertificateByTagNameSpecification extends BaseSqlSpecification<Certificate> {
 
     private final String tagName;

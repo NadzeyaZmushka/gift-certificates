@@ -6,6 +6,12 @@ import com.epam.esm.specification.BaseSqlSpecification;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Implementation of the {@link BaseSqlSpecification}
+ * Specification for query a collection of tags by certificate id in database
+ *
+ * @author Nadzeya Zmushka
+ */
 public class TagFindByCertificateIdSpecification extends BaseSqlSpecification<Tag> {
     private final Long certificateId;
 

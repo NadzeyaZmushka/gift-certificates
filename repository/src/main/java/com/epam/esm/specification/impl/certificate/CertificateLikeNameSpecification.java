@@ -3,6 +3,12 @@ package com.epam.esm.specification.impl.certificate;
 import com.epam.esm.entity.Certificate;
 import com.epam.esm.specification.BaseSqlSpecification;
 
+/**
+ * Implementation of the {@link BaseSqlSpecification}
+ * Specification for query a certificate by part of its name
+ *
+ * @author Nadzeya Zmushka
+ */
 public class CertificateLikeNameSpecification extends BaseSqlSpecification<Certificate> {
 
     private final String partName;

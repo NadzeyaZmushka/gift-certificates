@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
  */
 @Repository
 @RequiredArgsConstructor
-public class TagToCertificateRepositoryImpl implements CrudRepository<TagAndCertificate> {
+public class TagToCertificateRepository implements CrudRepository<TagAndCertificate> {
 
     private static final String CREATE_CERTIFICATE_TAG_SQL = "INSERT INTO gifts.certificate_tag " +
             "(certificate_id, tag_id) VALUES (?, ?)";

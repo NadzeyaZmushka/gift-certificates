@@ -10,10 +10,20 @@ public abstract class BaseSqlSpecification<T extends BaseEntity> implements SqlS
 
     public abstract String getBaseStatement();
 
+    /**
+     * Return parts for join statement
+     *
+     * @return Map of join conditions
+     */
     public Map<String, String> getJoinConditions() {
         return null;
     }
 
+    /**
+     * Returns the where condition when the query will be made
+     *
+     * @return String condition
+     */
     public String getWhereCondition() {
         return null;
     }
