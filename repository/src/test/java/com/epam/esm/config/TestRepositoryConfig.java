@@ -17,13 +17,11 @@ import javax.sql.DataSource;
 public class TestRepositoryConfig {
 
     @Bean
-    @Profile("dev")
     public JdbcTemplate jdbcTemplate() {
         return new JdbcTemplate(testDataSource());
     }
 
     @Bean
-    @Profile("dev")
     public DataSource testDataSource() {
         return new EmbeddedDatabaseBuilder()
                 .setType(EmbeddedDatabaseType.H2)

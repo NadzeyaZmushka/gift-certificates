@@ -6,13 +6,13 @@ import com.epam.esm.entity.Tag;
 import com.epam.esm.repository.BaseCrudRepository;
 import com.epam.esm.specification.impl.certificate.CertificateFindAllSpecification;
 import com.epam.esm.specification.impl.certificate.CertificateFindByIdSpecification;
+import com.epam.esm.specification.impl.tag.TagFindByCertificateIdSpecification;
 import com.epam.esm.validator.CertificateValidator;
 import com.epam.esm.validator.TagValidator;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
@@ -23,12 +23,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -64,23 +61,34 @@ class CertificateServiceImplTest {
     }
 
     @Test
-    void testShouldReturnAllCertificates() {
-        List<Tag> tags = new ArrayList<>();
-        Certificate certificate = new Certificate(1L, "name", "description", new BigDecimal(100), 10,
-                LocalDateTime.now(), LocalDateTime.now());
-        certificate.setTags(tags);
-        List<Certificate> certificates = Collections.singletonList(certificate);
-        when(certificateRepository.queryForList(any(CertificateFindAllSpecification.class))).thenReturn(certificates);
+    void testFindAllWithoutResult() {
+        //given
+        when(certificateRepository.queryForList(any(CertificateFindAllSpecification.class))).thenReturn(Collections.emptyList());
+        //when
         List<Certificate> actual = certificateService.findAll();
-        assertEquals(certificates, actual);
+        //then
+        assertEquals(Collections.emptyList(), actual);
     }
 
     @Test
     void findAllByCriteria() {
     }
 
+    //???
     @Test
     void findById() {
+        when(certificateRepository.queryForOne(any(CertificateFindByIdSpecification.class))).thenReturn(
+                Optional.of(new Certificate(1L, "name",
+                        "description", new BigDecimal(100), 10,
+                        LocalDateTime.now(), LocalDateTime.now()))
+        );
+        when(tagRepository.queryForList(any(TagFindByCertificateIdSpecification.class))).thenReturn(new ArrayList<>());
+        Certificate certificate = new Certificate(1L, "name",
+                "description", new BigDecimal(100), 10,
+                LocalDateTime.now(), LocalDateTime.now());
+        certificate.setTags(new ArrayList<>());
+        Certificate actual = certificateService.findById(1L);
+        assertEquals(certificate, actual);
     }
 
 //    @Test
