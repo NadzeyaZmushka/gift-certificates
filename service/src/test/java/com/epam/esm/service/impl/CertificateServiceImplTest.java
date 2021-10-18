@@ -5,8 +5,6 @@ import com.epam.esm.entity.Certificate;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.repository.BaseCrudRepository;
 import com.epam.esm.specification.impl.certificate.CertificateFindAllSpecification;
-import com.epam.esm.specification.impl.certificate.CertificateFindByIdSpecification;
-import com.epam.esm.specification.impl.tag.TagFindByCertificateIdSpecification;
 import com.epam.esm.validator.CertificateValidator;
 import com.epam.esm.validator.TagValidator;
 import org.junit.jupiter.api.Test;
@@ -17,11 +15,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -70,47 +66,31 @@ class CertificateServiceImplTest {
         assertEquals(Collections.emptyList(), actual);
     }
 
-    @Test
-    void findAllByCriteria() {
-    }
-
-    //???
 //    @Test
-//    void findById() {
-//        when(certificateRepository.queryForOne(any(CertificateFindByIdSpecification.class))).thenReturn(
-//                Optional.of(new Certificate(1L, "name",
-//                        "description", new BigDecimal(100), 10,
-//                        LocalDateTime.now(), LocalDateTime.now()))
-//        );
-//        when(tagRepository.queryForList(any(TagFindByCertificateIdSpecification.class))).thenReturn(new ArrayList<>());
-//        Certificate certificate = new Certificate(1L, "name",
-//                "description", new BigDecimal(100), 10,
-//                LocalDateTime.now(), LocalDateTime.now());
-//        certificate.setTags(new ArrayList<>());
-//        Certificate actual = certificateService.findById(1L);
-//        assertEquals(certificate, actual);
-//    }
-
-//    @Test
-//    void delete() {
+//    void testShouldDeleteCertificate() {
+//        Certificate certificate = new Certificate();
 //        List<Tag> tags = new ArrayList<>();
-//        Certificate certificate = new Certificate(1L, "name", "description", new BigDecimal(100), 10,
-//                LocalDateTime.now(), LocalDateTime.now());
+//        when(tagRepository.queryForList(any(TagFindByCertificateIdSpecification.class)))
+//                .thenReturn(tags);
 //        certificate.setTags(tags);
-//        when(certificateRepository.remove(any(Certificate.class))).thenReturn(true);
+//        when(certificateRepository.queryForOne(any(CertificateFindByIdSpecification.class)))
+//                .thenReturn(Optional.of(certificate));
 //        certificateService.delete(1L);
 //        verify(certificateRepository, times(1)).remove(certificate);
 //    }
+//
+//    // ???
+//    @Test
+//    void findAllByCriteria() {
+//        Certificate certificate = new Certificate(1L, "name", "description", new BigDecimal(100),
+//                10, LocalDateTime.now(), LocalDateTime.now(),
+//                Arrays.asList(new Tag(1L, "tag"), new Tag(2L, "tag2")));
+//        List<Certificate> certificates = List.of(certificate);
+//        when(certificateRepository.queryForList(any(AndSpecification.class),any(QueryOptions.class))).thenReturn(certificates);
+//
+//        List<Certificate> actual = certificateService.findAllByCriteria("tag", "am", "name", "asc");
+//
+//        assertEquals(certificates, actual);
+//    }
 
-    @Test
-    void update() {
-    }
-
-    @Test
-    void addTagsToCertificate() {
-    }
-
-    @Test
-    void deleteTagFromCertificate() {
-    }
 }

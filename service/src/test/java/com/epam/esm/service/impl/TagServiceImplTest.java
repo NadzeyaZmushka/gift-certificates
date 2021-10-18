@@ -22,6 +22,8 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -71,12 +73,16 @@ class TagServiceImplTest {
         assertEquals(expectedTag, tag);
     }
 
-//    @Test
-//    void delete() {
-////        Tag tag = new Tag(1L, "tag");
-//        when(tagRepository.remove(any(Tag.class))).thenReturn(true);
-//        boolean actual = tagService.delete(1L);
-//    }
+    @Test
+    void delete() {
+        //given
+        Tag tag = new Tag(1L, "tag");
+        when(tagRepository.queryForOne(any(TagFindByIdSpecification.class))).thenReturn(Optional.of(tag));
+        //when
+        tagService.delete(1L);
+        //then
+        verify(tagRepository, times(1)).remove(tag);
+    }
 
     @Test
     void testShouldReturnTagWithSuchName() {
@@ -115,12 +121,5 @@ class TagServiceImplTest {
         assertEquals(tags, actual);
     }
 
-//    @Test
-//    void testShouldThrowExceptionWhenThereIsNoTagWithSuchId() {
-//        when(tagRepository.queryForOne(any(TagFindByIdSpecification.class))).thenReturn(Optional.empty());
-//
-//        assertThrows(NoSuchEntityException.class, () -> tagService.findById(anyLong()));
-//
-//    }
 
 }

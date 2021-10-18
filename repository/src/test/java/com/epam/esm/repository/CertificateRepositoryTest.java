@@ -5,7 +5,6 @@ import com.epam.esm.entity.Certificate;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.mapper.CertificateMapper;
 import com.epam.esm.specification.BaseSqlSpecification;
-import com.epam.esm.specification.SqlSpecification;
 import com.epam.esm.specification.impl.AndSpecification;
 import com.epam.esm.specification.impl.certificate.CertificateByTagNameSpecification;
 import com.epam.esm.specification.impl.certificate.CertificateFindAllSpecification;
