@@ -76,9 +76,9 @@ class TagRepositoryTest {
 
     @Test
     void testShouldReturnTagWithSuchName() {
-        Tag actual = tagRepository.queryForOne(new TagFindByNameSpecification("tag3")).orElse(null);
+        Tag actual = tagRepository.queryForOne(new TagFindByNameSpecification("tag6")).orElse(null);
 
-        assertEquals(tag3, actual);
+        assertEquals(tag6, actual);
     }
 
     @Test
@@ -112,4 +112,26 @@ class TagRepositoryTest {
         assertTrue(actual.isEmpty());
     }
 
+    @Test
+    void testShouldReturnEmptyOptionalWhenThereIsNoTagWithSuchId() {
+      Optional<Tag> tagOptional = tagRepository.queryForOne(new TagFindByIdSpecification(0L));
+
+      assertTrue(tagOptional.isEmpty());
+    }
+
+    @Test
+    void testShouldReturnEmptyOptionalWhenThereIsNoTagWithSuchName() {
+      Optional<Tag> tagOptional = tagRepository.queryForOne(new TagFindByNameSpecification("name"));
+
+      assertTrue(tagOptional.isEmpty());
+    }
+
+//    @Test
+//    void testShouldReturnUpdatedTag() {
+//        Tag tag = tagRepository.queryForOne(new TagFindByIdSpecification(3L)).get();
+//        tag.setName("new tag3");
+//        Tag updated = tagRepository.update(tag);
+//
+//        assertEquals("new tag3", updated.getName());
+//    }
 }

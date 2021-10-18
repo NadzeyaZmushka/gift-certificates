@@ -71,12 +71,12 @@ class TagServiceImplTest {
         assertEquals(expectedTag, tag);
     }
 
-    @Test
-    void delete() {
-//        Tag tag = new Tag(1L, "tag");
-        when(tagRepository.remove(any(Tag.class))).thenReturn(true);
-        boolean actual = tagService.delete(1L);
-    }
+//    @Test
+//    void delete() {
+////        Tag tag = new Tag(1L, "tag");
+//        when(tagRepository.remove(any(Tag.class))).thenReturn(true);
+//        boolean actual = tagService.delete(1L);
+//    }
 
     @Test
     void testShouldReturnTagWithSuchName() {

@@ -16,9 +16,10 @@ public class AndSpecification<T extends BaseEntity> extends BaseSqlSpecification
 
     private final List<BaseSqlSpecification<T>> specifications;
 
+    //todo do error message constants
     public AndSpecification(Collection<BaseSqlSpecification<T>> specifications) {
         if (specifications == null || specifications.size() <= 0) {
-            throw new IllegalArgumentException("");
+            throw new IllegalArgumentException("No criteria for searching");
         }
         this.specifications = new ArrayList<>(specifications);
     }
