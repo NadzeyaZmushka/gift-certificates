@@ -4,6 +4,7 @@ import com.epam.esm.entity.BaseEntity;
 import com.epam.esm.mapper.EntityMapper;
 import com.epam.esm.specification.SqlSpecification;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -12,6 +13,8 @@ import org.springframework.jdbc.support.KeyHolder;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -38,7 +41,11 @@ public abstract class BaseCrudRepository<T extends BaseEntity> implements CrudRe
 
     @Override
     public List<T> queryForList(SqlSpecification<T> specification) {
-        return jdbcTemplate.query(specification.toSql(), mapper, specification.getParameters());
+        try {
+            return jdbcTemplate.query(specification.toSql(), mapper, specification.getParameters());
+        } catch (EmptyResultDataAccessException e) {
+            return Collections.emptyList();
+        }
     }
 
     @Override

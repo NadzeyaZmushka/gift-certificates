@@ -1,46 +1,40 @@
 package com.epam.esm.config;
 
-import com.zaxxer.hikari.HikariConfig;
-import com.zaxxer.hikari.HikariDataSource;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 
 import javax.sql.DataSource;
 
 @Configuration
-@ComponentScan("com.epam.esm")
-public class DBConfiguration {
-
-    @Autowired
-    private Environment environment;
+@ComponentScan(basePackages = {"com.epam.esm.repository.impl", "com.epam.esm.mapper"})
+public class TestRepositoryConfig {
 
     @Bean
-    public JdbcTemplate getTemplate() {
-        return new JdbcTemplate(getDatasource());
-    }
-
-    @Bean
-    @Profile("prod")
-    public HikariDataSource getDatasource() {
-        HikariConfig config = new HikariConfig("/db.properties");
-        return new HikariDataSource(config);
+    @Profile("dev")
+    public JdbcTemplate jdbcTemplate() {
+        return new JdbcTemplate(testDataSource());
     }
 
     @Bean
     @Profile("dev")
-    public DataSource embeddedDatasource() {
+    public DataSource testDataSource() {
         return new EmbeddedDatabaseBuilder()
                 .setType(EmbeddedDatabaseType.H2)
                 .addScript("/create_db.sql")
                 .build();
     }
 
-
+//    @Bean
+//    public DataSourceTransactionManager transactionManager() {
+//        DataSourceTransactionManager transactionManager = new DataSourceTransactionManager();
+//        transactionManager.setDataSource(testDataSource());
+//        return transactionManager;
+//    }
 }

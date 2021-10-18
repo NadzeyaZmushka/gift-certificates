@@ -35,40 +35,40 @@ create table if not exists certificate_tag
 create unique index if not exists certificate_tag_tag_id_certificate_id_uindex
     on certificate_tag (tag_id, certificate_id);
 
--- insert into certificate (name, description, price, duration, create_date, last_update_date)
--- values ('certificate1', 'description1', 100.55, 10, '2021-10-10 12:00:00', '2021-10-10 12:30:00');
--- insert into certificate (name, description, price, duration, create_date, last_update_date)
--- values ('certificate2', 'description2', 100.55, 20, '2021-10-10 16:00:00', '2021-10-11 12:30:00');
--- insert into certificate (name, description, price, duration, create_date, last_update_date)
--- values ('certificate3', 'description3', 200.55, 30, '2021-10-10 10:00:00', '2021-10-10 11:30:00');
--- insert into certificate (name, description, price, duration, create_date, last_update_date)
--- values ('certificate4', 'description4', 150.55, 15, '2021-10-11 12:00:00', '2021-10-13 12:30:00');
--- insert into certificate (name, description, price, duration, create_date, last_update_date)
--- values ('certificate5', 'description5', 250.55, 10, '2021-10-15 18:00:00', '2021-10-16 12:30:00');
---
--- insert into tag (name)
--- values ('tag1');
--- insert into tag (name)
--- values ('tag2');
--- insert into tag (name)
--- values ('tag3');
--- insert into tag (name)
--- values ('tag4');
--- insert into tag (name)
--- values ('tag5');
--- insert into tag (name)
--- values ('tag6');
--- insert into tag (name)
--- values ('tag7');
--- insert into tag (name)
--- values ('tag8');
--- insert into tag (name)
--- values ('tag9');
--- insert into tag (name)
--- values ('tag10');
--- insert into tag (name)
--- values ('tag11');
---
+insert into certificate (name, description, price, duration, create_date, last_update_date)
+values ('certificate1', 'description1', 100.55, 10, '2021-10-10 12:00:00', '2021-10-10 12:30:00');
+insert into certificate (name, description, price, duration, create_date, last_update_date)
+values ('certificate2', 'description2', 100.55, 20, '2021-10-10 16:00:00', '2021-10-11 12:30:00');
+insert into certificate (name, description, price, duration, create_date, last_update_date)
+values ('certificate3', 'description3', 200.55, 30, '2021-10-10 10:00:00', '2021-10-10 11:30:00');
+insert into certificate (name, description, price, duration, create_date, last_update_date)
+values ('certificate4', 'description4', 150.55, 15, '2021-10-11 12:00:00', '2021-10-13 12:30:00');
+insert into certificate (name, description, price, duration, create_date, last_update_date)
+values ('certificate5', 'description5', 250.55, 10, '2021-10-15 18:00:00', '2021-10-16 12:30:00');
+
+insert into tag (name)
+values ('tag1');
+insert into tag (name)
+values ('tag2');
+insert into tag (name)
+values ('tag3');
+insert into tag (name)
+values ('tag4');
+insert into tag (name)
+values ('tag5');
+insert into tag (name)
+values ('tag6');
+insert into tag (name)
+values ('tag7');
+insert into tag (name)
+values ('tag8');
+insert into tag (name)
+values ('tag9');
+insert into tag (name)
+values ('tag10');
+insert into tag (name)
+values ('tag11');
+
 -- insert into certificate_tag (tag_id, certificate_id)
 -- values (1, 2);
 -- insert into certificate_tag (tag_id, certificate_id)
@@ -91,4 +91,4 @@ create unique index if not exists certificate_tag_tag_id_certificate_id_uindex
 -- values (4, 11);
 -- insert into certificate_tag (tag_id, certificate_id)
 -- values (5, 2);
---
+

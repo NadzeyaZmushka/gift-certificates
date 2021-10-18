@@ -19,13 +19,13 @@ import java.util.List;
  * @author Nadzeya Zmushka
  */
 @Repository
-public class TagRepositoryImpl extends BaseCrudRepository<Tag> {
+public class TagRepository extends BaseCrudRepository<Tag> {
 
     private static final String ADD_TAG_SQL = "INSERT INTO gifts.tag (name) VALUES (?)";
     private static final String UPDATE_TAG_SQL = "UPDATE gifts.tag SET name = ? WHERE id = ?";
 
     @Autowired
-    public TagRepositoryImpl(JdbcTemplate jdbcTemplate, EntityMapper<Tag> mapper) {
+    public TagRepository(JdbcTemplate jdbcTemplate, EntityMapper<Tag> mapper) {
         super(jdbcTemplate, mapper);
     }
 

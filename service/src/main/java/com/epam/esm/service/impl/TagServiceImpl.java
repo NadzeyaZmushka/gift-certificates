@@ -3,11 +3,14 @@ package com.epam.esm.service.impl;
 import com.epam.esm.config.Translator;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.exception.NoSuchEntityException;
-import com.epam.esm.repository.impl.TagRepositoryImpl;
+import com.epam.esm.repository.BaseCrudRepository;
+import com.epam.esm.repository.impl.TagRepository;
 import com.epam.esm.service.TagService;
 import com.epam.esm.specification.impl.tag.TagFindAllSpecification;
+import com.epam.esm.specification.impl.tag.TagFindByCertificateIdSpecification;
 import com.epam.esm.specification.impl.tag.TagFindByIdSpecification;
 import com.epam.esm.specification.impl.tag.TagFindByNameSpecification;
+import com.epam.esm.specification.impl.tag.TagFindByNamesSpecification;
 import com.epam.esm.validator.TagValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +25,7 @@ import static com.epam.esm.exception.CustomErrorCode.TAG_NOT_FOUND;
 @RequiredArgsConstructor
 public class TagServiceImpl implements TagService {
 
-    private final TagRepositoryImpl tagRepository;
+    private final BaseCrudRepository<Tag> tagRepository;
     private final TagValidator tagValidator;
     private final Translator translator;
 
@@ -61,4 +64,22 @@ public class TagServiceImpl implements TagService {
                         TAG_NOT_FOUND.getErrorCode()));
     }
 
+    @Override
+    public Tag findByNameOrCreate(String name) {
+        return tagRepository.queryForOne(new TagFindByNameSpecification(name)).orElseGet(() -> {
+            Tag tag = new Tag();
+            tag.setName(name);
+            return add(tag);
+        });
+    }
+
+    @Override
+    public List<Tag> findByCertificateId(Long certificateId) {
+        return tagRepository.queryForList(new TagFindByCertificateIdSpecification(certificateId));
+    }
+
+    @Override
+    public List<Tag> findByNames(List<String> names) {
+        return tagRepository.queryForList(new TagFindByNamesSpecification(names));
+    }
 }

@@ -1,53 +1,126 @@
 package com.epam.esm.service.impl;
 
-import com.epam.esm.repository.impl.TagRepositoryImpl;
-import org.junit.jupiter.api.BeforeEach;
+import com.epam.esm.config.Translator;
+import com.epam.esm.entity.Tag;
+import com.epam.esm.repository.BaseCrudRepository;
+import com.epam.esm.specification.impl.tag.TagFindAllSpecification;
+import com.epam.esm.specification.impl.tag.TagFindByCertificateIdSpecification;
+import com.epam.esm.specification.impl.tag.TagFindByIdSpecification;
+import com.epam.esm.specification.impl.tag.TagFindByNameSpecification;
+import com.epam.esm.specification.impl.tag.TagFindByNamesSpecification;
+import com.epam.esm.validator.TagValidator;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 class TagServiceImplTest {
 
     @Mock
-    private TagRepositoryImpl tagRepository;
+    private BaseCrudRepository<Tag> tagRepository;
+    @Mock
+    private TagValidator tagValidator;
+    @Mock
+    private Translator translator;
     @InjectMocks
     private TagServiceImpl tagService;
-//    private List<Tag> testTags;
-//    private Tag testTag;
 
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.initMocks(this);
+    @Test
+    void testShouldAddTag() {
+        //given
+        Tag tag = new Tag("tag");
+        when(tagRepository.add(tag)).thenReturn(new Tag(1L, "tag"));
+        //when
+        Tag actual = tagService.add(tag);
+        //then
+        assertEquals(tag.getName(), actual.getName());
+        assertNotNull(actual.getId());
     }
 
     @Test
-    void add() {
-//        Tag tag = new Tag("Test tag");
-//        when(tagRepository.add(tag)).thenReturn(tag);
-//
-//        tagService.add(mapper.toDTO(tag));
-//
-//        verify(tagRepository, times(1)).add(tag);
+    void testShouldReturnAllTags() {
+        //given
+        List<Tag> tags = Arrays.asList(new Tag(1L, "tag"), new Tag());
+        when(tagRepository.queryForList(any(TagFindAllSpecification.class))).thenReturn(tags);
+        //when
+        List<Tag> actual = tagService.findAll();
+        //then
+        assertEquals(tags.size(), actual.size());
+        assertEquals(tags, actual);
     }
 
     @Test
-    void findAll() {
-    }
-
-    @Test
-    void findById() {
+    void testShouldReturnTagWithSuchId() {
+        //given
+        Tag tag = new Tag(1L, "tag");
+        when(tagRepository.queryForOne(any(TagFindByIdSpecification.class))).thenReturn(Optional.of(tag));
+        //when
+        Tag expectedTag = tagService.findById(1L);
+        //then
+        assertEquals(expectedTag, tag);
     }
 
     @Test
     void delete() {
+//        Tag tag = new Tag(1L, "tag");
+        when(tagRepository.remove(any(Tag.class))).thenReturn(true);
+        boolean actual = tagService.delete(1L);
     }
 
     @Test
-    void findByName() {
+    void testShouldReturnTagWithSuchName() {
+        //given
+        Tag tag = new Tag(1L, "tag");
+        when(tagRepository.queryForOne(any(TagFindByNameSpecification.class))).thenReturn(Optional.of(tag));
+        //when
+        Tag actual = tagService.findByName("tag");
+        //then
+        assertEquals(tag, actual);
+
     }
+
+    @Test
+    void testShouldReturnListOfTagsByCertificateId() {
+        //given
+        List<Tag> tags = Arrays.asList(new Tag(1L, "tag"), new Tag());
+        when(tagRepository.queryForList(any(TagFindByCertificateIdSpecification.class))).thenReturn(tags);
+        //when
+        List<Tag> actual = tagService.findByCertificateId(1L);
+        //then
+        assertEquals(tags.size(), actual.size());
+        assertEquals(tags, actual);
+    }
+
+    @Test
+    void testShouldReturnListOfTagsWithNames() {
+        //given
+        List<Tag> tags = Arrays.asList(new Tag("name"), new Tag("name2"));
+        when(tagRepository.queryForList(any(TagFindByNamesSpecification.class))).thenReturn(tags);
+        //when
+        List<String> names = Arrays.asList("name", "name2");
+        List<Tag> actual = tagService.findByNames(names);
+        //then
+        assertEquals(tags.size(), actual.size());
+        assertEquals(tags, actual);
+    }
+
+//    @Test
+//    void testShouldThrowExceptionWhenThereIsNoTagWithSuchId() {
+//        when(tagRepository.queryForOne(any(TagFindByIdSpecification.class))).thenReturn(Optional.empty());
+//
+//        assertThrows(NoSuchEntityException.class, () -> tagService.findById(anyLong()));
+//
+//    }
+
 }

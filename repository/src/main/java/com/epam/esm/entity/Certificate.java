@@ -1,5 +1,6 @@
 package com.epam.esm.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -35,6 +36,18 @@ public class Certificate extends BaseEntity {
         this.createDate = createDate;
         this.lastUpdateDate = lastUpdateDate;
         this.tags = new ArrayList<>();
+    }
+
+    public Certificate(String name, String description, BigDecimal price,
+                       Integer duration, LocalDateTime createDate,
+                       LocalDateTime lastUpdateDate, List<Tag> tags) {
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.duration = duration;
+        this.createDate = createDate;
+        this.lastUpdateDate = lastUpdateDate;
+        this.tags = tags;
     }
 
     public void addTags(Tag tag) {
