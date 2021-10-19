@@ -19,4 +19,5 @@ public class Tag extends BaseEntity {
         super(id);
         this.name = name;
     }
+
 }

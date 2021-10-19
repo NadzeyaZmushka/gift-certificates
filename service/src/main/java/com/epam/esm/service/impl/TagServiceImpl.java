@@ -18,7 +18,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 import static com.epam.esm.exception.CustomErrorCode.TAG_NOT_FOUND;
-import static com.epam.esm.exception.ErrorMessageCodeConstant.*;
+import static com.epam.esm.exception.ErrorMessageCodeConstant.TAG_WITH_ID_NOT_FOUND;
+import static com.epam.esm.exception.ErrorMessageCodeConstant.TAG_WITH_NAME_NOT_FOUND;
 
 @Slf4j
 @Service

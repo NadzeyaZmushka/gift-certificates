@@ -96,4 +96,5 @@ public class CertificateRepositoryTest {
 
         assertEquals("update", updated.getName());
     }
+
 }

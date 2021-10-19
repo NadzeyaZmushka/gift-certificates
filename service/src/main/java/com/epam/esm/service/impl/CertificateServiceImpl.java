@@ -31,7 +31,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.epam.esm.exception.CustomErrorCode.CERTIFICATE_NOT_FOUND;
-import static com.epam.esm.exception.ErrorMessageCodeConstant.*;
+import static com.epam.esm.exception.ErrorMessageCodeConstant.CERTIFICATE_WITH_ID_NOT_FOUND;
 
 @Slf4j
 @Service
@@ -131,7 +131,6 @@ public class CertificateServiceImpl implements CertificateService {
         tagToCertificateRepository.addAll(tagCertificateList);
     }
 
-    //todo translator в exception
     @Override
     @Transactional
     public void deleteTagFromCertificate(Long certificateId, List<String> tagsNames) {

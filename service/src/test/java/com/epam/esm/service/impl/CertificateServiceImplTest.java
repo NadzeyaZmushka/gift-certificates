@@ -66,31 +66,4 @@ class CertificateServiceImplTest {
         assertEquals(Collections.emptyList(), actual);
     }
 
-//    @Test
-//    void testShouldDeleteCertificate() {
-//        Certificate certificate = new Certificate();
-//        List<Tag> tags = new ArrayList<>();
-//        when(tagRepository.queryForList(any(TagFindByCertificateIdSpecification.class)))
-//                .thenReturn(tags);
-//        certificate.setTags(tags);
-//        when(certificateRepository.queryForOne(any(CertificateFindByIdSpecification.class)))
-//                .thenReturn(Optional.of(certificate));
-//        certificateService.delete(1L);
-//        verify(certificateRepository, times(1)).remove(certificate);
-//    }
-//
-//    // ???
-//    @Test
-//    void findAllByCriteria() {
-//        Certificate certificate = new Certificate(1L, "name", "description", new BigDecimal(100),
-//                10, LocalDateTime.now(), LocalDateTime.now(),
-//                Arrays.asList(new Tag(1L, "tag"), new Tag(2L, "tag2")));
-//        List<Certificate> certificates = List.of(certificate);
-//        when(certificateRepository.queryForList(any(AndSpecification.class),any(QueryOptions.class))).thenReturn(certificates);
-//
-//        List<Certificate> actual = certificateService.findAllByCriteria("tag", "am", "name", "asc");
-//
-//        assertEquals(certificates, actual);
-//    }
-
 }

@@ -8,9 +8,7 @@ import com.epam.esm.specification.impl.tag.TagFindByCertificateIdSpecification;
 import com.epam.esm.specification.impl.tag.TagFindByIdSpecification;
 import com.epam.esm.specification.impl.tag.TagFindByNameSpecification;
 import com.epam.esm.specification.impl.tag.TagFindByNamesSpecification;
-import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -28,7 +26,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @ContextConfiguration(classes = TestRepositoryConfig.class)
 class TagRepositoryTest {
 
-    //    private static final Tag tag1 = new Tag(1L, "tag1");
     private static final Tag tag2 = new Tag(2L, "tag2");
     private static final Tag tag3 = new Tag(3L, "tag3");
     private static final Tag tag4 = new Tag(4L, "tag4");
@@ -114,24 +111,16 @@ class TagRepositoryTest {
 
     @Test
     void testShouldReturnEmptyOptionalWhenThereIsNoTagWithSuchId() {
-      Optional<Tag> tagOptional = tagRepository.queryForOne(new TagFindByIdSpecification(0L));
+        Optional<Tag> tagOptional = tagRepository.queryForOne(new TagFindByIdSpecification(0L));
 
-      assertTrue(tagOptional.isEmpty());
+        assertTrue(tagOptional.isEmpty());
     }
 
     @Test
     void testShouldReturnEmptyOptionalWhenThereIsNoTagWithSuchName() {
-      Optional<Tag> tagOptional = tagRepository.queryForOne(new TagFindByNameSpecification("name"));
+        Optional<Tag> tagOptional = tagRepository.queryForOne(new TagFindByNameSpecification("name"));
 
-      assertTrue(tagOptional.isEmpty());
+        assertTrue(tagOptional.isEmpty());
     }
 
-//    @Test
-//    void testShouldReturnUpdatedTag() {
-//        Tag tag = tagRepository.queryForOne(new TagFindByIdSpecification(3L)).get();
-//        tag.setName("new tag3");
-//        Tag updated = tagRepository.update(tag);
-//
-//        assertEquals("new tag3", updated.getName());
-//    }
 }

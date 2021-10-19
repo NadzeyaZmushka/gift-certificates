@@ -16,8 +16,12 @@ public class TagValidator {
     private final Translator translator;
 
     public void validTag(Tag tag) {
-        if (StringUtils.isBlank(tag.getName()) && tag.getName().length() > 50) {
+        if (StringUtils.isBlank(tag.getName())) {
             throw new IncorrectDataException(translator.toLocale(ErrorMessageCodeConstant.TAG_INCORRECT_NAME),
+                    CustomErrorCode.TAG_INCORRECT_DATA.getErrorCode());
+        }
+        if (tag.getName().length() > 50) {
+            throw new IncorrectDataException(translator.toLocale(ErrorMessageCodeConstant.TAG_INCORRECT_NAME_LENGTH),
                     CustomErrorCode.TAG_INCORRECT_DATA.getErrorCode());
         }
     }

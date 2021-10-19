@@ -9,7 +9,6 @@ import com.epam.esm.specification.impl.tag.TagFindByIdSpecification;
 import com.epam.esm.specification.impl.tag.TagFindByNameSpecification;
 import com.epam.esm.specification.impl.tag.TagFindByNamesSpecification;
 import com.epam.esm.validator.TagValidator;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -28,7 +27,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-@DisplayName("Test tag service") //?
 class TagServiceImplTest {
 
     @Mock
@@ -122,6 +120,5 @@ class TagServiceImplTest {
         assertEquals(tags.size(), actual.size());
         assertEquals(tags, actual);
     }
-
 
 }

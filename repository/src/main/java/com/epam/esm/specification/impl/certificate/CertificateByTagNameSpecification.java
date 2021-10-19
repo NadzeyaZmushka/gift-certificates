@@ -1,7 +1,6 @@
 package com.epam.esm.specification.impl.certificate;
 
 import com.epam.esm.entity.Certificate;
-import com.epam.esm.repository.CrudRepository;
 import com.epam.esm.specification.BaseSqlSpecification;
 
 import java.util.LinkedHashMap;

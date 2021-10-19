@@ -23,14 +23,8 @@ create table if not exists gifts.tag
 
 create table if not exists gifts.certificate_tag
 (
-    tag_id         bigint not null
-        constraint certificate_tag_tag_id_fk
-            references gifts.tag
-            on update cascade on delete cascade,
+    tag_id         bigint not null,
     certificate_id bigint not null
-        constraint certificate_tag_certificate_id_fk
-            references gifts.certificate
-            on update cascade on delete cascade
 );
 
 create unique index if not exists certificate_tag_tag_id_certificate_id_uindex
@@ -42,6 +36,10 @@ insert into gifts.certificate(name, description, price, duration, create_date, l
 values ('certificate2', 'description2', 100.55, 20, '2021-10-10 16:00:00', '2021-10-11 12:30:00');
 insert into gifts.certificate (name, description, price, duration, create_date, last_update_date)
 values ('certificate3', 'description3', 200.55, 30, '2021-10-10 10:00:00', '2021-10-10 11:30:00');
+insert into gifts.certificate (name, description, price, duration, create_date, last_update_date)
+values ('certificate4', 'description4', 150.55, 15, '2021-10-11 12:00:00', '2021-10-13 12:30:00');
+insert into gifts.certificate (name, description, price, duration, create_date, last_update_date)
+values ('certificate5', 'description5', 250.55, 10, '2021-10-15 18:00:00', '2021-10-16 12:30:00');
 
 insert into gifts.tag (name)
 values ('tag1');
@@ -58,27 +56,26 @@ values ('tag6');
 insert into gifts.tag (name)
 values ('tag7');
 
-
--- insert into gifts.certificate_tag (tag_id, certificate_id)
--- values (1, 2);
--- insert into gifts.certificate_tag (tag_id, certificate_id)
--- values (1, 3);
--- insert into gifts.certificate_tag (tag_id, certificate_id)
--- values (1, 4);
--- insert into gifts.certificate_tag (tag_id, certificate_id)
--- values (2, 5);
--- insert into gifts.certificate_tag (tag_id, certificate_id)
--- values (2, 6);
--- insert into gifts.certificate_tag (tag_id, certificate_id)
--- values (2, 7);
--- insert into gifts.certificate_tag (tag_id, certificate_id)
--- values (3, 8);
--- insert into gifts.certificate_tag (tag_id, certificate_id)
--- values (3, 9);
--- insert into gifts.certificate_tag (tag_id, certificate_id)
--- values (3, 10);
--- insert into gifts.certificate_tag (tag_id, certificate_id)
--- values (4, 11);
--- insert into gifts.certificate_tag (tag_id, certificate_id)
--- values (5, 2);
+insert into gifts.certificate_tag (tag_id, certificate_id)
+values (7, 1);
+insert into gifts.certificate_tag (tag_id, certificate_id)
+values (4, 1);
+insert into gifts.certificate_tag (tag_id, certificate_id)
+values (5, 2);
+insert into gifts.certificate_tag (tag_id, certificate_id)
+values (4, 2);
+insert into gifts.certificate_tag (tag_id, certificate_id)
+values (7, 2);
+insert into gifts.certificate_tag (tag_id, certificate_id)
+values (2, 3);
+insert into gifts.certificate_tag (tag_id, certificate_id)
+values (6, 3);
+insert into gifts.certificate_tag (tag_id, certificate_id)
+values (3, 3);
+insert into gifts.certificate_tag (tag_id, certificate_id)
+values (3, 4);
+insert into gifts.certificate_tag (tag_id, certificate_id)
+values (2, 5);
+insert into gifts.certificate_tag (tag_id, certificate_id)
+values (4, 5);
 
