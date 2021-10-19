@@ -21,12 +21,13 @@ import java.util.stream.Collectors;
  */
 public class AndSpecification<T extends BaseEntity> extends BaseSqlSpecification<T> {
 
+    private static final String NO_CRITERIA = "No criteria for searching";
     private final List<BaseSqlSpecification<T>> specifications;
 
     //todo do error message constants
     public AndSpecification(Collection<BaseSqlSpecification<T>> specifications) {
         if (specifications == null || specifications.size() <= 0) {
-            throw new IllegalArgumentException("No criteria for searching");
+            throw new IllegalArgumentException(NO_CRITERIA);
         }
         this.specifications = new ArrayList<>(specifications);
     }

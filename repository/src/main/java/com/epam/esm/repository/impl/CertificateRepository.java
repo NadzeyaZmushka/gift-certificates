@@ -20,12 +20,15 @@ import java.util.List;
 @Repository
 public class CertificateRepository extends BaseCrudRepository<Certificate> {
 
+
     private static final String ADD_CERTIFICATE_SQL = "INSERT INTO gifts.certificate (name, description, price" +
             ", duration, create_date, last_update_date) " +
             "VALUES (?, ?, ?, ?, ?, ?)";
     private static final String UPDATE_CERTIFICATE_SQL = "UPDATE gifts.certificate SET name = ?" +
             ", description = ?, price = ?, duration = ?" +
             ", create_date = ?, last_update_date = ? WHERE id = ?";
+
+    private static final String NOT_SUPPORTED = "This operation is not supported";
 
     public CertificateRepository(JdbcTemplate jdbcTemplate, EntityMapper<Certificate> mapper) {
         super(jdbcTemplate, mapper);
@@ -66,12 +69,12 @@ public class CertificateRepository extends BaseCrudRepository<Certificate> {
 
     @Override
     public void addAll(List<Certificate> tagCertificateList) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException(NOT_SUPPORTED);
     }
 
     @Override
     public void removeAll(List<Certificate> tagCertificateList) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException(NOT_SUPPORTED);
     }
 
 }

@@ -24,6 +24,8 @@ public class TagRepository extends BaseCrudRepository<Tag> {
     private static final String ADD_TAG_SQL = "INSERT INTO gifts.tag (name) VALUES (?)";
     private static final String UPDATE_TAG_SQL = "UPDATE gifts.tag SET name = ? WHERE id = ?";
 
+    private static final String NOT_SUPPORTED = "This operation is not supported";
+
     @Autowired
     public TagRepository(JdbcTemplate jdbcTemplate, EntityMapper<Tag> mapper) {
         super(jdbcTemplate, mapper);
@@ -31,12 +33,12 @@ public class TagRepository extends BaseCrudRepository<Tag> {
 
     @Override
     public void addAll(List<Tag> tagCertificateList) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException(NOT_SUPPORTED);
     }
 
     @Override
     public void removeAll(List<Tag> tagCertificateList) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException(NOT_SUPPORTED);
     }
 
     @Override

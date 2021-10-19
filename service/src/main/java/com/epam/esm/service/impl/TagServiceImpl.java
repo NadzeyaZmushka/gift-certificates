@@ -4,7 +4,6 @@ import com.epam.esm.config.Translator;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.exception.NoSuchEntityException;
 import com.epam.esm.repository.BaseCrudRepository;
-import com.epam.esm.repository.impl.TagRepository;
 import com.epam.esm.service.TagService;
 import com.epam.esm.specification.impl.tag.TagFindAllSpecification;
 import com.epam.esm.specification.impl.tag.TagFindByCertificateIdSpecification;
@@ -19,6 +18,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 import static com.epam.esm.exception.CustomErrorCode.TAG_NOT_FOUND;
+import static com.epam.esm.exception.ErrorMessageCodeConstant.*;
 
 @Slf4j
 @Service
@@ -43,7 +43,7 @@ public class TagServiceImpl implements TagService {
     @Override
     public Tag findById(Long id) {
         return tagRepository.queryForOne(new TagFindByIdSpecification(id))
-                .orElseThrow(() -> new NoSuchEntityException(String.format(translator.toLocale("tag.withIdNotFound"), id),
+                .orElseThrow(() -> new NoSuchEntityException(String.format(translator.toLocale(TAG_WITH_ID_NOT_FOUND), id),
                         TAG_NOT_FOUND.getErrorCode()));
     }
 
@@ -51,7 +51,7 @@ public class TagServiceImpl implements TagService {
     public boolean delete(Long id) {
         Tag tag = findById(id);
         if (tag == null) {
-            throw new NoSuchEntityException(String.format(translator.toLocale("tag.withIdNotFound"), id),
+            throw new NoSuchEntityException(String.format(translator.toLocale(TAG_WITH_ID_NOT_FOUND), id),
                     TAG_NOT_FOUND.getErrorCode());
         }
         return tagRepository.remove(tag);
@@ -60,7 +60,7 @@ public class TagServiceImpl implements TagService {
     @Override
     public Tag findByName(String name) {
         return tagRepository.queryForOne(new TagFindByNameSpecification(name))
-                .orElseThrow(() -> new NoSuchEntityException(String.format(translator.toLocale("tag.withNameNotFound"), name),
+                .orElseThrow(() -> new NoSuchEntityException(String.format(translator.toLocale(TAG_WITH_NAME_NOT_FOUND), name),
                         TAG_NOT_FOUND.getErrorCode()));
     }
 

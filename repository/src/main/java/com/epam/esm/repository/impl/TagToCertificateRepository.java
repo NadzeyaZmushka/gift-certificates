@@ -27,21 +27,23 @@ public class TagToCertificateRepository implements CrudRepository<TagAndCertific
     private static final String DELETE_CERTIFICATE_TAG_SQL = "DELETE FROM gifts.certificate_tag " +
             "WHERE certificate_id = ? AND tag_id = ?";
 
+    private static final String NOT_SUPPORTED = "This operation is not supported";
+
     private final JdbcTemplate jdbcTemplate;
 
     @Override
     public List<TagAndCertificate> queryForList(SqlSpecification<TagAndCertificate> specification) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException(NOT_SUPPORTED);
     }
 
     @Override
     public List<TagAndCertificate> queryForList(SqlSpecification<TagAndCertificate> specification, QueryOptions options) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException(NOT_SUPPORTED);
     }
 
     @Override
     public Optional<TagAndCertificate> queryForOne(SqlSpecification<TagAndCertificate> specification) {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException(NOT_SUPPORTED);
     }
 
     @Override

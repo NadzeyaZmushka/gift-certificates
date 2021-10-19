@@ -6,7 +6,6 @@ dependencies {
     implementation group: 'org.springframework', name: 'spring-jdbc', version: springVersion
 
     testImplementation group: 'com.h2database', name: 'h2', version: '1.4.200'
-    testImplementation group: 'org.springframework', name: 'spring-test', version: '5.3.10'
 }
 test {
     useJUnitPlatform()

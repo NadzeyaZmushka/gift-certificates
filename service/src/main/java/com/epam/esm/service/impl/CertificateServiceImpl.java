@@ -8,7 +8,6 @@ import com.epam.esm.exception.NoSuchEntityException;
 import com.epam.esm.repository.BaseCrudRepository;
 import com.epam.esm.repository.CrudRepository;
 import com.epam.esm.repository.QueryOptions;
-import com.epam.esm.repository.impl.CertificateRepository;
 import com.epam.esm.service.CertificateService;
 import com.epam.esm.service.TagService;
 import com.epam.esm.specification.BaseSqlSpecification;
@@ -17,8 +16,6 @@ import com.epam.esm.specification.impl.certificate.CertificateByTagNameSpecifica
 import com.epam.esm.specification.impl.certificate.CertificateFindAllSpecification;
 import com.epam.esm.specification.impl.certificate.CertificateFindByIdSpecification;
 import com.epam.esm.specification.impl.certificate.CertificateLikeNameSpecification;
-import com.epam.esm.specification.impl.tag.TagFindByCertificateIdSpecification;
-import com.epam.esm.specification.impl.tag.TagFindByNamesSpecification;
 import com.epam.esm.validator.CertificateValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,6 +31,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.epam.esm.exception.CustomErrorCode.CERTIFICATE_NOT_FOUND;
+import static com.epam.esm.exception.ErrorMessageCodeConstant.*;
 
 @Slf4j
 @Service
@@ -93,7 +91,7 @@ public class CertificateServiceImpl implements CertificateService {
     @Override
     public Certificate findById(Long id) {
         Certificate certificate = certificateRepository.queryForOne(new CertificateFindByIdSpecification(id))
-                .orElseThrow(() -> new NoSuchEntityException(String.format(translator.toLocale("certificate.withIdNotFound"), id)
+                .orElseThrow(() -> new NoSuchEntityException(String.format(translator.toLocale(CERTIFICATE_WITH_ID_NOT_FOUND), id)
                         , CERTIFICATE_NOT_FOUND.getErrorCode()));
         certificate.setTags(tagService.findByCertificateId(certificate.getId()));
         return certificate;
@@ -103,7 +101,7 @@ public class CertificateServiceImpl implements CertificateService {
     public boolean delete(Long id) {
         Certificate certificate = findById(id);
         if (certificate == null) {
-            throw new NoSuchEntityException(String.format(translator.toLocale("certificate.withIdNotFound"), id)
+            throw new NoSuchEntityException(String.format(translator.toLocale(CERTIFICATE_WITH_ID_NOT_FOUND), id)
                     , CERTIFICATE_NOT_FOUND.getErrorCode());
         }
         return certificateRepository.remove(certificate);
@@ -139,7 +137,7 @@ public class CertificateServiceImpl implements CertificateService {
     public void deleteTagFromCertificate(Long certificateId, List<String> tagsNames) {
         CertificateFindByIdSpecification specification = new CertificateFindByIdSpecification(certificateId);
         Certificate certificate = certificateRepository.queryForOne(specification)
-                .orElseThrow(() -> new NoSuchEntityException(String.format(translator.toLocale("certificate.withIdNotFound"), certificateId),
+                .orElseThrow(() -> new NoSuchEntityException(String.format(translator.toLocale(CERTIFICATE_WITH_ID_NOT_FOUND), certificateId),
                         CERTIFICATE_NOT_FOUND.getErrorCode()));
         List<Tag> tags = tagService.findByNames(tagsNames);
         List<TagAndCertificate> tagCertificateList = tags.stream()
