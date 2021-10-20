@@ -26,11 +26,20 @@ public class EntityExceptionHandler {
         return info;
     }
 
+    @ExceptionHandler(DuplicateException.class)
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
+    public ExceptionInfo handleDuplicateException(DuplicateException exception) {
+        ExceptionInfo info = new ExceptionInfo();
+        info.setErrorMessage(exception.getMessage());
+        info.setErrorCode(exception.getErrorCode());
+        return info;
+    }
+
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ExceptionInfo handleException(Exception exception) {
         ExceptionInfo info = new ExceptionInfo();
-        info.setErrorMessage(exception.getMessage());
+        info.setErrorMessage("Sorry, something went wrong");
         info.setErrorCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
         return info;
     }

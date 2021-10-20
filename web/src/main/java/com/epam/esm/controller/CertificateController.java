@@ -37,7 +37,7 @@ public interface CertificateController {
     @ResponseStatus(HttpStatus.OK)
     List<CertificateDTO> findAll(@RequestParam(required = false, name = "tagName") String tagName,
                                  @RequestParam(required = false, name = "partName") String partName,
-                                 @RequestParam(required = false, defaultValue = "certificate.id", name = "sortBy") String sortBy,
+                                 @RequestParam(required = false, defaultValue = "id", name = "sortBy") String sortBy,
                                  @RequestParam(required = false, defaultValue = "ASC", name = "order") String order);
 
     /**

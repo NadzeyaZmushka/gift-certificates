@@ -24,7 +24,7 @@ public class CertificateLikeNameSpecification extends BaseSqlSpecification<Certi
 
     @Override
     public String getWhereCondition() {
-        return "certificate.name LIKE concat ('%', ?, '%')";
+        return "certificate.name LIKE concat (?, '%')";
     }
 
     @Override

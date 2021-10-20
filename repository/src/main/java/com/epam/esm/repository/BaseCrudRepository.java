@@ -57,7 +57,7 @@ public abstract class BaseCrudRepository<T extends BaseEntity> implements CrudRe
                     String parameters = order.entrySet().stream()
                             .map(e -> String.format("%s %s", e.getKey(), e.getValue()))
                             .collect(Collectors.joining(","));
-                    queryBuilder.append(String.format(" ORDER BY %s", parameters));
+                    queryBuilder.append(String.format(" ORDER BY certificate.%s", parameters));
                 });
         ofNullable(options.getLimit())
                 .ifPresent(limit -> {
