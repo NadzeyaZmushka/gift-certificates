@@ -21,4 +21,5 @@ public class QueryOptions {
     public enum Ordering {
         ASC, DESC
     }
+
 }

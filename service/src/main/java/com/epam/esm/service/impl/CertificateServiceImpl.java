@@ -50,6 +50,7 @@ public class CertificateServiceImpl implements CertificateService {
         validator.validCertificate(certificate);
         certificate.setCreateDate(LocalDateTime.now());
         certificate.setLastUpdateDate(LocalDateTime.now());
+
         return certificateRepository.add(certificate);
     }
 
@@ -57,9 +58,8 @@ public class CertificateServiceImpl implements CertificateService {
     public List<Certificate> findAll() {
         List<Certificate> certificateList;
         certificateList = certificateRepository.queryForList(new CertificateFindAllSpecification());
-        for (Certificate certificate : certificateList) {
-            certificate.setTags(tagService.findByCertificateId(certificate.getId()));
-        }
+        receiveTagsForCertificates(certificateList);
+
         return certificateList;
     }
 
@@ -81,10 +81,8 @@ public class CertificateServiceImpl implements CertificateService {
         AndSpecification<Certificate> specification = new AndSpecification<>(specifications);
 
         List<Certificate> certificateList = certificateRepository.queryForList(specification, options);
+        receiveTagsForCertificates(certificateList);
 
-        for (Certificate certificate : certificateList) {
-            certificate.setTags(tagService.findByCertificateId(certificate.getId()));
-        }
         return certificateList;
     }
 
@@ -94,6 +92,7 @@ public class CertificateServiceImpl implements CertificateService {
                 .orElseThrow(() -> new NoSuchEntityException(String.format(translator.toLocale(CERTIFICATE_WITH_ID_NOT_FOUND), id)
                         , CERTIFICATE_NOT_FOUND.getErrorCode()));
         certificate.setTags(tagService.findByCertificateId(certificate.getId()));
+
         return certificate;
     }
 
@@ -154,6 +153,12 @@ public class CertificateServiceImpl implements CertificateService {
                 .distinct()
                 .filter(name -> !certificatesTag.contains(name))
                 .collect(Collectors.toList());
+    }
+
+    private void receiveTagsForCertificates(List<Certificate> certificates) {
+        for (Certificate certificate : certificates) {
+            certificate.setTags(tagService.findByCertificateId(certificate.getId()));
+        }
     }
 
 }

@@ -24,7 +24,6 @@ public class AndSpecification<T extends BaseEntity> extends BaseSqlSpecification
     private static final String NO_CRITERIA = "No criteria for searching";
     private final List<BaseSqlSpecification<T>> specifications;
 
-    //todo do error message constants
     public AndSpecification(Collection<BaseSqlSpecification<T>> specifications) {
         if (specifications == null || specifications.size() <= 0) {
             throw new IllegalArgumentException(NO_CRITERIA);

@@ -39,4 +39,5 @@ public abstract class BaseSqlSpecification<T extends BaseEntity> implements SqlS
 
         return query.toString();
     }
+
 }
