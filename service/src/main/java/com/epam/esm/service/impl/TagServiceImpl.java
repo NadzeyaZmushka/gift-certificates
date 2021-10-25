@@ -35,10 +35,11 @@ public class TagServiceImpl implements TagService {
     @Override
     public Tag add(Tag tag) {
         tagValidator.validTag(tag);
-        if (findByName(tag.getName()) != null) {
+        if (tagRepository.queryForOne(new TagFindByNameSpecification(tag.getName())).isPresent()) {
             throw new DuplicateException(translator.toLocale("tag.duplicate"), TAG_INCORRECT_DATA.getErrorCode());
+        } else {
+            return tagRepository.add(tag);
         }
-        return tagRepository.add(tag);
     }
 
     @Override

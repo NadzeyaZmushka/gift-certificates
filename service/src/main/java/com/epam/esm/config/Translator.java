@@ -9,11 +9,12 @@ import java.util.Locale;
 
 @Component
 public class Translator {
-    private static ResourceBundleMessageSource messageSource;
+
+    private final ResourceBundleMessageSource messageSource;
 
     @Autowired
     Translator(ResourceBundleMessageSource messageSource) {
-        Translator.messageSource = messageSource;
+        this.messageSource = messageSource;
     }
 
     public String toLocale(String msgCode) {
