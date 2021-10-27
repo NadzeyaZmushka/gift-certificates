@@ -22,42 +22,23 @@ subprojects {
 
     ext {
         springBootVersion = '2.5.5'
-        springVersion = '5.3.5'
         jacksonVersion = '2.11.0'
-        log4jVersion = '2.14.0'
-        mockitoVersion = '3.3.3'
-        junitVersion = '5.8.1'
     }
 
     dependencies {
-        implementation group: 'org.springframework.boot', name: 'spring-boot-starter', version: '2.5.5'
+        implementation group: 'org.springframework.boot', name: 'spring-boot-starter', version: springBootVersion
         implementation group: 'org.springframework.boot', name :'spring-boot-starter-web', version: springBootVersion
         implementation group: 'org.springframework.boot', name: 'spring-boot-starter-actuator', version: springBootVersion
-
-        implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: jacksonVersion
-        implementation group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: jacksonVersion
+        implementation group: 'org.springframework.boot', name: 'spring-boot-devtools', version: '2.5.5'
 
         compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.22'
         annotationProcessor group: 'org.projectlombok', name: 'lombok', version: '1.18.22'
-//        implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.32'
-//        implementation group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.32'
 
-//        implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: log4jVersion
-//        implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: log4jVersion
-////        implementation group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: log4jVersion
+        testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: springBootVersion
 
-        testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version : junitVersion
-        testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: junitVersion
-        testImplementation group: 'org.mockito', name: 'mockito-core', version: mockitoVersion
-        testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: mockitoVersion
-
-        testImplementation group: 'org.springframework', name: 'spring-test', version: '5.3.10'
     }
     test {
         useJUnitPlatform()
     }
 }
-//bootJar {
-//    mainClass = 'com.epam.esm.config.Application'
-//}
 
