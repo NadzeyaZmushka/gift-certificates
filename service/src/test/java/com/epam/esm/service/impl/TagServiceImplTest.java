@@ -3,9 +3,9 @@ package com.epam.esm.service.impl;
 import com.epam.esm.config.Translator;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.repository.BaseCrudRepository;
-import com.epam.esm.specification.impl.tag.TagFindAllSpecification;
+import com.epam.esm.specification.impl.FindAllSpecification;
+import com.epam.esm.specification.impl.FindByIdSpecification;
 import com.epam.esm.specification.impl.tag.TagFindByCertificateIdSpecification;
-import com.epam.esm.specification.impl.tag.TagFindByIdSpecification;
 import com.epam.esm.specification.impl.tag.TagFindByNameSpecification;
 import com.epam.esm.specification.impl.tag.TagFindByNamesSpecification;
 import com.epam.esm.validator.TagValidator;
@@ -54,7 +54,7 @@ class TagServiceImplTest {
     void testShouldReturnAllTags() {
         //given
         List<Tag> tags = Arrays.asList(new Tag(1L, "tag"), new Tag());
-        when(tagRepository.queryForList(any(TagFindAllSpecification.class))).thenReturn(tags);
+        when(tagRepository.queryForList(any(FindAllSpecification.class))).thenReturn(tags);
         //when
         List<Tag> actual = tagService.findAll();
         //then
@@ -66,7 +66,7 @@ class TagServiceImplTest {
     void testShouldReturnTagWithSuchId() {
         //given
         Tag tag = new Tag(1L, "tag");
-        when(tagRepository.queryForOne(any(TagFindByIdSpecification.class))).thenReturn(Optional.of(tag));
+        when(tagRepository.queryForOne(any(FindByIdSpecification.class))).thenReturn(Optional.of(tag));
         //when
         Tag expectedTag = tagService.findById(1L);
         //then
@@ -77,7 +77,7 @@ class TagServiceImplTest {
     void delete() {
         //given
         Tag tag = new Tag(1L, "tag");
-        when(tagRepository.queryForOne(any(TagFindByIdSpecification.class))).thenReturn(Optional.of(tag));
+        when(tagRepository.queryForOne(any(FindByIdSpecification.class))).thenReturn(Optional.of(tag));
         //when
         tagService.delete(1L);
         //then

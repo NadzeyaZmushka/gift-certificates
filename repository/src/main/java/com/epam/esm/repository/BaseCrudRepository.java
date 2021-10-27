@@ -1,6 +1,7 @@
 package com.epam.esm.repository;
 
 import com.epam.esm.entity.BaseEntity;
+import com.epam.esm.entity.Entity;
 import com.epam.esm.mapper.EntityMapper;
 import com.epam.esm.specification.SqlSpecification;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +10,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -32,6 +35,7 @@ public abstract class BaseCrudRepository<T extends BaseEntity> implements CrudRe
 
     protected final JdbcTemplate jdbcTemplate;
     protected final EntityMapper<T> mapper;
+    private EntityManager entityManager;
 
     private static final String DELETE_SQL = "DELETE FROM gifts.%s WHERE id = ?";
 
@@ -39,6 +43,8 @@ public abstract class BaseCrudRepository<T extends BaseEntity> implements CrudRe
 
     @Override
     public List<T> queryForList(SqlSpecification<T> specification) {
+//        Query query = entityManager.createQuery(specification.toSql());
+//        List<T> result = query.getResultList();
         try {
             return jdbcTemplate.query(specification.toSql(), mapper, specification.getParameters());
         } catch (EmptyResultDataAccessException e) {
@@ -71,6 +77,7 @@ public abstract class BaseCrudRepository<T extends BaseEntity> implements CrudRe
 
     @Override
     public Optional<T> queryForOne(SqlSpecification<T> specification) {
+//        Entity entity = entityManager.find(Entity.class, specification.getParameters());
         try {
             return ofNullable(jdbcTemplate.queryForObject(specification.toSql(), mapper, specification.getParameters()));
         } catch (EmptyResultDataAccessException e) {
@@ -80,6 +87,11 @@ public abstract class BaseCrudRepository<T extends BaseEntity> implements CrudRe
 
     @Override
     public T add(T entity) {
+//        BaseEntity entity1 = entityManager.merge(entity);
+//        entity.setId(entity1.getId());
+
+//        entityManager.persist(entity);
+
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(con -> prepareAddStatement(con, entity), keyHolder);
         Long id = (Long) Objects.requireNonNull(keyHolder.getKeys()).get("id");
@@ -97,6 +109,12 @@ public abstract class BaseCrudRepository<T extends BaseEntity> implements CrudRe
 
     @Override
     public boolean remove(T entity) {
+//        Query query = entityManager.createQuery(DELETE_SQL);
+//        query.setParameter("id", entity.getId());
+//        query.executeUpdate();
+
+//        entityManager.remove(entity);
+
         return jdbcTemplate.update(String.format(DELETE_SQL, getTableName()), entity.getId()) != 0;
     }
 

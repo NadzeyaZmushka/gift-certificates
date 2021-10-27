@@ -3,9 +3,9 @@ package com.epam.esm.repository;
 import com.epam.esm.config.TestRepositoryConfig;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.mapper.TagMapper;
-import com.epam.esm.specification.impl.tag.TagFindAllSpecification;
+import com.epam.esm.specification.impl.FindAllSpecification;
+import com.epam.esm.specification.impl.FindByIdSpecification;
 import com.epam.esm.specification.impl.tag.TagFindByCertificateIdSpecification;
-import com.epam.esm.specification.impl.tag.TagFindByIdSpecification;
 import com.epam.esm.specification.impl.tag.TagFindByNameSpecification;
 import com.epam.esm.specification.impl.tag.TagFindByNamesSpecification;
 import org.junit.jupiter.api.Test;
@@ -58,7 +58,7 @@ class TagRepositoryTest {
     @Test
     void testShouldReturnAllTags() {
         List<Tag> expected = Arrays.asList(tag2, tag3, tag4, tag5, tag6, tag7, tag8);
-        List<Tag> actual = tagRepository.queryForList(new TagFindAllSpecification());
+        List<Tag> actual = tagRepository.queryForList(new FindAllSpecification<>("tag"));
 
         assertEquals(expected, actual);
     }
@@ -66,7 +66,7 @@ class TagRepositoryTest {
     @Test
     void testShouldReturnTagWithSuchId() {
         Optional<Tag> tagOptional = Optional.of(tag2);
-        Optional<Tag> actual = tagRepository.queryForOne(new TagFindByIdSpecification(2L));
+        Optional<Tag> actual = tagRepository.queryForOne(new FindByIdSpecification<>("tag", 2L));
 
         assertEquals(tagOptional, actual);
     }
@@ -111,7 +111,7 @@ class TagRepositoryTest {
 
     @Test
     void testShouldReturnEmptyOptionalWhenThereIsNoTagWithSuchId() {
-        Optional<Tag> tagOptional = tagRepository.queryForOne(new TagFindByIdSpecification(0L));
+        Optional<Tag> tagOptional = tagRepository.queryForOne(new FindByIdSpecification<>("tag",0L));
 
         assertTrue(tagOptional.isEmpty());
     }
