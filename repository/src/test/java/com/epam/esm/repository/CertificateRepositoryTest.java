@@ -6,9 +6,9 @@ import com.epam.esm.entity.Tag;
 import com.epam.esm.mapper.CertificateMapper;
 import com.epam.esm.specification.BaseSqlSpecification;
 import com.epam.esm.specification.impl.AndSpecification;
+import com.epam.esm.specification.impl.FindAllSpecification;
+import com.epam.esm.specification.impl.FindByIdSpecification;
 import com.epam.esm.specification.impl.certificate.CertificateByTagNameSpecification;
-import com.epam.esm.specification.impl.certificate.CertificateFindAllSpecification;
-import com.epam.esm.specification.impl.certificate.CertificateFindByIdSpecification;
 import com.epam.esm.specification.impl.certificate.CertificateLikeNameSpecification;
 import com.epam.esm.specification.impl.tag.TagFindByCertificateIdSpecification;
 import org.junit.jupiter.api.Test;
@@ -45,7 +45,7 @@ public class CertificateRepositoryTest {
 
     @Test
     void testShouldReturnAllCertificates() {
-        List<Certificate> certificates = certificateRepository.queryForList(new CertificateFindAllSpecification());
+        List<Certificate> certificates = certificateRepository.queryForList(new FindAllSpecification<>("certificate"));
 
         assertEquals(5, certificates.size());
 
@@ -62,7 +62,7 @@ public class CertificateRepositoryTest {
 
     @Test
     void testShouldReturnCertificateWithSuchId() {
-        Optional<Certificate> certificate = certificateRepository.queryForOne(new CertificateFindByIdSpecification(1L));
+        Optional<Certificate> certificate = certificateRepository.queryForOne(new FindByIdSpecification<>("certificate", 1L));
         assertTrue(certificate.isPresent());
         assertEquals(1L, certificate.get().getId());
     }
@@ -90,7 +90,7 @@ public class CertificateRepositoryTest {
 
     @Test
     void testShouldReturnUpdatedCertificate() {
-        Certificate certificate = certificateRepository.queryForOne(new CertificateFindByIdSpecification(4L)).get();
+        Certificate certificate = certificateRepository.queryForOne(new FindByIdSpecification<>("certificate",4L)).get();
         certificate.setName("update");
         Certificate updated = certificateRepository.update(certificate);
 

@@ -16,9 +16,10 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 public class Order extends BaseEntity {
 
-    private LocalDateTime createDate;
     private BigDecimal cost;
-    private List<Certificate> certificate;
+    private LocalDateTime createDate;
     private User user;
+    private List<Certificate> certificates;
+//    private Certificate certificate;
 
 }

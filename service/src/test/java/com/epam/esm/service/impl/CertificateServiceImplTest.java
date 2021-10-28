@@ -4,7 +4,7 @@ import com.epam.esm.config.Translator;
 import com.epam.esm.entity.Certificate;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.repository.BaseCrudRepository;
-import com.epam.esm.specification.impl.certificate.CertificateFindAllSpecification;
+import com.epam.esm.specification.impl.FindAllSpecification;
 import com.epam.esm.validator.CertificateValidator;
 import com.epam.esm.validator.TagValidator;
 import org.junit.jupiter.api.Test;
@@ -59,7 +59,7 @@ class CertificateServiceImplTest {
     @Test
     void testFindAllWithoutResult() {
         //given
-        when(certificateRepository.queryForList(any(CertificateFindAllSpecification.class))).thenReturn(Collections.emptyList());
+        when(certificateRepository.queryForList(any(FindAllSpecification.class))).thenReturn(Collections.emptyList());
         //when
         List<Certificate> actual = certificateService.findAll();
         //then

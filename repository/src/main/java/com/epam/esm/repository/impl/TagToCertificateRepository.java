@@ -32,26 +32,6 @@ public class TagToCertificateRepository implements CrudRepository<TagAndCertific
     private final JdbcTemplate jdbcTemplate;
 
     @Override
-    public List<TagAndCertificate> queryForList(SqlSpecification<TagAndCertificate> specification) {
-        throw new UnsupportedOperationException(NOT_SUPPORTED);
-    }
-
-    @Override
-    public List<TagAndCertificate> queryForList(SqlSpecification<TagAndCertificate> specification, QueryOptions options) {
-        throw new UnsupportedOperationException(NOT_SUPPORTED);
-    }
-
-    @Override
-    public Optional<TagAndCertificate> queryForOne(SqlSpecification<TagAndCertificate> specification) {
-        throw new UnsupportedOperationException(NOT_SUPPORTED);
-    }
-
-    @Override
-    public TagAndCertificate update(TagAndCertificate entity) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
     public TagAndCertificate add(TagAndCertificate entity) {
         jdbcTemplate.update(CREATE_CERTIFICATE_TAG_SQL, entity.getCertificateId(), entity.getTagId());
         return entity;
@@ -74,6 +54,26 @@ public class TagToCertificateRepository implements CrudRepository<TagAndCertific
         jdbcTemplate.batchUpdate(DELETE_CERTIFICATE_TAG_SQL, tagCertificateList.stream()
                 .map(tc -> new Object[]{tc.getCertificateId(), tc.getTagId()})
                 .collect(Collectors.toList()));
+    }
+
+    @Override
+    public List<TagAndCertificate> queryForList(SqlSpecification<TagAndCertificate> specification) {
+        throw new UnsupportedOperationException(NOT_SUPPORTED);
+    }
+
+    @Override
+    public List<TagAndCertificate> queryForList(SqlSpecification<TagAndCertificate> specification, QueryOptions options) {
+        throw new UnsupportedOperationException(NOT_SUPPORTED);
+    }
+
+    @Override
+    public Optional<TagAndCertificate> queryForOne(SqlSpecification<TagAndCertificate> specification) {
+        throw new UnsupportedOperationException(NOT_SUPPORTED);
+    }
+
+    @Override
+    public TagAndCertificate update(TagAndCertificate entity) {
+        throw new UnsupportedOperationException(NOT_SUPPORTED);
     }
 
 }

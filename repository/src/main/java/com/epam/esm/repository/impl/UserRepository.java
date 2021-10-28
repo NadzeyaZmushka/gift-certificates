@@ -9,11 +9,16 @@ import org.springframework.stereotype.Repository;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.List;
 
 @Repository
 public class UserRepository extends BaseCrudRepository<User> {
 
+    private static final String ADD_USER_SQL = "INSERT INTO gifts.user (name, surname) " +
+            "VALUES (?, ?)";
+    private static final String UPDATE_USER_SQL = "UPDATE gifts.user SET name = ?, " +
+            "surname = ?";
     private static final String NOT_SUPPORTED = "This operation is not supported";
 
     public UserRepository(JdbcTemplate jdbcTemplate, EntityMapper<User> mapper) {
@@ -26,18 +31,22 @@ public class UserRepository extends BaseCrudRepository<User> {
     }
 
     @Override
-    protected PreparedStatement prepareAddStatement(Connection connection, User entity) throws SQLException {
-        return null;
+    protected PreparedStatement prepareAddStatement(Connection connection, User user) throws SQLException {
+        PreparedStatement ps = connection.prepareStatement(ADD_USER_SQL, Statement.RETURN_GENERATED_KEYS);
+        ps.setString(1, user.getName());
+        ps.setString(2, user.getSurname());
+        return ps;
     }
 
     @Override
     protected String getUpdateSql() {
-        return null;
+        return UPDATE_USER_SQL;
     }
 
     @Override
-    protected Object[] getParam(User entity) {
-        return new Object[0];
+    protected Object[] getParam(User user) {
+        return new Object[]{user.getName(),
+                user.getName()};
     }
 
     @Override

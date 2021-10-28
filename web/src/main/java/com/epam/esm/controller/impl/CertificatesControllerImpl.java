@@ -56,8 +56,8 @@ public class CertificatesControllerImpl implements CertificateController {
 
     @Override
     public void update(Long id, CertificateDTO certificateDTO) {
-        certificateDTO.setId(id);
-        certificateService.update(mapper.toEntity(certificateDTO));
+//        certificateDTO.setId(id);
+        certificateService.update(id, mapper.toEntity(certificateDTO));
     }
 
     @Override

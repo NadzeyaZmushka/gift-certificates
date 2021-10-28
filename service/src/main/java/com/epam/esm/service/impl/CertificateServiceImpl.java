@@ -12,9 +12,9 @@ import com.epam.esm.service.CertificateService;
 import com.epam.esm.service.TagService;
 import com.epam.esm.specification.BaseSqlSpecification;
 import com.epam.esm.specification.impl.AndSpecification;
+import com.epam.esm.specification.impl.FindAllSpecification;
+import com.epam.esm.specification.impl.FindByIdSpecification;
 import com.epam.esm.specification.impl.certificate.CertificateByTagNameSpecification;
-import com.epam.esm.specification.impl.certificate.CertificateFindAllSpecification;
-import com.epam.esm.specification.impl.certificate.CertificateFindByIdSpecification;
 import com.epam.esm.specification.impl.certificate.CertificateLikeNameSpecification;
 import com.epam.esm.validator.CertificateValidator;
 import lombok.RequiredArgsConstructor;
@@ -44,6 +44,8 @@ public class CertificateServiceImpl implements CertificateService {
     private final CertificateValidator validator;
     private final TagService tagService;
 
+    private static final String CERTIFICATE_TABLE = "certificate";
+
     @Override
     @Transactional
     public Certificate add(Certificate certificate) {
@@ -57,7 +59,7 @@ public class CertificateServiceImpl implements CertificateService {
     @Override
     public List<Certificate> findAll() {
         List<Certificate> certificateList;
-        certificateList = certificateRepository.queryForList(new CertificateFindAllSpecification());
+        certificateList = certificateRepository.queryForList(new FindAllSpecification<>(CERTIFICATE_TABLE));
         receiveTagsForCertificates(certificateList);
 
         return certificateList;
@@ -88,7 +90,7 @@ public class CertificateServiceImpl implements CertificateService {
 
     @Override
     public Certificate findById(Long id) {
-        Certificate certificate = certificateRepository.queryForOne(new CertificateFindByIdSpecification(id))
+        Certificate certificate = certificateRepository.queryForOne(new FindByIdSpecification<>(CERTIFICATE_TABLE, id))
                 .orElseThrow(() -> new NoSuchEntityException(String.format(translator.toLocale(CERTIFICATE_WITH_ID_NOT_FOUND), id)
                         , CERTIFICATE_NOT_FOUND.getErrorCode()));
         certificate.setTags(tagService.findByCertificateId(certificate.getId()));
@@ -106,11 +108,26 @@ public class CertificateServiceImpl implements CertificateService {
         return certificateRepository.remove(certificate);
     }
 
+//    @Override
+//    public Certificate update(Certificate certificate) {
+//        validator.validCertificate(certificate);
+//        certificate.setLastUpdateDate(LocalDateTime.now());
+//        return certificateRepository.update(certificate);
+//
+//    }
+
     @Override
-    public Certificate update(Certificate certificate) {
-        validator.validCertificate(certificate);
-        certificate.setLastUpdateDate(LocalDateTime.now());
-        return certificateRepository.update(certificate);
+    public Certificate update(Long id, Certificate certificate) {
+        Certificate fromDB = findById(id);
+        fromDB.setName(certificate.getName() == null ? fromDB.getName() : certificate.getName());
+        fromDB.setDescription(certificate.getDescription() == null ? fromDB.getDescription() : certificate.getDescription());
+        fromDB.setPrice(certificate.getPrice() == null ? fromDB.getPrice() : certificate.getPrice());
+        fromDB.setDuration((certificate.getDuration() == null ? fromDB.getDuration() : certificate.getDuration()));
+        fromDB.getTags().addAll(certificate.getTags());
+        fromDB.setCreateDate(fromDB.getCreateDate());
+        validator.validCertificate(fromDB);
+        fromDB.setLastUpdateDate(LocalDateTime.now());
+        return certificateRepository.update(fromDB);
 
     }
 
@@ -133,10 +150,7 @@ public class CertificateServiceImpl implements CertificateService {
     @Override
     @Transactional
     public void deleteTagFromCertificate(Long certificateId, List<String> tagsNames) {
-        CertificateFindByIdSpecification specification = new CertificateFindByIdSpecification(certificateId);
-        Certificate certificate = certificateRepository.queryForOne(specification)
-                .orElseThrow(() -> new NoSuchEntityException(String.format(translator.toLocale(CERTIFICATE_WITH_ID_NOT_FOUND), certificateId),
-                        CERTIFICATE_NOT_FOUND.getErrorCode()));
+        Certificate certificate = findById(certificateId);
         List<Tag> tags = tagService.findByNames(tagsNames);
         List<TagAndCertificate> tagCertificateList = tags.stream()
                 .map(tag -> new TagAndCertificate(certificate.getId(), tag.getId()))
