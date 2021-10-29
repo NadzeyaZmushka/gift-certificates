@@ -1,9 +1,12 @@
 package com.epam.esm.dto;
 
+import com.epam.esm.entity.Order;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -13,5 +16,6 @@ public class UserDTO extends BaseEntityDTO{
 
     private String name;
     private String surname;
+    private List<OrderDTO> orders;
 
 }

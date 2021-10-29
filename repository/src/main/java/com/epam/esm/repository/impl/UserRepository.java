@@ -1,8 +1,11 @@
 package com.epam.esm.repository.impl;
 
+import com.epam.esm.entity.Order;
 import com.epam.esm.entity.User;
 import com.epam.esm.mapper.EntityMapper;
 import com.epam.esm.repository.BaseCrudRepository;
+import com.epam.esm.specification.SqlSpecification;
+import com.epam.esm.specification.impl.order.OrderFindByUserIdSpecification;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -11,6 +14,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class UserRepository extends BaseCrudRepository<User> {
@@ -21,13 +25,30 @@ public class UserRepository extends BaseCrudRepository<User> {
             "surname = ?";
     private static final String NOT_SUPPORTED = "This operation is not supported";
 
-    public UserRepository(JdbcTemplate jdbcTemplate, EntityMapper<User> mapper) {
+    private final OrderRepository orderRepository;
+
+    public UserRepository(JdbcTemplate jdbcTemplate, EntityMapper<User> mapper, OrderRepository orderRepository) {
         super(jdbcTemplate, mapper);
+        this.orderRepository = orderRepository;
     }
 
     @Override
     protected String getTableName() {
         return "user";
+    }
+
+    @Override
+    public List<User> queryForList(SqlSpecification<User> specification) {
+        List<User> users = super.queryForList(specification);
+        users.forEach(this::addOrdersToUser);
+        return users;
+    }
+
+    @Override
+    public Optional<User> queryForOne(SqlSpecification<User> specification) {
+        Optional<User> user = super.queryForOne(specification);
+        user.ifPresent(this::addOrdersToUser);
+        return user;
     }
 
     @Override
@@ -57,6 +78,11 @@ public class UserRepository extends BaseCrudRepository<User> {
     @Override
     public void removeAll(List<User> tagCertificateList) {
         throw new UnsupportedOperationException(NOT_SUPPORTED);
+    }
+
+    private void addOrdersToUser(User user) {
+        List<Order> orders = orderRepository.queryForList(new OrderFindByUserIdSpecification(user.getId()));
+        user.setOrders(orders);
     }
 
 }

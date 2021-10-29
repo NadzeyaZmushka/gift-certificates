@@ -14,6 +14,8 @@ import com.epam.esm.specification.BaseSqlSpecification;
 import com.epam.esm.specification.impl.AndSpecification;
 import com.epam.esm.specification.impl.FindAllSpecification;
 import com.epam.esm.specification.impl.FindByIdSpecification;
+import com.epam.esm.specification.impl.certificate.CertificateByNameSpecification;
+import com.epam.esm.specification.impl.certificate.CertificateByOrderIdSpecification;
 import com.epam.esm.specification.impl.certificate.CertificateByTagNameSpecification;
 import com.epam.esm.specification.impl.certificate.CertificateLikeNameSpecification;
 import com.epam.esm.validator.CertificateValidator;
@@ -32,6 +34,7 @@ import java.util.stream.Collectors;
 
 import static com.epam.esm.exception.CustomErrorCode.CERTIFICATE_NOT_FOUND;
 import static com.epam.esm.exception.ErrorMessageCodeConstant.CERTIFICATE_WITH_ID_NOT_FOUND;
+import static com.epam.esm.exception.ErrorMessageCodeConstant.CERTIFICATE_WITH_NAME_NOT_FOUND;
 
 @Slf4j
 @Service
@@ -156,6 +159,20 @@ public class CertificateServiceImpl implements CertificateService {
                 .map(tag -> new TagAndCertificate(certificate.getId(), tag.getId()))
                 .collect(Collectors.toList());
         tagToCertificateRepository.removeAll(tagCertificateList);
+    }
+
+    @Override
+    public Certificate findByName(String name) {
+        return certificateRepository.queryForOne(new CertificateByNameSpecification(name))
+                .orElseThrow(() -> new NoSuchEntityException(String.format(translator.toLocale(CERTIFICATE_WITH_NAME_NOT_FOUND), name),
+                        CERTIFICATE_NOT_FOUND.getErrorCode()));
+    }
+
+    //todo message and error code
+    @Override
+    public Certificate findByOrderId(Long orderId) {
+        return certificateRepository.queryForOne(new CertificateByOrderIdSpecification(orderId))
+                .orElseThrow(() -> new NoSuchEntityException("", 1));
     }
 
     private List<String> getTagsToAdd(List<Tag> tags, List<String> tagNames) {

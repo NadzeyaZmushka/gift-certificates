@@ -39,7 +39,7 @@ public class EntityExceptionHandler {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ExceptionInfo handleException(Exception exception) {
         ExceptionInfo info = new ExceptionInfo();
-        info.setErrorMessage("Sorry, something went wrong");
+        info.setErrorMessage(exception.getMessage());
         info.setErrorCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
         return info;
     }

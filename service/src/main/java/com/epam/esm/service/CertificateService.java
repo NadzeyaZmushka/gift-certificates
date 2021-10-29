@@ -20,7 +20,6 @@ public interface CertificateService extends EntityService<Certificate> {
     /**
      * Updates certificate that has such id
      *
-     *
      * @param id
      * @param entity that need to be update
      * @return updated certificate
@@ -42,5 +41,9 @@ public interface CertificateService extends EntityService<Certificate> {
      * @param tagsNames     list of tag names that need to be deleted
      */
     void deleteTagFromCertificate(Long certificateId, List<String> tagsNames);
+
+    Certificate findByName(String name);
+
+    Certificate findByOrderId(Long orderId);
 
 }
