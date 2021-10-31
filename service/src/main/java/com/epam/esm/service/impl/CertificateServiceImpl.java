@@ -111,14 +111,6 @@ public class CertificateServiceImpl implements CertificateService {
         return certificateRepository.remove(certificate);
     }
 
-//    @Override
-//    public Certificate update(Certificate certificate) {
-//        validator.validCertificate(certificate);
-//        certificate.setLastUpdateDate(LocalDateTime.now());
-//        return certificateRepository.update(certificate);
-//
-//    }
-
     @Override
     public Certificate update(Long id, Certificate certificate) {
         Certificate fromDB = findById(id);
@@ -126,7 +118,7 @@ public class CertificateServiceImpl implements CertificateService {
         fromDB.setDescription(certificate.getDescription() == null ? fromDB.getDescription() : certificate.getDescription());
         fromDB.setPrice(certificate.getPrice() == null ? fromDB.getPrice() : certificate.getPrice());
         fromDB.setDuration((certificate.getDuration() == null ? fromDB.getDuration() : certificate.getDuration()));
-        fromDB.getTags().addAll(certificate.getTags());
+//        fromDB.getTags().addAll(certificate.getTags());
         fromDB.setCreateDate(fromDB.getCreateDate());
         validator.validCertificate(fromDB);
         fromDB.setLastUpdateDate(LocalDateTime.now());
@@ -171,8 +163,11 @@ public class CertificateServiceImpl implements CertificateService {
     //todo message and error code
     @Override
     public Certificate findByOrderId(Long orderId) {
-        return certificateRepository.queryForOne(new CertificateByOrderIdSpecification(orderId))
+        Certificate certificate = certificateRepository.queryForOne(new CertificateByOrderIdSpecification(orderId))
                 .orElseThrow(() -> new NoSuchEntityException("", 1));
+        certificate.setTags(tagService.findByCertificateId(certificate.getId()));
+
+        return certificate;
     }
 
     private List<String> getTagsToAdd(List<Tag> tags, List<String> tagNames) {

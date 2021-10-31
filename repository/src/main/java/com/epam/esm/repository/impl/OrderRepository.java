@@ -23,9 +23,6 @@ public class OrderRepository extends BaseCrudRepository<Order> {
     private static final String ADD_ORDER_SQL = "INSERT INTO gifts.order (cost, user_id, create_date, certificate_id) " +
             "VALUES (?, ?, ?, ?)";
 
-    @Autowired
-    private CertificateRepository certificateRepository;
-
     public OrderRepository(JdbcTemplate jdbcTemplate, EntityMapper<Order> mapper) {
         super(jdbcTemplate, mapper);
     }
@@ -33,29 +30,6 @@ public class OrderRepository extends BaseCrudRepository<Order> {
     @Override
     protected String getTableName() {
         return "order";
-    }
-
-    @Override
-    public List<Order> queryForList(SqlSpecification<Order> specification) {
-        List<Order> orders = super.queryForList(specification);
-        orders.forEach(this::addCertificateToOrder);
-        return orders;
-    }
-
-    @Override
-    public Optional<Order> queryForOne(SqlSpecification<Order> specification) {
-        Optional<Order> order = super.queryForOne(specification);
-        order.ifPresent(this::addCertificateToOrder);
-        return order;
-    }
-
-    @Override
-    public Order add(Order entity) {
-        super.add(entity);
-        Certificate certificate = entity.getCertificate();
-        Certificate savedCertificate = certificateRepository.add(certificate);
-        entity.setCertificate(savedCertificate);
-        return entity;
     }
 
     //???
@@ -89,11 +63,6 @@ public class OrderRepository extends BaseCrudRepository<Order> {
     @Override
     public void removeAll(List<Order> tagCertificateList) {
         throw new UnsupportedOperationException();
-    }
-
-    private void addCertificateToOrder(Order order) {
-        Optional<Certificate> certificate = certificateRepository.queryForOne(new CertificateByOrderIdSpecification(order.getId()));
-        order.setCertificate(certificate.orElseThrow());
     }
 
 }

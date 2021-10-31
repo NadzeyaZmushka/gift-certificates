@@ -20,7 +20,7 @@ public interface CertificateService extends EntityService<Certificate> {
     /**
      * Updates certificate that has such id
      *
-     * @param id
+     * @param id certificate id
      * @param entity that need to be update
      * @return updated certificate
      */

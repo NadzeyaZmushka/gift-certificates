@@ -6,9 +6,11 @@ import com.epam.esm.entity.User;
 import com.epam.esm.exception.NoSuchEntityException;
 import com.epam.esm.repository.BaseCrudRepository;
 import com.epam.esm.repository.impl.UserRepository;
+import com.epam.esm.service.OrderService;
 import com.epam.esm.service.UserService;
 import com.epam.esm.specification.impl.FindAllSpecification;
 import com.epam.esm.specification.impl.FindByIdSpecification;
+import com.epam.esm.specification.impl.user.UserByOrderIdSpecification;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -40,18 +42,26 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> findAll() {
         List<User> users = userRepository.queryForList(new FindAllSpecification<>(USER_TABLE));
-        for (User user : users) {
-            List<Order> userOrders = orderService.findByUserId(user.getId());
-            user.setOrders(userOrders);
-        }
+        users.forEach(this::addOrdersToUser);
         return users;
     }
 
     @Override
     public User findById(Long id) {
-        return userRepository.queryForOne(new FindByIdSpecification<>(USER_TABLE, id))
+        User user = userRepository.queryForOne(new FindByIdSpecification<>(USER_TABLE, id))
                 .orElseThrow(() -> new NoSuchEntityException(String.format(translator.toLocale(USER_WITH_ID_NOT_FOUND), id),
                         USER_NOT_FOUND.getErrorCode()));
+        addOrdersToUser(user);
+        return user;
+    }
+
+    //???
+    @Override
+    public User findByOrderId(Long orderId) {
+        User user = userRepository.queryForOne(new UserByOrderIdSpecification(orderId))
+                .orElseThrow();
+        addOrdersToUser(user);
+        return user;
     }
 
     @Override
@@ -62,6 +72,11 @@ public class UserServiceImpl implements UserService {
                     TAG_NOT_FOUND.getErrorCode());
         }
         return userRepository.remove(user);
+    }
+
+    private void addOrdersToUser(User user) {
+        List<Order> orders = orderService.findByUserId(user.getId());
+        user.setOrders(orders);
     }
 
 }

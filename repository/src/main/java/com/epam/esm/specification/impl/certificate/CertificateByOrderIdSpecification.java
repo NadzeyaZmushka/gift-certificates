@@ -13,7 +13,7 @@ public class CertificateByOrderIdSpecification extends BaseSqlSpecification<Cert
 
     @Override
     public String getBaseStatement() {
-        return "SELECT * FROM gifts.certificate";
+        return null;
     }
 
 //    @Override
@@ -38,4 +38,5 @@ public class CertificateByOrderIdSpecification extends BaseSqlSpecification<Cert
     public Object[] getParameters() {
         return new Object[]{orderId};
     }
+
 }
