@@ -45,4 +45,9 @@ public class TagControllerImpl implements TagController {
         tagService.delete(id);
     }
 
+    @Override
+    public TagDTO findWidelyUsed() {
+        return mapper.toDTO(tagService.findWidelyUsed());
+    }
+
 }

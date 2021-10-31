@@ -1,5 +1,5 @@
 plugins{
-    id 'org.springframework.boot' version '2.5.5'
+    id 'org.springframework.boot' version '2.5.5' apply true
 }
 allprojects {
     group 'com.epam.esm'
@@ -41,4 +41,5 @@ subprojects {
         useJUnitPlatform()
     }
 }
+
 

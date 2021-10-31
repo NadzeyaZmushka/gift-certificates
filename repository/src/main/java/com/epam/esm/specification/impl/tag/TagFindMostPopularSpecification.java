@@ -10,17 +10,29 @@ public class TagFindMostPopularSpecification extends BaseSqlSpecification<Tag> {
 
     @Override
     public String getBaseStatement() {
-        return "SELECT * FROM gifts.tag";
+        return null;
     }
 
     @Override
-    public Map<String, String> getJoinConditions() {
-        return super.getJoinConditions();
-    }
-
-    @Override
-    public String getWhereCondition() {
-        return "";
+    public String toSql() {
+        return "SELECT tag.id, tag.name\n" +
+                "FROM gifts.tag\n" +
+                "         INNER JOIN gifts.certificate_tag ct on tag.id = ct.tag_id\n" +
+                "         INNER JOIN gifts.certificate c on c.id = ct.certificate_id\n" +
+                "         INNER JOIN gifts.\"order\" o on c.id = o.certificate_id\n" +
+                "         INNER JOIN gifts.\"user\" u on u.id = o.user_id\n" +
+                "WHERE u.id IN (\n" +
+                "    SELECT tmp.user_id\n" +
+                "    FROM (\n" +
+                "             SELECT SUM(gifts.\"order\".cost) sumCost, user_id\n" +
+                "             FROM gifts.\"order\"\n" +
+                "             GROUP BY user_id\n" +
+                "             ORDER BY sumCost desc\n" +
+                "             limit 1) as tmp\n" +
+                ")\n" +
+                "GROUP BY tag.id\n" +
+                "ORDER BY count(tag.id) desc\n" +
+                "limit 1";
     }
 
     @Override

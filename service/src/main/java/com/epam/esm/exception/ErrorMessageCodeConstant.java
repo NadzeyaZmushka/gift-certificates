@@ -3,6 +3,7 @@ package com.epam.esm.exception;
 public class ErrorMessageCodeConstant {
 
     public static final String TAG_WITH_ID_NOT_FOUND = "tag.withIdNotFound";
+    public static final String SUCH_TAG_NOT_FOUND = "tag.suchTagNotFound";
     public static final String TAG_WITH_NAME_NOT_FOUND = "tag.withNameNotFound";
     public static final String TAG_INCORRECT_NAME = "tag.incorrectName";
     public static final String TAG_INCORRECT_NAME_LENGTH = "tag.incorrectNameLength";

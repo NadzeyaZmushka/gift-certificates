@@ -59,4 +59,8 @@ public interface TagController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     void delete(@PathVariable Long id);
 
+    @GetMapping("/widelyUsed")
+    @ResponseStatus(HttpStatus.OK)
+    TagDTO findWidelyUsed();
+
 }

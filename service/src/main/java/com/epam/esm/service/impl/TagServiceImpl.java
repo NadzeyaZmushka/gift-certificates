@@ -11,6 +11,7 @@ import com.epam.esm.specification.impl.FindByIdSpecification;
 import com.epam.esm.specification.impl.tag.TagFindByCertificateIdSpecification;
 import com.epam.esm.specification.impl.tag.TagFindByNameSpecification;
 import com.epam.esm.specification.impl.tag.TagFindByNamesSpecification;
+import com.epam.esm.specification.impl.tag.TagFindMostPopularSpecification;
 import com.epam.esm.validator.TagValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +21,7 @@ import java.util.List;
 
 import static com.epam.esm.exception.CustomErrorCode.TAG_INCORRECT_DATA;
 import static com.epam.esm.exception.CustomErrorCode.TAG_NOT_FOUND;
+import static com.epam.esm.exception.ErrorMessageCodeConstant.SUCH_TAG_NOT_FOUND;
 import static com.epam.esm.exception.ErrorMessageCodeConstant.TAG_DUPLICATE;
 import static com.epam.esm.exception.ErrorMessageCodeConstant.TAG_WITH_ID_NOT_FOUND;
 import static com.epam.esm.exception.ErrorMessageCodeConstant.TAG_WITH_NAME_NOT_FOUND;
@@ -90,6 +92,13 @@ public class TagServiceImpl implements TagService {
     @Override
     public List<Tag> findByNames(List<String> names) {
         return tagRepository.queryForList(new TagFindByNamesSpecification(names));
+    }
+
+    @Override
+    public Tag findWidelyUsed() {
+        return tagRepository.queryForOne(new TagFindMostPopularSpecification())
+                .orElseThrow(() -> new NoSuchEntityException(translator.toLocale(SUCH_TAG_NOT_FOUND),
+                        TAG_NOT_FOUND.getErrorCode()));
     }
 
 }

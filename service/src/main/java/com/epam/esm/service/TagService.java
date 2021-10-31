@@ -38,4 +38,6 @@ public interface TagService extends EntityService<Tag> {
      */
     List<Tag> findByNames(List<String> names);
 
+    Tag findWidelyUsed();
+
 }

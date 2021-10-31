@@ -31,4 +31,5 @@ public class TagFindByNameSpecification extends BaseSqlSpecification<Tag> {
     public Object[] getParameters() {
         return new Object[]{name};
     }
+
 }
