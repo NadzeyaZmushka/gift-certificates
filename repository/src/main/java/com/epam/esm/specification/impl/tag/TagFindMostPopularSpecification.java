@@ -5,7 +5,6 @@ import com.epam.esm.specification.BaseSqlSpecification;
 
 import java.util.Map;
 
-//todo
 public class TagFindMostPopularSpecification extends BaseSqlSpecification<Tag> {
 
     @Override
@@ -22,13 +21,13 @@ public class TagFindMostPopularSpecification extends BaseSqlSpecification<Tag> {
                 "         INNER JOIN gifts.\"order\" o on c.id = o.certificate_id\n" +
                 "         INNER JOIN gifts.\"user\" u on u.id = o.user_id\n" +
                 "WHERE u.id IN (\n" +
-                "    SELECT tmp.user_id\n" +
+                "    SELECT wu.user_id\n" +
                 "    FROM (\n" +
                 "             SELECT SUM(gifts.\"order\".cost) sumCost, user_id\n" +
                 "             FROM gifts.\"order\"\n" +
                 "             GROUP BY user_id\n" +
                 "             ORDER BY sumCost desc\n" +
-                "             limit 1) as tmp\n" +
+                "             limit 1) as wu\n" +
                 ")\n" +
                 "GROUP BY tag.id\n" +
                 "ORDER BY count(tag.id) desc\n" +

@@ -67,7 +67,8 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Order findById(Long id) {
         Order order = orderRepository.queryForOne(new FindByIdSpecification<>(ORDER_TABLE, id))
-                .orElseThrow(() -> new NoSuchEntityException(String.format(translator.toLocale(ORDER_WITH_ID_NOT_FOUND), id), ORDER_NOT_FOUND.getErrorCode()));
+                .orElseThrow(() -> new NoSuchEntityException(String.format(translator.toLocale(ORDER_WITH_ID_NOT_FOUND), id),
+                        ORDER_NOT_FOUND.getErrorCode()));
         addCertificateToOrder(order);
 //        addUserToOrder(order);
         return order;
@@ -96,6 +97,7 @@ public class OrderServiceImpl implements OrderService {
 //        User user = userRepository.queryForOne(new UserByOrderIdSpecification(order.getId()))
 //                .orElseThrow(() -> new NoSuchEntityException(translator.toLocale(USER_WITH_ID_NOT_FOUND),
 //                        USER_NOT_FOUND.getErrorCode()));
+//        User userToAdd = new User(user.getName(), user.getSurname());
 //        order.setUser(user);
 //
 //    }

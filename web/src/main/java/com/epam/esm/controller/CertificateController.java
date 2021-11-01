@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -65,20 +64,21 @@ public interface CertificateController {
      * Realizes REST's delete operation of a resource
      *
      * @param id of certificate to be deleted
+     * @return null
      */
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    void delete(@PathVariable Long id);
+    CertificateDTO delete(@PathVariable Long id);
 
     /**
      * Realizes REST's update operation of a resource
-     *
-     * @param id             of certificate to be updated
+     *  @param id             of certificate to be updated
      * @param certificateDTO an object with new fields of a resource
+     * @return updated certificate
      */
     @PatchMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    void update(@PathVariable Long id, @RequestBody CertificateDTO certificateDTO);
+    CertificateDTO update(@PathVariable Long id, @RequestBody CertificateDTO certificateDTO);
 
     /**
      * Adds new or existing tags to the certificate

@@ -15,7 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class CertificateDTO extends BaseEntityDTO {
+public class CertificateDTO extends BaseEntityDTO<CertificateDTO> {
 
     private String name;
     private String description;

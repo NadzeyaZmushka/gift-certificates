@@ -16,13 +16,13 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class OrderDTO extends BaseEntityDTO {
+public class OrderDTO extends BaseEntityDTO<OrderDTO> {
 
     private BigDecimal cost;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
     private LocalDateTime createDate;
-    private User user;
+//    private User user;
     private Certificate certificate;
 
 }

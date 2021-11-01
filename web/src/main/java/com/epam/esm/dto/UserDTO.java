@@ -12,7 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class UserDTO extends BaseEntityDTO{
+public class UserDTO extends BaseEntityDTO<UserDTO> {
 
     private String name;
     private String surname;

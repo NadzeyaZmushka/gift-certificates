@@ -54,10 +54,11 @@ public interface TagController {
      * Realizes REST's delete operation of a resource
      *
      * @param id of tag to be deleted
+     * @return null
      */
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    void delete(@PathVariable Long id);
+    TagDTO delete(@PathVariable Long id);
 
     @GetMapping("/widelyUsed")
     @ResponseStatus(HttpStatus.OK)

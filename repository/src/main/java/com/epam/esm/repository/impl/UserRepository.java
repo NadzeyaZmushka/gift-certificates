@@ -38,20 +38,6 @@ public class UserRepository extends BaseCrudRepository<User> {
     }
 
     @Override
-    public List<User> queryForList(SqlSpecification<User> specification) {
-        List<User> users = super.queryForList(specification);
-        users.forEach(this::addOrdersToUser);
-        return users;
-    }
-
-    @Override
-    public Optional<User> queryForOne(SqlSpecification<User> specification) {
-        Optional<User> user = super.queryForOne(specification);
-        user.ifPresent(this::addOrdersToUser);
-        return user;
-    }
-
-    @Override
     protected PreparedStatement prepareAddStatement(Connection connection, User user) throws SQLException {
         PreparedStatement ps = connection.prepareStatement(ADD_USER_SQL, Statement.RETURN_GENERATED_KEYS);
         ps.setString(1, user.getName());
@@ -80,9 +66,5 @@ public class UserRepository extends BaseCrudRepository<User> {
         throw new UnsupportedOperationException(NOT_SUPPORTED);
     }
 
-    private void addOrdersToUser(User user) {
-        List<Order> orders = orderRepository.queryForList(new OrderFindByUserIdSpecification(user.getId()));
-        user.setOrders(orders);
-    }
 
 }

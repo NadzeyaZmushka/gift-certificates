@@ -3,6 +3,7 @@ package com.epam.esm.controller.impl;
 import com.epam.esm.controller.TagController;
 import com.epam.esm.dto.TagDTO;
 import com.epam.esm.entity.Tag;
+import com.epam.esm.hateoas.HateoasLinkBuilder;
 import com.epam.esm.mapper.TagConvertor;
 import com.epam.esm.service.impl.TagServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -19,18 +20,23 @@ public class TagControllerImpl implements TagController {
 
     private final TagServiceImpl tagService;
     private final TagConvertor mapper;
+    private final HateoasLinkBuilder hateoasLinkBuilder;
 
     @Override
     public List<TagDTO> findAll() {
-        return tagService.findAll()
+        List<TagDTO> tagDTOList = tagService.findAll()
                 .stream()
                 .map(mapper::toDTO)
                 .collect(Collectors.toList());
+        tagDTOList.forEach(hateoasLinkBuilder::addLinksForTag);
+        return tagDTOList;
     }
 
     @Override
     public TagDTO findOne(Long id) {
-        return mapper.toDTO(tagService.findById(id));
+        TagDTO tagDTO = mapper.toDTO(tagService.findById(id));
+        hateoasLinkBuilder.addLinksForTag(tagDTO);
+        return tagDTO;
     }
 
     @Override
@@ -41,13 +47,16 @@ public class TagControllerImpl implements TagController {
     }
 
     @Override
-    public void delete(Long id) {
+    public TagDTO delete(Long id) {
         tagService.delete(id);
+        return null;
     }
 
     @Override
     public TagDTO findWidelyUsed() {
-        return mapper.toDTO(tagService.findWidelyUsed());
+        TagDTO tagDTO = mapper.toDTO(tagService.findWidelyUsed());
+        hateoasLinkBuilder.addLinksForTag(tagDTO);
+        return tagDTO;
     }
 
 }

@@ -3,6 +3,7 @@ package com.epam.esm.controller.impl;
 import com.epam.esm.controller.CertificateController;
 import com.epam.esm.dto.CertificateDTO;
 import com.epam.esm.entity.Certificate;
+import com.epam.esm.hateoas.HateoasLinkBuilder;
 import com.epam.esm.mapper.CertificateConverter;
 import com.epam.esm.service.impl.CertificateServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,7 @@ public class CertificatesControllerImpl implements CertificateController {
 
     private final CertificateServiceImpl certificateService;
     private final CertificateConverter mapper;
+    private final HateoasLinkBuilder hateoasLinkBuilder;
 
     @Override
     public List<CertificateDTO> findAll(String tagName, String partName, String sortBy, String order) {
@@ -34,12 +36,15 @@ public class CertificatesControllerImpl implements CertificateController {
                     .map(mapper::toDTO)
                     .collect(Collectors.toList());
         }
+        certificateDTOList.forEach(hateoasLinkBuilder::addLinksForCertificate);
         return certificateDTOList;
     }
 
     @Override
     public CertificateDTO findOne(Long id) {
-        return mapper.toDTO(certificateService.findById(id));
+        CertificateDTO dto = mapper.toDTO(certificateService.findById(id));
+        hateoasLinkBuilder.addLinksForCertificate(dto);
+        return dto;
     }
 
     @Override
@@ -50,14 +55,17 @@ public class CertificatesControllerImpl implements CertificateController {
     }
 
     @Override
-    public void delete(Long id) {
+    public CertificateDTO delete(Long id) {
         certificateService.delete(id);
+        return null;
     }
 
     @Override
-    public void update(Long id, CertificateDTO certificateDTO) {
+    public CertificateDTO update(Long id, CertificateDTO certificateDTO) {
 //        certificateDTO.setId(id);
-        certificateService.update(id, mapper.toEntity(certificateDTO));
+        CertificateDTO dto = mapper.toDTO(certificateService.update(id, mapper.toEntity(certificateDTO)));
+        hateoasLinkBuilder.addLinksForCertificate(dto);
+        return dto;
     }
 
     @Override
