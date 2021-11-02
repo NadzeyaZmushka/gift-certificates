@@ -30,6 +30,14 @@ public class OrderControllerImpl implements OrderController {
         return mapper.toDTO(orderService.findById(id));
     }
 
+    @Override
+    public List<OrderDTO> findAllByUserId(Long id) {
+        return orderService.findByUserId(id)
+                .stream()
+                .map(mapper::toDTO)
+                .collect(Collectors.toList());
+    }
+
 //    @Override
 //    public ResponseEntity<Void> add(OrderDTO orderDTO) {
 //        Order order = orderService.add(mapper.toEntity(orderDTO));

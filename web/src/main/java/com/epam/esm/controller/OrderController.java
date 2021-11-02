@@ -22,6 +22,10 @@ public interface OrderController {
     @ResponseStatus(HttpStatus.OK)
     OrderDTO findOne(@PathVariable Long id);
 
+    @GetMapping("/users/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    List<OrderDTO> findAllByUserId(@PathVariable Long id);
+
 //    @PostMapping
 //    @ResponseStatus(HttpStatus.CREATED)
 //    ResponseEntity<Void> add(@RequestBody OrderDTO orderDTO);

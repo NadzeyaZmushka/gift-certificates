@@ -2,6 +2,7 @@ package com.epam.esm.controller.impl;
 
 import com.epam.esm.controller.UserController;
 import com.epam.esm.dto.UserDTO;
+import com.epam.esm.hateoas.HateoasLinkBuilder;
 import com.epam.esm.mapper.UserConverter;
 import com.epam.esm.service.impl.OrderServiceImpl;
 import com.epam.esm.service.impl.UserServiceImpl;
@@ -19,13 +20,16 @@ public class UserControllerImpl implements UserController {
     private final UserServiceImpl userService;
     private final OrderServiceImpl orderService;
     private final UserConverter mapper;
+    private final HateoasLinkBuilder hateoasLinkBuilder;
 
     @Override
     public List<UserDTO> findAll(int page, int limit) {
-        return userService.findAll(limit, page)
+        List<UserDTO> userDTOList = userService.findAll(limit, page)
                 .stream()
                 .map(mapper::toDTO)
                 .collect(Collectors.toList());
+        userDTOList.forEach(hateoasLinkBuilder::addLinksForUser);
+        return userDTOList;
     }
 
     @Override
@@ -38,7 +42,9 @@ public class UserControllerImpl implements UserController {
 
     @Override
     public UserDTO findOne(Long id) {
-        return mapper.toDTO(userService.findById(id));
+        UserDTO userDTO = mapper.toDTO(userService.findById(id));
+        hateoasLinkBuilder.addLinksForUser(userDTO);
+        return userDTO;
     }
 
     //todo

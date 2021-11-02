@@ -49,7 +49,7 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.queryForOne(new FindByIdSpecification<>(USER_TABLE, id))
                 .orElseThrow(() -> new NoSuchEntityException(String.format(translator.toLocale(USER_WITH_ID_NOT_FOUND), id),
                         USER_NOT_FOUND.getErrorCode()));
-        addOrdersToUser(user);
+//        addOrdersToUser(user);
         return user;
     }
 
