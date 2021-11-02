@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.List;
@@ -25,10 +26,14 @@ public interface TagController {
      * Realizes REST's read operation of resource
      *
      * @return list of tag TagDTOs in JSON format
+     * @param page
+     * @param limit
      */
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    List<TagDTO> findAll();
+    List<TagDTO> findAll(@RequestParam(required = false, name = "page") int page,
+                         @RequestParam(required = false, name = "limit") int limit
+                         );
 
     /**
      * Realizes REST's read operation a resource with id in a request path

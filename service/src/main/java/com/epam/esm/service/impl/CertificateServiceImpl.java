@@ -60,17 +60,20 @@ public class CertificateServiceImpl implements CertificateService {
     }
 
     @Override
-    public List<Certificate> findAll() {
+    public List<Certificate> findAll(int limit, int page) {
+        int offset = (page - 1) * limit;
+        QueryOptions options = new QueryOptions(limit, offset);
         List<Certificate> certificateList;
-        certificateList = certificateRepository.queryForList(new FindAllSpecification<>(CERTIFICATE_TABLE));
+        certificateList = certificateRepository.queryForList(new FindAllSpecification<>(CERTIFICATE_TABLE), options);
         receiveTagsForCertificates(certificateList);
 
         return certificateList;
     }
 
     @Override
-    public List<Certificate> findAllByCriteria(String tagName, String partName, String sortBy, String order) {
-        QueryOptions options = new QueryOptions();
+    public List<Certificate> findAllByCriteria(String tagName, String partName, String sortBy, String order, int limit, int page) {
+        int offset = (page - 1) * limit;
+        QueryOptions options = new QueryOptions(limit, offset);
         Map<String, QueryOptions.Ordering> orderingMap = new HashMap<>();
         orderingMap.put(sortBy, QueryOptions.Ordering.valueOf(order.toUpperCase()));
         options.setOrder(orderingMap);

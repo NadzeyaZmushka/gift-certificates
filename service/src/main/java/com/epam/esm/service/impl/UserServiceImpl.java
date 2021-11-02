@@ -4,6 +4,7 @@ import com.epam.esm.config.Translator;
 import com.epam.esm.entity.Order;
 import com.epam.esm.entity.User;
 import com.epam.esm.exception.NoSuchEntityException;
+import com.epam.esm.repository.QueryOptions;
 import com.epam.esm.repository.impl.UserRepository;
 import com.epam.esm.service.UserService;
 import com.epam.esm.specification.impl.FindAllSpecification;
@@ -37,10 +38,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> findAll() {
-        List<User> users = userRepository.queryForList(new FindAllSpecification<>(USER_TABLE));
-        users.forEach(this::addOrdersToUser);
-        return users;
+    public List<User> findAll(int limit, int page) {
+        int offset = (page - 1) * limit;
+        QueryOptions options = new QueryOptions(limit, offset);
+        return userRepository.queryForList(new FindAllSpecification<>(USER_TABLE), options);
     }
 
     @Override
@@ -59,6 +60,15 @@ public class UserServiceImpl implements UserService {
                         USER_NOT_FOUND.getErrorCode()));
         addOrdersToUser(user);
         return user;
+    }
+
+    @Override
+    public List<User> findAllWithOrders(int limit, int page) {
+        int offset = (page - 1) * limit;
+        QueryOptions options = new QueryOptions(limit, offset);
+        List<User> users = userRepository.queryForList(new FindAllSpecification<>(USER_TABLE), options);
+        users.forEach(this::addOrdersToUser);
+        return users;
     }
 
     @Override

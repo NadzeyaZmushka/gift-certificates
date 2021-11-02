@@ -13,9 +13,12 @@ public interface CertificateService extends EntityService<Certificate> {
      * @param partName part of certificate name
      * @param sortBy   field by which to sort
      * @param order    in what order to sort
+     * @param limit
+     * @param page
      * @return list of certificates
      */
-    List<Certificate> findAllByCriteria(String tagName, String partName, String sortBy, String order);
+    List<Certificate> findAllByCriteria(String tagName, String partName, String sortBy, String order,
+                                        int limit, int page);
 
     /**
      * Updates certificate that has such id

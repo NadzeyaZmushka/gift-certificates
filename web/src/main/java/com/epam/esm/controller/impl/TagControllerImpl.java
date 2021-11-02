@@ -23,8 +23,8 @@ public class TagControllerImpl implements TagController {
     private final HateoasLinkBuilder hateoasLinkBuilder;
 
     @Override
-    public List<TagDTO> findAll() {
-        List<TagDTO> tagDTOList = tagService.findAll()
+    public List<TagDTO> findAll(int page, int limit) {
+        List<TagDTO> tagDTOList = tagService.findAll(limit, page)
                 .stream()
                 .map(mapper::toDTO)
                 .collect(Collectors.toList());

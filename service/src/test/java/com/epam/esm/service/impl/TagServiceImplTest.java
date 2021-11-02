@@ -56,7 +56,7 @@ class TagServiceImplTest {
         List<Tag> tags = Arrays.asList(new Tag(1L, "tag"), new Tag());
         when(tagRepository.queryForList(any(FindAllSpecification.class))).thenReturn(tags);
         //when
-        List<Tag> actual = tagService.findAll();
+        List<Tag> actual = tagService.findAll(10, 0 );
         //then
         assertEquals(tags.size(), actual.size());
         assertEquals(tags, actual);

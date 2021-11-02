@@ -5,6 +5,7 @@ import com.epam.esm.entity.Certificate;
 import com.epam.esm.entity.Order;
 import com.epam.esm.entity.User;
 import com.epam.esm.exception.NoSuchEntityException;
+import com.epam.esm.repository.QueryOptions;
 import com.epam.esm.repository.impl.OrderRepository;
 import com.epam.esm.repository.impl.UserRepository;
 import com.epam.esm.service.CertificateService;
@@ -12,7 +13,6 @@ import com.epam.esm.service.OrderService;
 import com.epam.esm.specification.impl.FindAllSpecification;
 import com.epam.esm.specification.impl.FindByIdSpecification;
 import com.epam.esm.specification.impl.order.OrderFindByUserIdSpecification;
-import com.epam.esm.specification.impl.user.UserByOrderIdSpecification;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -57,8 +57,10 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<Order> findAll() {
-        List<Order> orders = orderRepository.queryForList(new FindAllSpecification<>(ORDER_TABLE));
+    public List<Order> findAll(int limit, int page) {
+        int offset = (page - 1) * limit;
+        QueryOptions options = new QueryOptions(limit, offset);
+        List<Order> orders = orderRepository.queryForList(new FindAllSpecification<>(ORDER_TABLE), options);
         orders.forEach(this::addCertificateToOrder);
 //        orders.forEach(this::addUserToOrder);
         return orders;

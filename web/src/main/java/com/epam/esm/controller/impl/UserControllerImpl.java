@@ -2,7 +2,6 @@ package com.epam.esm.controller.impl;
 
 import com.epam.esm.controller.UserController;
 import com.epam.esm.dto.UserDTO;
-import com.epam.esm.entity.Order;
 import com.epam.esm.mapper.UserConverter;
 import com.epam.esm.service.impl.OrderServiceImpl;
 import com.epam.esm.service.impl.UserServiceImpl;
@@ -10,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,8 +21,16 @@ public class UserControllerImpl implements UserController {
     private final UserConverter mapper;
 
     @Override
-    public List<UserDTO> findAll() {
-        return userService.findAll()
+    public List<UserDTO> findAll(int page, int limit) {
+        return userService.findAll(limit, page)
+                .stream()
+                .map(mapper::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<UserDTO> findAllWithOrders(int page, int limit) {
+        return userService.findAllWithOrders(limit, page)
                 .stream()
                 .map(mapper::toDTO)
                 .collect(Collectors.toList());

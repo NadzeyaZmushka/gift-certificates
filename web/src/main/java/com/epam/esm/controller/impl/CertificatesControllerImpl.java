@@ -23,15 +23,15 @@ public class CertificatesControllerImpl implements CertificateController {
     private final HateoasLinkBuilder hateoasLinkBuilder;
 
     @Override
-    public List<CertificateDTO> findAll(String tagName, String partName, String sortBy, String order) {
+    public List<CertificateDTO> findAll(String tagName, String partName, String sortBy, String order, int page, int limit) {
         List<CertificateDTO> certificateDTOList;
         if (tagName == null && partName == null) {
-            certificateDTOList = certificateService.findAll()
+            certificateDTOList = certificateService.findAll(limit, page)
                     .stream()
                     .map(mapper::toDTO)
                     .collect(Collectors.toList());
         } else {
-            certificateDTOList = certificateService.findAllByCriteria(tagName, partName, sortBy, order)
+            certificateDTOList = certificateService.findAllByCriteria(tagName, partName, sortBy, order, limit, page)
                     .stream()
                     .map(mapper::toDTO)
                     .collect(Collectors.toList());

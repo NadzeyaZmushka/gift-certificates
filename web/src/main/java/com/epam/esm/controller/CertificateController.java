@@ -31,6 +31,8 @@ public interface CertificateController {
      * @param partName part of certificate name
      * @param sortBy   field by which to sort
      * @param order    in what order to sort
+     * @param page
+     * @param limit
      * @return list of certificate DTO in JSON format
      */
     @GetMapping
@@ -38,7 +40,9 @@ public interface CertificateController {
     List<CertificateDTO> findAll(@RequestParam(required = false, name = "tagName") String tagName,
                                  @RequestParam(required = false, name = "partName") String partName,
                                  @RequestParam(required = false, defaultValue = "id", name = "sortBy") String sortBy,
-                                 @RequestParam(required = false, defaultValue = "ASC", name = "order") String order);
+                                 @RequestParam(required = false, defaultValue = "ASC", name = "order") String order,
+                                 @RequestParam(required = false, name = "page") int page,
+                                 @RequestParam(required = false, name = "limit") int limit);
 
     /**
      * Realizes REST's read operation a resource with id in a request path

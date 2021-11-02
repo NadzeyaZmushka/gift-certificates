@@ -61,7 +61,7 @@ class CertificateServiceImplTest {
         //given
         when(certificateRepository.queryForList(any(FindAllSpecification.class))).thenReturn(Collections.emptyList());
         //when
-        List<Certificate> actual = certificateService.findAll();
+        List<Certificate> actual = certificateService.findAll(10, 0);
         //then
         assertEquals(Collections.emptyList(), actual);
     }

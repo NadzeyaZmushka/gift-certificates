@@ -1,12 +1,15 @@
 package com.epam.esm.hateoas;
 
-import com.epam.esm.controller.TagController;
 import com.epam.esm.controller.impl.CertificatesControllerImpl;
 import com.epam.esm.controller.impl.TagControllerImpl;
 import com.epam.esm.dto.CertificateDTO;
 import com.epam.esm.dto.TagDTO;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.Link;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -21,11 +24,8 @@ public class HateoasLinkBuilder {
         Link deleteLink = linkTo(methodOn(TagControllerImpl.class)
                 .delete(tagDTO.getId()))
                 .withRel("Delete this tag");
-        Link linkForAll = linkTo(methodOn(TagControllerImpl.class)
-                .findAll())
-                .withRel("Show all tags");
 
-        tagDTO.add(linkForSelf, linkForAll, deleteLink);
+        tagDTO.add(linkForSelf, deleteLink);
     }
 
     public void addLinksForCertificate(CertificateDTO certificateDTO) {

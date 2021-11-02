@@ -1,6 +1,7 @@
 package com.epam.esm.repository;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Map;
 
@@ -10,6 +11,7 @@ import java.util.Map;
  * @author Nadzeya Zmushka
  */
 @Data
+@NoArgsConstructor
 public class QueryOptions {
 
     private Integer limit;
@@ -17,6 +19,10 @@ public class QueryOptions {
 
     private Map<String, Ordering> order;
 
+    public QueryOptions(Integer limit, Integer offset) {
+        this.limit = limit;
+        this.offset = offset;
+    }
 
     public enum Ordering {
         ASC, DESC

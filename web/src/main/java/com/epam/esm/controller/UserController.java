@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.List;
@@ -17,7 +18,13 @@ public interface UserController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    List<UserDTO> findAll();
+    List<UserDTO> findAll(@RequestParam(required = false, name = "page") int page,
+                          @RequestParam(required = false, name = "limit") int limit);
+
+    @GetMapping("/withOrders")
+    @ResponseStatus(HttpStatus.OK)
+    List<UserDTO> findAllWithOrders(@RequestParam(required = false, name = "page") int page,
+                                    @RequestParam(required = false, name = "limit") int limit);
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
@@ -26,6 +33,6 @@ public interface UserController {
     @PostMapping("/{id}/orders")
     @ResponseStatus(HttpStatus.CREATED)
     ResponseEntity<Void> createOrder(@PathVariable Long id,
-                                            @RequestBody String certificateName);
+                                     @RequestBody String certificateName);
 
 }

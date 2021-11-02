@@ -5,6 +5,7 @@ import com.epam.esm.entity.Tag;
 import com.epam.esm.exception.DuplicateException;
 import com.epam.esm.exception.NoSuchEntityException;
 import com.epam.esm.repository.BaseCrudRepository;
+import com.epam.esm.repository.QueryOptions;
 import com.epam.esm.service.TagService;
 import com.epam.esm.specification.impl.FindAllSpecification;
 import com.epam.esm.specification.impl.FindByIdSpecification;
@@ -47,8 +48,10 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public List<Tag> findAll() {
-        return tagRepository.queryForList(new FindAllSpecification<>(TAG_TABLE));
+    public List<Tag> findAll(int limit, int page) {
+        int offset = (page - 1) * limit;
+        QueryOptions options = new QueryOptions(limit, offset);
+        return tagRepository.queryForList(new FindAllSpecification<>(TAG_TABLE), options);
     }
 
     @Override
