@@ -41,7 +41,6 @@ public class Order {
     @ManyToOne(targetEntity = User.class, cascade = {CascadeType.REMOVE, CascadeType.MERGE})
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
-//    private List<Certificate> certificates;
     @ManyToOne(targetEntity = Certificate.class)
     @JoinColumn(name = "certificate_id", referencedColumnName = "id")
     private Certificate certificate;

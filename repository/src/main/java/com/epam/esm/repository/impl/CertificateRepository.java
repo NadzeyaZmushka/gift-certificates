@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.ListJoin;
 import javax.persistence.criteria.Predicate;
@@ -48,16 +49,17 @@ public class CertificateRepository implements CrudRepository<Certificate> {
         }
         if (tagNames != null && tagNames.size() != 0) {
             Join<Object, Object> tagListJoin = root.join("tags");
-            for (String tag : tagNames) {
-                Predicate predicate = criteriaBuilder.equal(tagListJoin.get("name"), tag);
-
-                predicates.add(predicate);
-            }
+            Expression<Long> countOfTagsInGroup = criteriaBuilder.count(root);
+            Predicate predicateTagsList = tagListJoin.get("name").in(tagNames);
+            predicates.add(predicateTagsList);
+            query.where(criteriaBuilder.and(predicates.toArray(new Predicate[0])))
+                    .having(criteriaBuilder.equal(countOfTagsInGroup, tagNames.size()))
+                    .groupBy(root);
+        } else {
+            query.where(criteriaBuilder.and(predicates.toArray(new Predicate[0])));
         }
-        query.where(criteriaBuilder.and(predicates.toArray(new Predicate[0])))
-                .orderBy(criteriaBuilder.asc(root.get(orderBy)));
-        //
-        //
+        query.orderBy(criteriaBuilder.asc(root.get(orderBy)));
+
         return entityManager.createQuery(query)
                 .setFirstResult(pageSize * (page - 1))
                 .setMaxResults(pageSize)

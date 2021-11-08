@@ -3,10 +3,8 @@ package com.epam.esm.service.impl;
 import com.epam.esm.config.Translator;
 import com.epam.esm.entity.Certificate;
 import com.epam.esm.entity.Tag;
-import com.epam.esm.entity.TagAndCertificate;
 import com.epam.esm.exception.NoSuchEntityException;
 import com.epam.esm.repository.impl.CertificateRepository;
-import com.epam.esm.repository.impl.TagToCertificateRepository;
 import com.epam.esm.service.CertificateService;
 import com.epam.esm.service.TagService;
 import com.epam.esm.validator.CertificateValidator;
@@ -29,7 +27,6 @@ import static com.epam.esm.exception.ErrorMessageCodeConstant.CERTIFICATE_WITH_I
 public class CertificateServiceImpl implements CertificateService {
 
     private final CertificateRepository certificateRepository;
-    private final TagToCertificateRepository tagToCertificateRepository;
     private final Translator translator;
     private final CertificateValidator validator;
     private final TagService tagService;
@@ -82,6 +79,8 @@ public class CertificateServiceImpl implements CertificateService {
         fromDB.setPrice(certificate.getPrice() == null ? fromDB.getPrice() : certificate.getPrice());
         fromDB.setDuration((certificate.getDuration() == null ? fromDB.getDuration() : certificate.getDuration()));
         fromDB.setCreateDate(fromDB.getCreateDate());
+        //?
+        fromDB.setTags(certificate.getTags());
         validator.validCertificate(fromDB);
         fromDB.setLastUpdateDate(LocalDateTime.now());
         certificateRepository.update(fromDB);
@@ -89,7 +88,6 @@ public class CertificateServiceImpl implements CertificateService {
         return fromDB;
     }
 
-    //todo переделать
     @Override
     @Transactional
     public void addTagsToCertificate(Long certificateId, List<String> tagsNames) {
@@ -100,26 +98,19 @@ public class CertificateServiceImpl implements CertificateService {
         List<Tag> tagsToAdd = getTagsToAdd(certificate.getTags(), tagsNames).stream()
                 .map(tagService::findByNameOrCreate)
                 .collect(Collectors.toList());
-        List<TagAndCertificate> tagCertificateList = tagsToAdd.stream()
-                .map(tag -> new TagAndCertificate(certificate.getId(), tag.getId()))
-                .collect(Collectors.toList());
-        tagToCertificateRepository.addAll(tagCertificateList);
-        //??
+        certificate.getTags().addAll(tagsToAdd);
         certificate.setLastUpdateDate(LocalDateTime.now());
     }
 
-    //todo переделать
+    //todo: переделать, удаляет все теги у сертификата
     @Override
     @Transactional
     public void deleteTagFromCertificate(Long certificateId, List<String> tagsNames) {
         Certificate certificate = findById(certificateId);
+        List<Tag> certificateTags = certificate.getTags();
         List<Tag> tags = tagService.findByNames(tagsNames);
-        List<TagAndCertificate> tagCertificateList = tags.stream()
-                .map(tag -> new TagAndCertificate(certificate.getId(), tag.getId()))
-                .collect(Collectors.toList());
-        tagToCertificateRepository.removeAll(tagCertificateList);
-        //??
-        certificate.setLastUpdateDate(LocalDateTime.now());
+        tags.forEach(certificateTags::remove);
+        certificateRepository.update(certificate);
     }
 
     private List<String> getTagsToAdd(List<Tag> tags, List<String> tagNames) {
