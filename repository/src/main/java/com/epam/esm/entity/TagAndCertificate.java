@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class TagAndCertificate implements Entity {
+public class TagAndCertificate {
 
     private Long certificateId;
     private Long tagId;

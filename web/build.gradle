@@ -8,9 +8,9 @@ dependencies {
     implementation project(":repository")
     implementation group: 'org.modelmapper', name: 'modelmapper', version: '2.3.2'
 
-    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '2.5.5'
-    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-actuator', version: '2.5.5'
-    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-hateoas', version: '2.5.5'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-hateoas'
 
 
 }

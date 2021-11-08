@@ -6,7 +6,13 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.hateoas.RepresentationModel;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -15,11 +21,22 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class CertificateDTO extends BaseEntityDTO<CertificateDTO> {
+public class CertificateDTO extends RepresentationModel<CertificateDTO> {
 
+    private Long id;
+    @Size(min = 2, max = 50, message = "")
+    @NotEmpty
+    @NotBlank
     private String name;
+    @Size(min = 2, max = 200, message = "")
+    @NotEmpty
+    @NotBlank
     private String description;
+    @Min(value = 1)
+    @Max(value = 999)
     private BigDecimal price;
+    @Min(value = 1)
+    @Max(value = 100)
     private Integer duration;
     private List<TagDTO> tags;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")

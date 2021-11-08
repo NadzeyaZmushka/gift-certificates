@@ -4,19 +4,13 @@ import com.epam.esm.config.Translator;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.exception.DuplicateException;
 import com.epam.esm.exception.NoSuchEntityException;
-import com.epam.esm.repository.BaseCrudRepository;
-import com.epam.esm.repository.QueryOptions;
+import com.epam.esm.repository.impl.TagRepository;
 import com.epam.esm.service.TagService;
-import com.epam.esm.specification.impl.FindAllSpecification;
-import com.epam.esm.specification.impl.FindByIdSpecification;
-import com.epam.esm.specification.impl.tag.TagFindByCertificateIdSpecification;
-import com.epam.esm.specification.impl.tag.TagFindByNameSpecification;
-import com.epam.esm.specification.impl.tag.TagFindByNamesSpecification;
-import com.epam.esm.specification.impl.tag.TagFindMostPopularSpecification;
 import com.epam.esm.validator.TagValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -29,10 +23,11 @@ import static com.epam.esm.exception.ErrorMessageCodeConstant.TAG_WITH_NAME_NOT_
 
 @Slf4j
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class TagServiceImpl implements TagService {
 
-    private final BaseCrudRepository<Tag> tagRepository;
+    private final TagRepository tagRepository;
     private final TagValidator tagValidator;
     private final Translator translator;
     private static final String TAG_TABLE = "tag";
@@ -40,7 +35,7 @@ public class TagServiceImpl implements TagService {
     @Override
     public Tag add(Tag tag) {
         tagValidator.validTag(tag);
-        if (tagRepository.queryForOne(new TagFindByNameSpecification(tag.getName())).isPresent()) {
+        if (tagRepository.findByName(tag.getName()).isPresent()) {
             throw new DuplicateException(translator.toLocale(TAG_DUPLICATE), TAG_INCORRECT_DATA.getErrorCode());
         } else {
             return tagRepository.add(tag);
@@ -49,57 +44,56 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public List<Tag> findAll(int limit, int page) {
-        int offset = (page - 1) * limit;
-        QueryOptions options = new QueryOptions(limit, offset);
-        return tagRepository.queryForList(new FindAllSpecification<>(TAG_TABLE), options);
+        return tagRepository.findAll(page, limit);
     }
 
     @Override
     public Tag findById(Long id) {
-        return tagRepository.queryForOne(new FindByIdSpecification<>(TAG_TABLE, id))
+        return tagRepository.findById(id)
                 .orElseThrow(() -> new NoSuchEntityException(String.format(translator.toLocale(TAG_WITH_ID_NOT_FOUND), id),
                         TAG_NOT_FOUND.getErrorCode()));
     }
 
     @Override
-    public boolean delete(Long id) {
+    public void delete(Long id) {
         Tag tag = findById(id);
         if (tag == null) {
             throw new NoSuchEntityException(String.format(translator.toLocale(TAG_WITH_ID_NOT_FOUND), id),
                     TAG_NOT_FOUND.getErrorCode());
         }
-        return tagRepository.remove(tag);
+        tagRepository.remove(tag);
     }
 
     @Override
     public Tag findByName(String name) {
-        return tagRepository.queryForOne(new TagFindByNameSpecification(name))
+        return tagRepository.findByName(name)
                 .orElseThrow(() -> new NoSuchEntityException(String.format(translator.toLocale(TAG_WITH_NAME_NOT_FOUND), name),
                         TAG_NOT_FOUND.getErrorCode()));
     }
 
     @Override
     public Tag findByNameOrCreate(String name) {
-        return tagRepository.queryForOne(new TagFindByNameSpecification(name)).orElseGet(() -> {
+        return tagRepository.findByName(name).orElseGet(() -> {
             Tag tag = new Tag();
             tag.setName(name);
-            return add(tag);
+            add(tag);
+            return tag;
         });
     }
 
     @Override
     public List<Tag> findByCertificateId(Long certificateId) {
-        return tagRepository.queryForList(new TagFindByCertificateIdSpecification(certificateId));
+        return tagRepository.findByCertificateId(certificateId);
     }
 
     @Override
     public List<Tag> findByNames(List<String> names) {
-        return tagRepository.queryForList(new TagFindByNamesSpecification(names));
+        return tagRepository.findByNames(names);
     }
 
     @Override
     public Tag findWidelyUsed() {
-        return tagRepository.queryForOne(new TagFindMostPopularSpecification())
+        return tagRepository.findMostPopularTag()
                 .orElseThrow(() -> new NoSuchEntityException(translator.toLocale(SUCH_TAG_NOT_FOUND),
                         TAG_NOT_FOUND.getErrorCode()));
     }

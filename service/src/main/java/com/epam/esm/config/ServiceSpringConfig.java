@@ -15,7 +15,6 @@ import java.util.Locale;
 
 @Configuration
 @ComponentScan("com.epam.esm")
-@Import(DBConfiguration.class)
 public class ServiceSpringConfig extends AcceptHeaderLocaleResolver {
 
     List<Locale> LOCALES = Arrays.asList(

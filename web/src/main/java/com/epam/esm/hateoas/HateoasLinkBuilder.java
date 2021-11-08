@@ -5,6 +5,7 @@ import com.epam.esm.controller.impl.OrderControllerImpl;
 import com.epam.esm.controller.impl.TagControllerImpl;
 import com.epam.esm.controller.impl.UserControllerImpl;
 import com.epam.esm.dto.CertificateDTO;
+import com.epam.esm.dto.OrderDTO;
 import com.epam.esm.dto.TagDTO;
 import com.epam.esm.dto.UserDTO;
 import org.springframework.hateoas.Link;
@@ -19,45 +20,54 @@ public class HateoasLinkBuilder {
     public void addLinksForTag(TagDTO tagDTO) {
         Link linkForSelf = linkTo(TagControllerImpl.class)
                 .slash(tagDTO.getId())
-                .withRel("Go to this tag");
-        Link deleteLink = linkTo(methodOn(TagControllerImpl.class)
-                .delete(tagDTO.getId()))
-                .withRel("Delete this tag");
+                .withSelfRel();
+        Link findAll = linkTo(methodOn(TagControllerImpl.class)
+                .findAll(1, 1000))
+                .withRel("findAll");
 
-        tagDTO.add(linkForSelf, deleteLink);
+        tagDTO.add(linkForSelf, findAll);
     }
 
     public void addLinksForCertificate(CertificateDTO certificateDTO) {
         Link linkForSelf = linkTo(CertificatesControllerImpl.class)
                 .slash(certificateDTO.getId())
-                .withRel("Go to this certificate");
-        Link deleteLink = linkTo(methodOn(CertificatesControllerImpl.class)
-                .delete(certificateDTO.getId()))
-                .withRel("Delete this certificate");
-        Link updateLink = linkTo(methodOn(CertificatesControllerImpl.class)
-                .update(certificateDTO.getId(), certificateDTO))
-                .withRel("Update this certificate");
+                .withSelfRel();
+        Link findAll = linkTo(methodOn(CertificatesControllerImpl.class)
+                .findAll(null, "", "", "", 1, 1000))
+                .withRel("findAll");
 
-        certificateDTO.add(linkForSelf, deleteLink, updateLink);
+        certificateDTO.add(linkForSelf, findAll);
     }
 
     public void addLinksForUser(UserDTO userDTO) {
         Link linkForSelf = linkTo(UserControllerImpl.class)
                 .slash(userDTO.getId())
-                .withRel("Go to this user");
+                .withSelfRel();
         Link linkForUserOrders = linkTo(methodOn(OrderControllerImpl.class)
                 .findAllByUserId(userDTO.getId()))
                 .withRel("Show user's orders");
         Link linkForAll = linkTo(methodOn(UserControllerImpl.class)
-                .findAll(0, 0))
+                .findAll(1, 1000))
                 .withRel("Show all users");
-        Link linkForAllWithOrders = linkTo(methodOn(UserControllerImpl.class)
-                .findAllWithOrders(0, 0))
-                .withRel("Show all users and their orders");
         Link linForCreateOrder = linkTo(methodOn(UserControllerImpl.class)
                 .createOrder(userDTO.getId(), null))
-                .withRel("Go to create order");
-        userDTO.add(linkForSelf, linkForUserOrders, linkForAll, linkForAllWithOrders, linForCreateOrder);
+                .withRel("Create order");
+
+        userDTO.add(linkForSelf, linkForUserOrders, linkForAll, linForCreateOrder);
+    }
+
+    public void addLinksForOrder(OrderDTO orderDTO) {
+        Link linkForSelf = linkTo(OrderControllerImpl.class)
+                .slash(orderDTO.getId())
+                .withSelfRel();
+        Link linkForAll = linkTo(methodOn(OrderControllerImpl.class)
+                .findAll(1, 1000))
+                .withRel("findAll");
+        Link linkForCreateOrder = linkTo(methodOn(UserControllerImpl.class)
+                .createOrder(null, null))
+                .withRel("Create order");
+
+        orderDTO.add(linkForSelf, linkForAll, linkForCreateOrder);
     }
 
 }

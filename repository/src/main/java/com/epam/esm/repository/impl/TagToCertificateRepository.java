@@ -1,10 +1,7 @@
 package com.epam.esm.repository.impl;
 
 import com.epam.esm.entity.TagAndCertificate;
-import com.epam.esm.repository.BaseCrudRepository;
 import com.epam.esm.repository.CrudRepository;
-import com.epam.esm.repository.QueryOptions;
-import com.epam.esm.specification.SqlSpecification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -14,7 +11,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
- * Implementation of the {@link BaseCrudRepository}
+ * Implementation of the {@link }
  *
  * @author Nadzeya Zmushka
  */
@@ -38,18 +35,16 @@ public class TagToCertificateRepository implements CrudRepository<TagAndCertific
     }
 
     @Override
-    public boolean remove(TagAndCertificate entity) {
-        return jdbcTemplate.update(DELETE_CERTIFICATE_TAG_SQL, entity.getTagId(), entity.getCertificateId()) != 0;
+    public void remove(TagAndCertificate entity) {
+        jdbcTemplate.update(DELETE_CERTIFICATE_TAG_SQL, entity.getTagId(), entity.getCertificateId());
     }
 
-    @Override
     public void addAll(List<TagAndCertificate> tagCertificateList) {
         jdbcTemplate.batchUpdate(CREATE_CERTIFICATE_TAG_SQL, tagCertificateList.stream()
                 .map(tc -> new Object[]{tc.getCertificateId(), tc.getTagId()})
                 .collect(Collectors.toList()));
     }
 
-    @Override
     public void removeAll(List<TagAndCertificate> tagCertificateList) {
         jdbcTemplate.batchUpdate(DELETE_CERTIFICATE_TAG_SQL, tagCertificateList.stream()
                 .map(tc -> new Object[]{tc.getCertificateId(), tc.getTagId()})
@@ -57,22 +52,17 @@ public class TagToCertificateRepository implements CrudRepository<TagAndCertific
     }
 
     @Override
-    public List<TagAndCertificate> queryForList(SqlSpecification<TagAndCertificate> specification) {
+    public List<TagAndCertificate> findAll(int page, int pageSize) {
         throw new UnsupportedOperationException(NOT_SUPPORTED);
     }
 
     @Override
-    public List<TagAndCertificate> queryForList(SqlSpecification<TagAndCertificate> specification, QueryOptions options) {
+    public Optional<TagAndCertificate> findById(Long id) {
         throw new UnsupportedOperationException(NOT_SUPPORTED);
     }
 
     @Override
-    public Optional<TagAndCertificate> queryForOne(SqlSpecification<TagAndCertificate> specification) {
-        throw new UnsupportedOperationException(NOT_SUPPORTED);
-    }
-
-    @Override
-    public TagAndCertificate update(TagAndCertificate entity) {
+    public void update(TagAndCertificate entity) {
         throw new UnsupportedOperationException(NOT_SUPPORTED);
     }
 

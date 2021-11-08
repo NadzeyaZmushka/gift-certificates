@@ -2,6 +2,7 @@ package com.epam.esm.controller.impl;
 
 import com.epam.esm.controller.OrderController;
 import com.epam.esm.dto.OrderDTO;
+import com.epam.esm.hateoas.HateoasLinkBuilder;
 import com.epam.esm.mapper.OrderConverter;
 import com.epam.esm.service.impl.OrderServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -16,33 +17,33 @@ public class OrderControllerImpl implements OrderController {
 
     private final OrderServiceImpl orderService;
     private final OrderConverter mapper;
+    private final HateoasLinkBuilder hateoasLinkBuilder;
 
     @Override
     public List<OrderDTO> findAll(int page, int limit) {
-        return orderService.findAll(limit, page)
+        List<OrderDTO> orderDTOList = orderService.findAll(limit, page)
                 .stream()
                 .map(mapper::toDTO)
                 .collect(Collectors.toList());
+        orderDTOList.forEach(hateoasLinkBuilder::addLinksForOrder);
+        return orderDTOList;
     }
 
     @Override
     public OrderDTO findOne(Long id) {
-        return mapper.toDTO(orderService.findById(id));
+        OrderDTO orderDTO = mapper.toDTO(orderService.findById(id));
+        hateoasLinkBuilder.addLinksForOrder(orderDTO);
+        return orderDTO;
     }
 
     @Override
     public List<OrderDTO> findAllByUserId(Long id) {
-        return orderService.findByUserId(id)
+        List<OrderDTO> orderDTOList = orderService.findByUserId(id, 1, 10)
                 .stream()
                 .map(mapper::toDTO)
                 .collect(Collectors.toList());
+        orderDTOList.forEach(hateoasLinkBuilder::addLinksForOrder);
+        return orderDTOList;
     }
-
-//    @Override
-//    public ResponseEntity<Void> add(OrderDTO orderDTO) {
-//        Order order = orderService.add(mapper.toEntity(orderDTO));
-//        URI location = URI.create(String.format("/orders/%d", order.getId()));
-//        return ResponseEntity.created(location).build();
-//    }
 
 }

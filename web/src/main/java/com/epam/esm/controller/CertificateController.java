@@ -37,12 +37,12 @@ public interface CertificateController {
      */
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    List<CertificateDTO> findAll(@RequestParam(required = false, name = "tagName") String tagName,
+    List<CertificateDTO> findAll(@RequestParam(required = false, name = "tagName") List<String> tagName,
                                  @RequestParam(required = false, name = "partName") String partName,
                                  @RequestParam(required = false, defaultValue = "id", name = "sortBy") String sortBy,
                                  @RequestParam(required = false, defaultValue = "ASC", name = "order") String order,
-                                 @RequestParam(required = false, name = "page") int page,
-                                 @RequestParam(required = false, name = "limit") int limit);
+                                 @RequestParam(required = false, name = "page", defaultValue = "1") int page,
+                                 @RequestParam(required = false, name = "limit", defaultValue = "1000") int limit);
 
     /**
      * Realizes REST's read operation a resource with id in a request path
@@ -76,7 +76,8 @@ public interface CertificateController {
 
     /**
      * Realizes REST's update operation of a resource
-     *  @param id             of certificate to be updated
+     *
+     * @param id             of certificate to be updated
      * @param certificateDTO an object with new fields of a resource
      * @return updated certificate
      */

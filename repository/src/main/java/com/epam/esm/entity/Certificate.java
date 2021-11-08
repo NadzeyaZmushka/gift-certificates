@@ -2,58 +2,48 @@ package com.epam.esm.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
+@Entity
+@Table(name = "certificate", schema = "gifts")
 @Data
-@ToString(callSuper = true)
-@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class Certificate extends BaseEntity {
+public class Certificate {
 
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @Column(name = "name")
     private String name;
+    @Column(name = "description")
     private String description;
+    @Column(name = "price")
     private BigDecimal price;
+    @Column(name = "duration")
     private Integer duration;
+    @Column(name = "create_date", updatable = false, columnDefinition = "TIMESTAMP")
     private LocalDateTime createDate;
+    @Column(name = "last_update_date", columnDefinition = "TIMESTAMP")
     private LocalDateTime lastUpdateDate;
+    @ManyToMany
+    @JoinTable(name = "certificate_tag", schema = "gifts",
+            joinColumns = {@JoinColumn(name = "certificate_id", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "tag_id", referencedColumnName = "id")})
     private List<Tag> tags;
-
-    public Certificate(Long id, String name, String description
-            , BigDecimal price, Integer duration
-            , LocalDateTime createDate, LocalDateTime lastUpdateDate) {
-        super(id);
-        this.name = name;
-        this.description = description;
-        this.price = price;
-        this.duration = duration;
-        this.createDate = createDate;
-        this.lastUpdateDate = lastUpdateDate;
-        this.tags = new ArrayList<>();
-    }
-
-    public Certificate(Long id, String name, String description, BigDecimal price,
-                       Integer duration, LocalDateTime createDate, LocalDateTime lastUpdateDate,
-                       List<Tag> tags) {
-        super(id);
-        this.name = name;
-        this.description = description;
-        this.price = price;
-        this.duration = duration;
-        this.createDate = createDate;
-        this.lastUpdateDate = lastUpdateDate;
-        this.tags = tags;
-    }
-
-    public void addTags(Tag tag) {
-        tags.add(tag);
-    }
 
 }

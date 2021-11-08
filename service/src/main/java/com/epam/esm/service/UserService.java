@@ -6,8 +6,8 @@ import java.util.List;
 
 public interface UserService extends EntityService<User> {
 
-    User findByOrderId(Long orderId);
-
-    List<User> findAllWithOrders(int limit, int page);
+//    User findByOrderId(Long orderId);
+//
+//    List<User> findAllWithOrders(int limit, int page);
 
 }

@@ -23,7 +23,7 @@ public class CertificatesControllerImpl implements CertificateController {
     private final HateoasLinkBuilder hateoasLinkBuilder;
 
     @Override
-    public List<CertificateDTO> findAll(String tagName, String partName, String sortBy, String order, int page, int limit) {
+    public List<CertificateDTO> findAll(List<String> tagName, String partName, String sortBy, String order, int page, int limit) {
         List<CertificateDTO> certificateDTOList;
         if (tagName == null && partName == null) {
             certificateDTOList = certificateService.findAll(limit, page)
@@ -62,7 +62,6 @@ public class CertificatesControllerImpl implements CertificateController {
 
     @Override
     public CertificateDTO update(Long id, CertificateDTO certificateDTO) {
-//        certificateDTO.setId(id);
         CertificateDTO dto = mapper.toDTO(certificateService.update(id, mapper.toEntity(certificateDTO)));
         hateoasLinkBuilder.addLinksForCertificate(dto);
         return dto;

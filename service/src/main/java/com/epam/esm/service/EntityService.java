@@ -1,7 +1,5 @@
 package com.epam.esm.service;
 
-import com.epam.esm.entity.BaseEntity;
-
 import java.util.List;
 
 /**
@@ -9,7 +7,7 @@ import java.util.List;
  *
  * @param <T> entities which service operates with
  */
-public interface EntityService<T extends BaseEntity> {
+public interface EntityService<T> {
 
     T add(T entity);
 
@@ -34,8 +32,7 @@ public interface EntityService<T extends BaseEntity> {
      * Deletes entities.
      *
      * @param id of entity that need to be deleted
-     * @return true when entity is deleted
      */
-    boolean delete(Long id);
+    void delete(Long id);
 
 }

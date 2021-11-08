@@ -15,8 +15,8 @@ public interface OrderController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    List<OrderDTO> findAll(@RequestParam(required = false, name = "page") int page,
-                           @RequestParam(required = false, name = "limit") int limit);
+    List<OrderDTO> findAll(@RequestParam(required = false, name = "page", defaultValue = "1") int page,
+                           @RequestParam(required = false, name = "limit", defaultValue = "1000") int limit);
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
