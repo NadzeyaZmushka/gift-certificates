@@ -1,5 +1,7 @@
 package com.epam.esm.service;
 
+import com.epam.esm.entity.BaseEntity;
+
 import java.util.List;
 
 /**
@@ -7,16 +9,16 @@ import java.util.List;
  *
  * @param <T> entities which service operates with
  */
-public interface EntityService<T> {
+public interface EntityService<T extends BaseEntity> {
 
     T add(T entity);
 
     /**
      * Finds all entities
      *
-     * @return list of certificate. May return empty list if there is no entities
      * @param limit
      * @param page
+     * @return list of certificate. May return empty list if there is no entities
      */
     List<T> findAll(int limit, int page);
 

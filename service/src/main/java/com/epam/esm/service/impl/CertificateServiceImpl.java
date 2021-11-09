@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 
 import static com.epam.esm.exception.CustomErrorCode.CERTIFICATE_NOT_FOUND;
 import static com.epam.esm.exception.ErrorMessageCodeConstant.CERTIFICATE_WITH_ID_NOT_FOUND;
+import static com.epam.esm.exception.ErrorMessageCodeConstant.CERTIFICATE_WITH_NAME_NOT_FOUND;
 
 @Slf4j
 @Service
@@ -42,16 +43,19 @@ public class CertificateServiceImpl implements CertificateService {
     }
 
     @Override
+    @Transactional
     public List<Certificate> findAll(int limit, int page) {
         return certificateRepository.findAll(page, limit);
     }
 
     @Override
+    @Transactional
     public List<Certificate> findAllByCriteria(List<String> tagNames, String partName, String sortBy, String order, int limit, int page) {
         return certificateRepository.findAll(tagNames, partName, sortBy, page, limit);
     }
 
     @Override
+    @Transactional
     public Certificate findById(Long id) {
         Certificate certificate = certificateRepository.findById(id)
                 .orElseThrow(() -> new NoSuchEntityException(String.format(translator.toLocale(CERTIFICATE_WITH_ID_NOT_FOUND), id)
@@ -62,6 +66,7 @@ public class CertificateServiceImpl implements CertificateService {
     }
 
     @Override
+    @Transactional
     public void delete(Long id) {
         Certificate certificate = findById(id);
         if (certificate == null) {
@@ -72,6 +77,7 @@ public class CertificateServiceImpl implements CertificateService {
     }
 
     @Override
+    @Transactional
     public Certificate update(Long id, Certificate certificate) {
         Certificate fromDB = findById(id);
         fromDB.setName(certificate.getName() == null ? fromDB.getName() : certificate.getName());
@@ -111,6 +117,13 @@ public class CertificateServiceImpl implements CertificateService {
         List<Tag> tags = tagService.findByNames(tagsNames);
         tags.forEach(certificateTags::remove);
         certificateRepository.update(certificate);
+    }
+
+    @Override
+    public Certificate findByName(String name) {
+        return certificateRepository.findByName(name)
+                .orElseThrow(() -> new NoSuchEntityException(String.format(translator.toLocale(CERTIFICATE_WITH_NAME_NOT_FOUND), name)
+                , CERTIFICATE_NOT_FOUND.getErrorCode()));
     }
 
     private List<String> getTagsToAdd(List<Tag> tags, List<String> tagNames) {

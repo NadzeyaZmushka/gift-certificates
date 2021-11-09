@@ -46,7 +46,7 @@ public interface CertificateService extends EntityService<Certificate> {
      */
     void deleteTagFromCertificate(Long certificateId, List<String> tagsNames);
 
-//    Certificate findByName(String name);
+    Certificate findByName(String name);
 //
 //    Certificate findByOrderId(Long orderId);
 

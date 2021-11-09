@@ -1,22 +1,23 @@
 package com.epam.esm.repository.impl;
 
 import com.epam.esm.entity.Certificate;
-import com.epam.esm.entity.Tag;
+import com.epam.esm.repository.CertificateOrderOptions;
 import com.epam.esm.repository.CrudRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Join;
-import javax.persistence.criteria.ListJoin;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,14 +28,22 @@ public class CertificateRepository implements CrudRepository<Certificate> {
     private final EntityManager entityManager;
 
     @Override
+    public Certificate add(Certificate entity) {
+        entity.setCreateDate(LocalDateTime.now());
+        entity.setLastUpdateDate(LocalDateTime.now());
+        entityManager.persist(entity);
+        return entity;
+    }
+
+    @Override
     public List<Certificate> findAll(int page, int pageSize) {
         return entityManager.createQuery("select c from Certificate c", Certificate.class)
                 .setFirstResult(pageSize * (page - 1))
                 .setMaxResults(pageSize)
                 .getResultList();
     }
-
     //todo:
+
     public List<Certificate> findAll(List<String> tagNames, String namePart, String orderBy,
                                      int page, int pageSize) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
@@ -58,7 +67,10 @@ public class CertificateRepository implements CrudRepository<Certificate> {
         } else {
             query.where(criteriaBuilder.and(predicates.toArray(new Predicate[0])));
         }
-        query.orderBy(criteriaBuilder.asc(root.get(orderBy)));
+        if (Arrays.stream(CertificateOrderOptions.values())
+                .anyMatch(value -> value.getOrderBy().equals(orderBy))) {
+            query.orderBy(criteriaBuilder.asc(root.get(orderBy)));
+        }
 
         return entityManager.createQuery(query)
                 .setFirstResult(pageSize * (page - 1))
@@ -71,12 +83,15 @@ public class CertificateRepository implements CrudRepository<Certificate> {
         return Optional.ofNullable(entityManager.find(Certificate.class, id));
     }
 
-    @Override
-    public Certificate add(Certificate entity) {
-        entity.setCreateDate(LocalDateTime.now());
-        entity.setLastUpdateDate(LocalDateTime.now());
-        entityManager.persist(entity);
-        return entity;
+    public Optional<Certificate> findByName(String name) {
+        try {
+            return Optional.of(entityManager.createQuery("select c from Certificate c where c.name =: name", Certificate.class)
+                    .setParameter("name", name)
+                    .setMaxResults(1)
+                    .getSingleResult());
+        } catch (NoResultException e) {
+            return Optional.empty();
+        }
     }
 
     @Override

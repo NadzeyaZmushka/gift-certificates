@@ -1,5 +1,7 @@
 package com.epam.esm.repository;
 
+import com.epam.esm.entity.BaseEntity;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -10,7 +12,7 @@ import java.util.Optional;
  * @author Nadzeya Zmushka
  */
 
-public interface CrudRepository<T> {
+public interface CrudRepository<T extends BaseEntity> {
 
     /**
      * Finds objects in database

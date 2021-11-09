@@ -42,8 +42,8 @@ public class UserControllerImpl implements UserController {
     }
 
     @Override
-    public ResponseEntity<Void> createOrder(Long id, Long certificateId) {
-        Order order = orderService.create(id, certificateId);
+    public ResponseEntity<Void> createOrder(Long id, String certificateName) {
+        Order order = orderService.create(id, certificateName);
         URI location = URI.create(String.format("/orders/%d", order.getId()));
         return ResponseEntity.created(location).build();
     }

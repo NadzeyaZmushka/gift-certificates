@@ -4,10 +4,7 @@ import com.epam.esm.entity.Certificate;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.repository.CrudRepository;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.Criteria;
-import org.hibernate.SQLQuery;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -26,7 +23,7 @@ public class TagRepository implements CrudRepository<Tag> {
     private final EntityManager entityManager;
 
     private static final String FIND_ALL = "select t from Tag t";
-    private static final String FIND_BY_NAME_SQL = "from Tag where name =: name";
+    private static final String FIND_BY_NAME_SQL = "select t from Tag t where t.name =: name";
     //??
     private static final String MOST_POPULAR_TAG_SQL = "SELECT gifts.tag.id, gifts.tag.name FROM gifts.tag INNER JOIN gifts.certificate_tag ct on tag.id = ct.tag_id INNER JOIN gifts.certificate c on c.id = ct.certificate_id INNER JOIN gifts.order o on c.id = o.certificate_id INNER JOIN gifts.user u on u.id = o.user_id WHERE u.id IN (SELECT wu.user_id FROM (SELECT SUM(gifts.order.cost) sumCost, user_id FROM gifts.order GROUP BY user_id ORDER BY sumCost desc limit 1) as wu) GROUP BY tag.id ORDER BY count(tag.id) desc limit 1";
 
@@ -81,7 +78,7 @@ public class TagRepository implements CrudRepository<Tag> {
     }
 
     public List<Tag> findByCertificateId(Long id) {
-        Certificate certificate = (Certificate) entityManager.createQuery("select c from Certificate c where c.id = :id")
+        Certificate certificate = entityManager.createQuery("select c from Certificate c where c.id = :id", Certificate.class)
                 .setParameter("id", id)
                 .getSingleResult();
         return certificate.getTags();

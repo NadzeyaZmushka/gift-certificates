@@ -33,6 +33,7 @@ public class TagServiceImpl implements TagService {
     private static final String TAG_TABLE = "tag";
 
     @Override
+    @Transactional
     public Tag add(Tag tag) {
         tagValidator.validTag(tag);
         if (tagRepository.findByName(tag.getName()).isPresent()) {
@@ -43,6 +44,7 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
+    @Transactional
     public List<Tag> findAll(int limit, int page) {
         return tagRepository.findAll(page, limit);
     }
@@ -55,6 +57,7 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
+    @Transactional
     public void delete(Long id) {
         Tag tag = findById(id);
         if (tag == null) {
@@ -72,6 +75,7 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
+    @Transactional
     public Tag findByNameOrCreate(String name) {
         return tagRepository.findByName(name).orElseGet(() -> {
             Tag tag = new Tag();

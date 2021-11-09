@@ -15,7 +15,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class OrderRepository implements CrudRepository<Order> {
 
-    private static final String FIND_ORDER_BY_USER_ID = "from Order where user =: user";
+    private static final String FIND_ORDER_BY_USER_ID = "select o from Order o where o.user =: user";
     private static final String FIND_ALL = "select o from Order o";
 
     private final EntityManager entityManager;

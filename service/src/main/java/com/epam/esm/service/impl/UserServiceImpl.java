@@ -25,16 +25,19 @@ public class UserServiceImpl implements UserService {
     private final Translator translator;
 
     @Override
+    @Transactional
     public User add(User user) {
         return userRepository.add(user);
     }
 
     @Override
+    @Transactional
     public List<User> findAll(int limit, int page) {
         return userRepository.findAll(page, limit);
     }
 
     @Override
+    @Transactional
     public User findById(Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new NoSuchEntityException(String.format(translator.toLocale(USER_WITH_ID_NOT_FOUND), id),
@@ -42,6 +45,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void delete(Long id) {
         User user = findById(id);
         if (user == null) {
