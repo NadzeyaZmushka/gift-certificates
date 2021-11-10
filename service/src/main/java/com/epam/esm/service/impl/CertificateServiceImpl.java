@@ -51,7 +51,7 @@ public class CertificateServiceImpl implements CertificateService {
     @Override
     @Transactional
     public List<Certificate> findAllByCriteria(List<String> tagNames, String partName, String sortBy, String order, int limit, int page) {
-        return certificateRepository.findAll(tagNames, partName, sortBy, page, limit);
+        return certificateRepository.findAll(tagNames, partName, sortBy, order, page, limit);
     }
 
     @Override

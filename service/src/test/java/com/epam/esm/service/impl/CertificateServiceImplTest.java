@@ -2,7 +2,6 @@ package com.epam.esm.service.impl;
 
 import com.epam.esm.config.Translator;
 import com.epam.esm.entity.Certificate;
-import com.epam.esm.entity.Tag;
 import com.epam.esm.repository.impl.CertificateRepository;
 import com.epam.esm.repository.impl.TagRepository;
 import com.epam.esm.validator.CertificateValidator;
@@ -16,14 +15,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -33,6 +29,8 @@ class CertificateServiceImplTest {
     private CertificateRepository certificateRepository;
     @Mock
     private TagRepository tagRepository;
+    @Mock
+    private TagServiceImpl tagService;
     @Mock
     private CertificateValidator validator;
     @Mock
@@ -66,8 +64,11 @@ class CertificateServiceImplTest {
 //                new BigDecimal(100), 10, LocalDateTime.now(), LocalDateTime.now(),
 //                new ArrayList<>());
 //        when(certificateRepository.findById(1L)).thenReturn(Optional.of(certificate));
+//        when(tagRepository.findByCertificateId(1L)).thenReturn(new ArrayList<>());
 //        //when
 //        Certificate actual = certificateService.findById(1L);
+//        List<Tag> tags = tagService.findByCertificateId(1L);
+//        actual.setTags(tags);
 //        //then
 //        assertEquals(certificate.getName(), actual.getName());
 //    }

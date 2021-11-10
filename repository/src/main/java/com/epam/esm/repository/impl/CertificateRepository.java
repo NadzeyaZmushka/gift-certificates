@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Expression;
@@ -25,6 +26,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class CertificateRepository implements CrudRepository<Certificate> {
 
+    @PersistenceContext
     private final EntityManager entityManager;
 
     @Override
@@ -44,7 +46,7 @@ public class CertificateRepository implements CrudRepository<Certificate> {
     }
     //todo:
 
-    public List<Certificate> findAll(List<String> tagNames, String namePart, String orderBy,
+    public List<Certificate> findAll(List<String> tagNames, String namePart, String orderBy, String order,
                                      int page, int pageSize) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Certificate> query = criteriaBuilder.createQuery(Certificate.class);
@@ -69,7 +71,12 @@ public class CertificateRepository implements CrudRepository<Certificate> {
         }
         if (Arrays.stream(CertificateOrderOptions.values())
                 .anyMatch(value -> value.getOrderBy().equals(orderBy))) {
-            query.orderBy(criteriaBuilder.asc(root.get(orderBy)));
+            if (order.equalsIgnoreCase("asc")) {
+                query.orderBy(criteriaBuilder.asc(root.get(orderBy)));
+            }
+            if (order.equalsIgnoreCase("desc")) {
+                query.orderBy(criteriaBuilder.desc(root.get(orderBy)));
+            }
         }
 
         return entityManager.createQuery(query)
