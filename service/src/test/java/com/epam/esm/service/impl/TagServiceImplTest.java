@@ -36,11 +36,13 @@ class TagServiceImplTest {
     void testShouldAddTag() {
         //given
         Tag tag = new Tag(1L, "tag");
-        when(tagRepository.add(tag)).thenReturn(new Tag(1L, "tag"));
+        Tag addTag = new Tag("name");
+        when(tagRepository.add(addTag)).thenReturn(tag);
         //when
-        Tag actual = tagService.add(tag);
+        Tag actual = tagService.add(addTag);
         //then
         assertEquals(tag.getName(), actual.getName());
+        assertEquals(1L, actual.getId());
         assertNotNull(actual.getId());
     }
 
