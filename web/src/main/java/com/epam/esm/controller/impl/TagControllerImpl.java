@@ -3,10 +3,11 @@ package com.epam.esm.controller.impl;
 import com.epam.esm.controller.TagController;
 import com.epam.esm.dto.TagDTO;
 import com.epam.esm.entity.Tag;
-import com.epam.esm.hateoas.HateoasLinkBuilder;
+import com.epam.esm.hateoas.TagsLinkBuilder;
 import com.epam.esm.mapper.TagConvertor;
 import com.epam.esm.service.impl.TagServiceImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,16 +21,19 @@ public class TagControllerImpl implements TagController {
 
     private final TagServiceImpl tagService;
     private final TagConvertor mapper;
-    private final HateoasLinkBuilder hateoasLinkBuilder;
+    private final TagsLinkBuilder hateoasLinkBuilder;
 
     @Override
-    public List<TagDTO> findAll(int page, int limit) {
+    public PagedModel<TagDTO> findAll(int page, int limit) {
         List<TagDTO> tagDTOList = tagService.findAll(limit, page)
                 .stream()
                 .map(mapper::toDTO)
                 .collect(Collectors.toList());
         tagDTOList.forEach(hateoasLinkBuilder::addLinksForTag);
-        return tagDTOList;
+        Long count = tagService.count();
+        PagedModel<TagDTO> pagedModel = PagedModel.of(tagDTOList, new PagedModel.PageMetadata(limit, page, count));
+        hateoasLinkBuilder.createPaginationLinks(pagedModel);
+        return pagedModel;
     }
 
     @Override

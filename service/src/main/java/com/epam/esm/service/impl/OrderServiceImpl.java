@@ -5,7 +5,7 @@ import com.epam.esm.entity.Certificate;
 import com.epam.esm.entity.Order;
 import com.epam.esm.entity.User;
 import com.epam.esm.exception.NoSuchEntityException;
-import com.epam.esm.repository.impl.OrderRepository;
+import com.epam.esm.repository.OrderRepository;
 import com.epam.esm.service.CertificateService;
 import com.epam.esm.service.OrderService;
 import lombok.RequiredArgsConstructor;
@@ -39,9 +39,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public Order create(Long userId, String certificateName) {
+    public Order create(Long userId, Long certificateId) {
         User user = userService.findById(userId);
-        Certificate certificate = certificateService.findByName(certificateName);
+        Certificate certificate = certificateService.findById(certificateId);
         BigDecimal cost = certificate.getPrice();
         Order order = Order.builder()
                 .cost(cost)
@@ -71,6 +71,11 @@ public class OrderServiceImpl implements OrderService {
     public void delete(Long id) {
         Order order = findById(id);
         orderRepository.remove(order);
+    }
+
+    @Override
+    public Long count() {
+        return certificateService.count();
     }
 
     @Override

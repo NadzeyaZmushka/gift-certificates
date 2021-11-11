@@ -1,7 +1,7 @@
 package com.epam.esm.repository.impl;
 
 import com.epam.esm.entity.User;
-import com.epam.esm.repository.CrudRepository;
+import com.epam.esm.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -11,7 +11,7 @@ import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
-public class UserRepository implements CrudRepository<User> {
+public class UserRepositoryImpl implements UserRepository {
 
     private final EntityManager entityManager;
 
@@ -43,6 +43,12 @@ public class UserRepository implements CrudRepository<User> {
     @Override
     public void remove(User entity) {
         entityManager.remove(entity);
+    }
+
+    @Override
+    public Long count() {
+        return (Long) entityManager.createQuery("select count(u) from User u")
+                .getSingleResult();
     }
 
 }

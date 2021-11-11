@@ -37,4 +37,6 @@ public interface EntityService<T extends BaseEntity> {
      */
     void delete(Long id);
 
+    Long count();
+
 }

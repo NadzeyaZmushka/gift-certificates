@@ -4,7 +4,8 @@ import com.epam.esm.config.Translator;
 import com.epam.esm.entity.Certificate;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.exception.NoSuchEntityException;
-import com.epam.esm.repository.impl.CertificateRepository;
+import com.epam.esm.repository.CertificateRepository;
+import com.epam.esm.repository.impl.CertificateRepositoryImpl;
 import com.epam.esm.service.CertificateService;
 import com.epam.esm.service.TagService;
 import com.epam.esm.validator.CertificateValidator;
@@ -74,6 +75,11 @@ public class CertificateServiceImpl implements CertificateService {
                     , CERTIFICATE_NOT_FOUND.getErrorCode());
         }
         certificateRepository.remove(certificate);
+    }
+
+    @Override
+    public Long count() {
+        return certificateRepository.count();
     }
 
     @Override

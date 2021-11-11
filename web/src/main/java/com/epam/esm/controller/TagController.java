@@ -1,6 +1,7 @@
 package com.epam.esm.controller;
 
 import com.epam.esm.dto.TagDTO;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -12,13 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import java.util.List;
-
-/**
- * Interface to perform REST's CRUD operations with tags
- *
- * @author Nadzeya Zmushka
- */
 @RequestMapping("/api/tags")
 public interface TagController {
 
@@ -31,9 +25,9 @@ public interface TagController {
      */
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    List<TagDTO> findAll(@RequestParam(required = false, name = "page", defaultValue = "1") int page,
-                         @RequestParam(required = false, name = "limit", defaultValue = "1000") int limit
-                         );
+    PagedModel<TagDTO> findAll(@RequestParam(required = false, name = "page", defaultValue = "1") int page,
+                               @RequestParam(required = false, name = "limit", defaultValue = "10") int limit
+    );
 
     /**
      * Realizes REST's read operation a resource with id in a request path
@@ -65,8 +59,9 @@ public interface TagController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     TagDTO delete(@PathVariable Long id);
 
-    @GetMapping("/widelyUsed")
+    @GetMapping("/most-used")
     @ResponseStatus(HttpStatus.OK)
     TagDTO findWidelyUsed();
 
 }
+

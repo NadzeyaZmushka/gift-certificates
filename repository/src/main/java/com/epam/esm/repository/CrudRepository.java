@@ -54,4 +54,6 @@ public interface CrudRepository<T extends BaseEntity> {
      */
     void remove(T entity);
 
+    Long count();
+
 }

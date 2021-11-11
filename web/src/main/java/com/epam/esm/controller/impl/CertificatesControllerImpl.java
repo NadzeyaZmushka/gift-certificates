@@ -3,10 +3,11 @@ package com.epam.esm.controller.impl;
 import com.epam.esm.controller.CertificateController;
 import com.epam.esm.dto.CertificateDTO;
 import com.epam.esm.entity.Certificate;
-import com.epam.esm.hateoas.HateoasLinkBuilder;
+import com.epam.esm.hateoas.CertificateLinkBuilder;
 import com.epam.esm.mapper.CertificateConverter;
 import com.epam.esm.service.impl.CertificateServiceImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,24 +21,20 @@ public class CertificatesControllerImpl implements CertificateController {
 
     private final CertificateServiceImpl certificateService;
     private final CertificateConverter mapper;
-    private final HateoasLinkBuilder hateoasLinkBuilder;
+    private final CertificateLinkBuilder hateoasLinkBuilder;
 
     @Override
-    public List<CertificateDTO> findAll(List<String> tagName, String partName, String sortBy, String order, int page, int limit) {
+    public PagedModel<CertificateDTO> findAll(List<String> tagNames, String partName, String sortBy, String order, int page, int limit) {
         List<CertificateDTO> certificateDTOList;
-        if (tagName == null && partName == null) {
-            certificateDTOList = certificateService.findAll(limit, page)
+            certificateDTOList = certificateService.findAllByCriteria(tagNames, partName, sortBy, order, limit, page)
                     .stream()
                     .map(mapper::toDTO)
                     .collect(Collectors.toList());
-        } else {
-            certificateDTOList = certificateService.findAllByCriteria(tagName, partName, sortBy, order, limit, page)
-                    .stream()
-                    .map(mapper::toDTO)
-                    .collect(Collectors.toList());
-        }
         certificateDTOList.forEach(hateoasLinkBuilder::addLinksForCertificate);
-        return certificateDTOList;
+        Long count = certificateService.count();
+        PagedModel<CertificateDTO> pagedModel = PagedModel.of(certificateDTOList, new PagedModel.PageMetadata(limit, page, count));
+        hateoasLinkBuilder.createPaginationLinks(pagedModel, tagNames, partName, sortBy, order);
+        return pagedModel;
     }
 
     @Override
@@ -70,11 +67,6 @@ public class CertificatesControllerImpl implements CertificateController {
     @Override
     public void addTag(Long id, List<String> tagsNames) {
         certificateService.addTagsToCertificate(id, tagsNames);
-    }
-
-    @Override
-    public void deleteTag(Long id, List<String> tagNames) {
-        certificateService.deleteTagFromCertificate(id, tagNames);
     }
 
 }

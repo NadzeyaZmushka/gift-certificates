@@ -3,7 +3,7 @@ package com.epam.esm.service.impl;
 import com.epam.esm.config.Translator;
 import com.epam.esm.entity.User;
 import com.epam.esm.exception.NoSuchEntityException;
-import com.epam.esm.repository.impl.UserRepository;
+import com.epam.esm.repository.impl.UserRepositoryImpl;
 import com.epam.esm.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +21,7 @@ import static com.epam.esm.exception.ErrorMessageCodeConstant.USER_WITH_ID_NOT_F
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    private final UserRepository userRepository;
+    private final UserRepositoryImpl userRepository;
     private final Translator translator;
 
     @Override
@@ -53,6 +53,11 @@ public class UserServiceImpl implements UserService {
                     USER_NOT_FOUND.getErrorCode());
         }
         userRepository.remove(user);
+    }
+
+    @Override
+    public Long count() {
+        return userRepository.count();
     }
 
 }

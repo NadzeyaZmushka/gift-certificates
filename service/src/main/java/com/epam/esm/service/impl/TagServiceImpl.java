@@ -4,7 +4,8 @@ import com.epam.esm.config.Translator;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.exception.DuplicateException;
 import com.epam.esm.exception.NoSuchEntityException;
-import com.epam.esm.repository.impl.TagRepository;
+import com.epam.esm.repository.TagRepository;
+import com.epam.esm.repository.impl.TagRepositoryImpl;
 import com.epam.esm.service.TagService;
 import com.epam.esm.validator.TagValidator;
 import lombok.RequiredArgsConstructor;
@@ -100,6 +101,11 @@ public class TagServiceImpl implements TagService {
         return tagRepository.findMostPopularTag()
                 .orElseThrow(() -> new NoSuchEntityException(translator.toLocale(SUCH_TAG_NOT_FOUND),
                         TAG_NOT_FOUND.getErrorCode()));
+    }
+
+    @Override
+    public Long count() {
+        return tagRepository.count();
     }
 
 }

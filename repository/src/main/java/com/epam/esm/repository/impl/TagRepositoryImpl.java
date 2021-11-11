@@ -2,9 +2,8 @@ package com.epam.esm.repository.impl;
 
 import com.epam.esm.entity.Certificate;
 import com.epam.esm.entity.Tag;
-import com.epam.esm.repository.CrudRepository;
+import com.epam.esm.repository.TagRepository;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -18,7 +17,7 @@ import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
-public class TagRepository implements CrudRepository<Tag> {
+public class TagRepositoryImpl implements TagRepository {
 
     private final EntityManager entityManager;
 
@@ -92,6 +91,12 @@ public class TagRepository implements CrudRepository<Tag> {
         } catch (NoResultException e) {
             return Optional.empty();
         }
+    }
+
+    @Override
+    public Long count() {
+        return (Long) entityManager.createQuery("select count(t) from Tag t")
+                .getSingleResult();
     }
 
 }

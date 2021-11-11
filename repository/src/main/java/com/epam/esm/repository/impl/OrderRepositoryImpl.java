@@ -2,7 +2,7 @@ package com.epam.esm.repository.impl;
 
 import com.epam.esm.entity.Order;
 import com.epam.esm.entity.User;
-import com.epam.esm.repository.CrudRepository;
+import com.epam.esm.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -13,7 +13,7 @@ import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
-public class OrderRepository implements CrudRepository<Order> {
+public class OrderRepositoryImpl implements OrderRepository {
 
     private static final String FIND_ORDER_BY_USER_ID = "select o from Order o where o.user =: user";
     private static final String FIND_ALL = "select o from Order o";
@@ -57,6 +57,12 @@ public class OrderRepository implements CrudRepository<Order> {
     @Override
     public void remove(Order entity) {
         entityManager.remove(entity);
+    }
+
+    @Override
+    public Long count() {
+        return (Long) entityManager.createQuery("select count(o) from Order o")
+                .getSingleResult();
     }
 
 }

@@ -2,7 +2,7 @@ package com.epam.esm.repository.impl;
 
 import com.epam.esm.entity.Certificate;
 import com.epam.esm.repository.CertificateOrderOptions;
-import com.epam.esm.repository.CrudRepository;
+import com.epam.esm.repository.CertificateRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Repository;
@@ -24,7 +24,7 @@ import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
-public class CertificateRepository implements CrudRepository<Certificate> {
+public class CertificateRepositoryImpl implements CertificateRepository {
 
     @PersistenceContext
     private final EntityManager entityManager;
@@ -44,7 +44,6 @@ public class CertificateRepository implements CrudRepository<Certificate> {
                 .setMaxResults(pageSize)
                 .getResultList();
     }
-    //todo:
 
     public List<Certificate> findAll(List<String> tagNames, String namePart, String orderBy, String order,
                                      int page, int pageSize) {
@@ -78,7 +77,6 @@ public class CertificateRepository implements CrudRepository<Certificate> {
                 query.orderBy(criteriaBuilder.desc(root.get(orderBy)));
             }
         }
-
         return entityManager.createQuery(query)
                 .setFirstResult(pageSize * (page - 1))
                 .setMaxResults(pageSize)
@@ -110,6 +108,12 @@ public class CertificateRepository implements CrudRepository<Certificate> {
     @Override
     public void remove(Certificate entity) {
         entityManager.remove(entity);
+    }
+
+    @Override
+    public Long count() {
+        return (Long) entityManager.createQuery("select count(c) from Certificate c")
+                .getSingleResult();
     }
 
 }
