@@ -2,8 +2,8 @@ package com.epam.esm.service.impl;
 
 import com.epam.esm.config.Translator;
 import com.epam.esm.entity.Certificate;
-import com.epam.esm.repository.impl.CertificateRepository;
-import com.epam.esm.repository.impl.TagRepository;
+import com.epam.esm.repository.impl.CertificateRepositoryImpl;
+import com.epam.esm.repository.impl.TagRepositoryImpl;
 import com.epam.esm.validator.CertificateValidator;
 import com.epam.esm.validator.TagValidator;
 import org.junit.jupiter.api.Test;
@@ -26,9 +26,9 @@ import static org.mockito.Mockito.when;
 class CertificateServiceImplTest {
 
     @Mock
-    private CertificateRepository certificateRepository;
+    private CertificateRepositoryImpl certificateRepository;
     @Mock
-    private TagRepository tagRepository;
+    private TagRepositoryImpl tagRepository;
     @Mock
     private TagServiceImpl tagService;
     @Mock

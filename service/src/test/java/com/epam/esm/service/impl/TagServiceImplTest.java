@@ -2,7 +2,7 @@ package com.epam.esm.service.impl;
 
 import com.epam.esm.config.Translator;
 import com.epam.esm.entity.Tag;
-import com.epam.esm.repository.impl.TagRepository;
+import com.epam.esm.repository.impl.TagRepositoryImpl;
 import com.epam.esm.validator.TagValidator;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,7 +24,7 @@ import static org.mockito.Mockito.when;
 class TagServiceImplTest {
 
     @Mock
-    private TagRepository tagRepository;
+    private TagRepositoryImpl tagRepository;
     @Mock
     private TagValidator tagValidator;
     @Mock

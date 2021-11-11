@@ -2,7 +2,7 @@ package com.epam.esm.service.impl;
 
 import com.epam.esm.config.Translator;
 import com.epam.esm.entity.User;
-import com.epam.esm.repository.impl.UserRepository;
+import com.epam.esm.repository.impl.UserRepositoryImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -22,7 +22,7 @@ import static org.mockito.Mockito.when;
 public class UserServiceImplTest {
 
     @Mock
-    private UserRepository userRepository;
+    private UserRepositoryImpl userRepository;
     @Mock
     private Translator translator;
     @InjectMocks
