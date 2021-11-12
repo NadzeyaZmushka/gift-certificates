@@ -31,7 +31,6 @@ public class TagServiceImpl implements TagService {
     private final TagRepository tagRepository;
     private final TagValidator tagValidator;
     private final Translator translator;
-    private static final String TAG_TABLE = "tag";
 
     @Override
     @Transactional

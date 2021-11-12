@@ -4,7 +4,7 @@ import com.epam.esm.controller.OrderController;
 import com.epam.esm.dto.OrderDTO;
 import com.epam.esm.entity.Order;
 import com.epam.esm.hateoas.OrderLinkBuilder;
-import com.epam.esm.mapper.OrderConverter;
+import com.epam.esm.converter.OrderConverter;
 import com.epam.esm.service.impl.OrderServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.PagedModel;
@@ -20,14 +20,14 @@ import java.util.stream.Collectors;
 public class OrderControllerImpl implements OrderController {
 
     private final OrderServiceImpl orderService;
-    private final OrderConverter mapper;
+    private final OrderConverter converter;
     private final OrderLinkBuilder hateoasLinkBuilder;
 
     @Override
     public PagedModel<OrderDTO> findAll(int page, int limit) {
         List<OrderDTO> orderDTOList = orderService.findAll(limit, page)
                 .stream()
-                .map(mapper::toDTO)
+                .map(converter::toDTO)
                 .collect(Collectors.toList());
         orderDTOList.forEach(hateoasLinkBuilder::addLinksForOrder);
         Long count = orderService.count();
@@ -38,7 +38,7 @@ public class OrderControllerImpl implements OrderController {
 
     @Override
     public OrderDTO findOne(Long id) {
-        OrderDTO orderDTO = mapper.toDTO(orderService.findById(id));
+        OrderDTO orderDTO = converter.toDTO(orderService.findById(id));
         hateoasLinkBuilder.addLinksForOrder(orderDTO);
         return orderDTO;
     }

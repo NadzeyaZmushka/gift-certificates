@@ -19,7 +19,7 @@ public class CertificateLinkBuilder {
                 .slash(certificateDTO.getId())
                 .withSelfRel();
         Link findAll = linkTo(methodOn(CertificatesControllerImpl.class)
-                .findAll(null, "", "", "", 1, 1000))
+                .findAll(null, null, null, null, 1, 10))
                 .withRel("findAll");
 
         certificateDTO.add(linkForSelf, findAll);

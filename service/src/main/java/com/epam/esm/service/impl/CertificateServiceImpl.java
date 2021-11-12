@@ -114,17 +114,6 @@ public class CertificateServiceImpl implements CertificateService {
         certificate.setLastUpdateDate(LocalDateTime.now());
     }
 
-    //todo: переделать, удаляет все теги у сертификата
-    @Override
-    @Transactional
-    public void deleteTagFromCertificate(Long certificateId, List<String> tagsNames) {
-        Certificate certificate = findById(certificateId);
-        List<Tag> certificateTags = certificate.getTags();
-        List<Tag> tags = tagService.findByNames(tagsNames);
-        tags.forEach(certificateTags::remove);
-        certificateRepository.update(certificate);
-    }
-
     @Override
     public Certificate findByName(String name) {
         return certificateRepository.findByName(name)

@@ -17,7 +17,7 @@ public class OrderLinkBuilder {
                 .slash(orderDTO.getId())
                 .withSelfRel();
         Link linkForAll = linkTo(methodOn(OrderControllerImpl.class)
-                .findAll(1, 1000))
+                .findAll(1, 10))
                 .withRel("findAll");
         Link linkForCreateOrder = linkTo(methodOn(OrderControllerImpl.class)
                 .create(null, null))

@@ -18,7 +18,7 @@ public class UserLinkBuilder {
                 .slash(userDTO.getId())
                 .withSelfRel();
         Link linkForAll = linkTo(methodOn(UserControllerImpl.class)
-                .findAll(1, 1000))
+                .findAll(1, 10))
                 .withRel("findAll");
         Link linForCreateOrder = linkTo(methodOn(OrderControllerImpl.class)
                 .create(userDTO.getId(), null))

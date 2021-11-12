@@ -28,7 +28,7 @@ public interface CertificateController {
      * Realizes REST's read operation of resource.
      * May finds by criteria(tag name or part of name)
      *
-     * @param tagName  tag name
+     * @param tagNames  tag name
      * @param partName part of certificate name
      * @param sortBy   field by which to sort
      * @param order    in what order to sort
@@ -38,7 +38,7 @@ public interface CertificateController {
      */
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    PagedModel<CertificateDTO> findAll(@RequestParam(required = false, name = "tagName") List<String> tagName,
+    PagedModel<CertificateDTO> findAll(@RequestParam(required = false, name = "tagName") List<String> tagNames,
                                        @RequestParam(required = false, name = "partName") String partName,
                                        @RequestParam(required = false, defaultValue = "id", name = "sortBy") String sortBy,
                                        @RequestParam(required = false, defaultValue = "ASC", name = "order") String order,

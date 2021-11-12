@@ -17,7 +17,7 @@ public class TagsLinkBuilder {
                 .slash(tagDTO.getId())
                 .withSelfRel();
         Link findAll = linkTo(methodOn(TagControllerImpl.class)
-                .findAll(1, 1000))
+                .findAll(1, 10))
                 .withRel("findAll");
 
         tagDTO.add(linkForSelf, findAll);

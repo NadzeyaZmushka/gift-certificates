@@ -38,16 +38,7 @@ public interface CertificateService extends EntityService<Certificate> {
      */
     void addTagsToCertificate(Long certificateId, List<String> tagsNames);
 
-    /**
-     * Deletes tags from certificate
-     *
-     * @param certificateId id of certificate that need to be found to delete tags
-     * @param tagsNames     list of tag names that need to be deleted
-     */
-    void deleteTagFromCertificate(Long certificateId, List<String> tagsNames);
-
     Certificate findByName(String name);
-//
-//    Certificate findByOrderId(Long orderId);
+
 
 }

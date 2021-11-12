@@ -4,7 +4,7 @@ import com.epam.esm.controller.CertificateController;
 import com.epam.esm.dto.CertificateDTO;
 import com.epam.esm.entity.Certificate;
 import com.epam.esm.hateoas.CertificateLinkBuilder;
-import com.epam.esm.mapper.CertificateConverter;
+import com.epam.esm.converter.CertificateConverter;
 import com.epam.esm.service.impl.CertificateServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.PagedModel;
@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 public class CertificatesControllerImpl implements CertificateController {
 
     private final CertificateServiceImpl certificateService;
-    private final CertificateConverter mapper;
+    private final CertificateConverter converter;
     private final CertificateLinkBuilder hateoasLinkBuilder;
 
     @Override
@@ -28,7 +28,7 @@ public class CertificatesControllerImpl implements CertificateController {
         List<CertificateDTO> certificateDTOList;
             certificateDTOList = certificateService.findAllByCriteria(tagNames, partName, sortBy, order, limit, page)
                     .stream()
-                    .map(mapper::toDTO)
+                    .map(converter::toDTO)
                     .collect(Collectors.toList());
         certificateDTOList.forEach(hateoasLinkBuilder::addLinksForCertificate);
         Long count = certificateService.count();
@@ -39,14 +39,14 @@ public class CertificatesControllerImpl implements CertificateController {
 
     @Override
     public CertificateDTO findOne(Long id) {
-        CertificateDTO dto = mapper.toDTO(certificateService.findById(id));
+        CertificateDTO dto = converter.toDTO(certificateService.findById(id));
         hateoasLinkBuilder.addLinksForCertificate(dto);
         return dto;
     }
 
     @Override
     public ResponseEntity<Void> add(CertificateDTO certificateDTO) {
-        Certificate certificate = certificateService.add(mapper.toEntity(certificateDTO));
+        Certificate certificate = certificateService.add(converter.toEntity(certificateDTO));
         URI location = URI.create(String.format("/certificates/%d", certificate.getId()));
         return ResponseEntity.created(location).build();
     }
@@ -59,7 +59,7 @@ public class CertificatesControllerImpl implements CertificateController {
 
     @Override
     public CertificateDTO update(Long id, CertificateDTO certificateDTO) {
-        CertificateDTO dto = mapper.toDTO(certificateService.update(id, mapper.toEntity(certificateDTO)));
+        CertificateDTO dto = converter.toDTO(certificateService.update(id, converter.toEntity(certificateDTO)));
         hateoasLinkBuilder.addLinksForCertificate(dto);
         return dto;
     }
