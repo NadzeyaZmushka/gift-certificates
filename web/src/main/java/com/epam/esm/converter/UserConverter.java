@@ -1,4 +1,4 @@
-package com.epam.esm.mapper;
+package com.epam.esm.converter;
 
 import com.epam.esm.dto.UserDTO;
 import com.epam.esm.entity.User;
