@@ -21,14 +21,24 @@ public class TagRepositoryImpl implements TagRepository {
 
     private final EntityManager entityManager;
 
-    private static final String FIND_ALL = "select t from Tag t";
-    private static final String FIND_BY_NAME_SQL = "select t from Tag t where t.name =: name";
-    //??
-    private static final String MOST_POPULAR_TAG_SQL = "SELECT gifts.tag.id, gifts.tag.name FROM gifts.tag INNER JOIN gifts.certificate_tag ct on tag.id = ct.tag_id INNER JOIN gifts.certificate c on c.id = ct.certificate_id INNER JOIN gifts.order o on c.id = o.certificate_id INNER JOIN gifts.user u on u.id = o.user_id WHERE u.id IN (SELECT wu.user_id FROM (SELECT SUM(gifts.order.cost) sumCost, user_id FROM gifts.order GROUP BY user_id ORDER BY sumCost desc limit 1) as wu) GROUP BY tag.id ORDER BY count(tag.id) desc limit 1";
+    private static final String FIND_ALL_QUERY = "select t from Tag t";
+    private static final String FIND_BY_NAME_QUERY = "select t from Tag t where t.name =: name";
+    private static final String FIND_BY_CERTIFICATE_ID_QUERY = "select c from Certificate c where c.id = :id";
+    private static final String COUNT_QUERY = "select count(t) from Tag t";
+    private static final String MOST_POPULAR_TAG_SQL = "SELECT gifts.tag.id, gifts.tag.name " +
+            "FROM gifts.tag INNER JOIN gifts.certificate_tag ct on tag.id = ct.tag_id " +
+            "INNER JOIN gifts.certificate c on c.id = ct.certificate_id " +
+            "INNER JOIN gifts.order o on c.id = o.certificate_id " +
+            "INNER JOIN gifts.user u on u.id = o.user_id " +
+            "WHERE u.id IN (SELECT wu.user_id " +
+            "FROM (SELECT SUM(gifts.order.cost) sumCost, user_id " +
+            "FROM gifts.order GROUP BY user_id ORDER BY sumCost desc limit 1) as wu) " +
+            "GROUP BY tag.id " +
+            "ORDER BY count(tag.id) desc limit 1";
 
     @Override
     public List<Tag> findAll(int page, int pageSize) {
-        return entityManager.createQuery(FIND_ALL, Tag.class)
+        return entityManager.createQuery(FIND_ALL_QUERY, Tag.class)
                 .setFirstResult(pageSize * (page - 1))
                 .setMaxResults(pageSize)
                 .getResultList();
@@ -57,7 +67,7 @@ public class TagRepositoryImpl implements TagRepository {
 
     public Optional<Tag> findByName(String name) {
         try {
-            return Optional.of(entityManager.createQuery(FIND_BY_NAME_SQL, Tag.class)
+            return Optional.of(entityManager.createQuery(FIND_BY_NAME_QUERY, Tag.class)
                     .setParameter("name", name)
                     .setMaxResults(1)
                     .getSingleResult());
@@ -77,7 +87,7 @@ public class TagRepositoryImpl implements TagRepository {
     }
 
     public List<Tag> findByCertificateId(Long id) {
-        Certificate certificate = entityManager.createQuery("select c from Certificate c where c.id = :id", Certificate.class)
+        Certificate certificate = entityManager.createQuery(FIND_BY_CERTIFICATE_ID_QUERY, Certificate.class)
                 .setParameter("id", id)
                 .getSingleResult();
         return certificate.getTags();
@@ -95,7 +105,7 @@ public class TagRepositoryImpl implements TagRepository {
 
     @Override
     public Long count() {
-        return (Long) entityManager.createQuery("select count(t) from Tag t")
+        return (Long) entityManager.createQuery(COUNT_QUERY)
                 .getSingleResult();
     }
 

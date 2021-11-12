@@ -15,14 +15,15 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class OrderRepositoryImpl implements OrderRepository {
 
-    private static final String FIND_ORDER_BY_USER_ID = "select o from Order o where o.user =: user";
-    private static final String FIND_ALL = "select o from Order o";
-
     private final EntityManager entityManager;
+
+    private static final String FIND_ORDER_BY_USER_ID_QUERY = "select o from Order o where o.user =: user";
+    private static final String FIND_ALL_QUERY = "select o from Order o";
+    private static final String COUNT_QUERY = "select o from Order o";
 
     @Override
     public List<Order> findAll(int page, int pageSize) {
-        return entityManager.createQuery(FIND_ALL, Order.class)
+        return entityManager.createQuery(FIND_ALL_QUERY, Order.class)
                 .setFirstResult((page - 1) * pageSize)
                 .setMaxResults(pageSize)
                 .getResultList();
@@ -35,7 +36,7 @@ public class OrderRepositoryImpl implements OrderRepository {
     }
 
     public List<Order> findByUserId(User user, int page, int pageSize) {
-        return entityManager.createQuery(FIND_ORDER_BY_USER_ID, Order.class)
+        return entityManager.createQuery(FIND_ORDER_BY_USER_ID_QUERY, Order.class)
                 .setParameter("user", user)
                 .setFirstResult((page - 1) * pageSize)
                 .setMaxResults(pageSize)
@@ -61,7 +62,7 @@ public class OrderRepositoryImpl implements OrderRepository {
 
     @Override
     public Long count() {
-        return (Long) entityManager.createQuery("select count(o) from Order o")
+        return (Long) entityManager.createQuery(COUNT_QUERY)
                 .getSingleResult();
     }
 

@@ -15,9 +15,12 @@ public class UserRepositoryImpl implements UserRepository {
 
     private final EntityManager entityManager;
 
+    private static final String FIND_ALL_QUERY = "select u from User u";
+    private static final String COUNT_QUERY = "select count(u) from User u";
+
     @Override
     public List<User> findAll(int page, int pageSize) {
-        return entityManager.createQuery("select u from User u", User.class)
+        return entityManager.createQuery(FIND_ALL_QUERY, User.class)
                 .setFirstResult(pageSize * (page - 1))
                 .setMaxResults(pageSize)
                 .getResultList();
@@ -47,7 +50,7 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public Long count() {
-        return (Long) entityManager.createQuery("select count(u) from User u")
+        return (Long) entityManager.createQuery(COUNT_QUERY)
                 .getSingleResult();
     }
 

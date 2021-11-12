@@ -26,8 +26,11 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class CertificateRepositoryImpl implements CertificateRepository {
 
-    @PersistenceContext
     private final EntityManager entityManager;
+
+    private static final String FIND_ALL_QUERY = "select c from Certificate c";
+    private static final String FIND_BY_NAME_QUERY = "select c from Certificate c where c.name =: name";
+    private static final String COUNT_QUERY = "select count(c) from Certificate c";
 
     @Override
     public Certificate add(Certificate entity) {
@@ -39,7 +42,7 @@ public class CertificateRepositoryImpl implements CertificateRepository {
 
     @Override
     public List<Certificate> findAll(int page, int pageSize) {
-        return entityManager.createQuery("select c from Certificate c", Certificate.class)
+        return entityManager.createQuery(FIND_ALL_QUERY, Certificate.class)
                 .setFirstResult(pageSize * (page - 1))
                 .setMaxResults(pageSize)
                 .getResultList();
@@ -90,7 +93,7 @@ public class CertificateRepositoryImpl implements CertificateRepository {
 
     public Optional<Certificate> findByName(String name) {
         try {
-            return Optional.of(entityManager.createQuery("select c from Certificate c where c.name =: name", Certificate.class)
+            return Optional.of(entityManager.createQuery(FIND_BY_NAME_QUERY, Certificate.class)
                     .setParameter("name", name)
                     .setMaxResults(1)
                     .getSingleResult());
@@ -112,7 +115,7 @@ public class CertificateRepositoryImpl implements CertificateRepository {
 
     @Override
     public Long count() {
-        return (Long) entityManager.createQuery("select count(c) from Certificate c")
+        return (Long) entityManager.createQuery(COUNT_QUERY)
                 .getSingleResult();
     }
 
