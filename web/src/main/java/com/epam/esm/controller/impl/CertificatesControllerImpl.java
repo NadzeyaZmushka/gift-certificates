@@ -45,7 +45,7 @@ public class CertificatesControllerImpl implements CertificateController {
     }
 
     @Override
-    public ResponseEntity<Void> add(CertificateDTO certificateDTO) {
+    public ResponseEntity<Void> create(CertificateDTO certificateDTO) {
         Certificate certificate = certificateService.add(converter.toEntity(certificateDTO));
         URI location = URI.create(String.format("/certificates/%d", certificate.getId()));
         return ResponseEntity.created(location).build();

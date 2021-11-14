@@ -5,7 +5,6 @@ import com.epam.esm.entity.Certificate;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.exception.NoSuchEntityException;
 import com.epam.esm.repository.CertificateRepository;
-import com.epam.esm.repository.impl.CertificateRepositoryImpl;
 import com.epam.esm.service.CertificateService;
 import com.epam.esm.service.TagService;
 import com.epam.esm.validator.CertificateValidator;
@@ -24,7 +23,6 @@ import static com.epam.esm.exception.ErrorMessageCodeConstant.CERTIFICATE_WITH_N
 
 @Slf4j
 @Service
-@Transactional
 @RequiredArgsConstructor
 public class CertificateServiceImpl implements CertificateService {
 
@@ -44,26 +42,20 @@ public class CertificateServiceImpl implements CertificateService {
     }
 
     @Override
-    @Transactional
     public List<Certificate> findAll(int limit, int page) {
         return certificateRepository.findAll(page, limit);
     }
 
     @Override
-    @Transactional
     public List<Certificate> findAllByCriteria(List<String> tagNames, String partName, String sortBy, String order, int limit, int page) {
         return certificateRepository.findAll(tagNames, partName, sortBy, order, page, limit);
     }
 
     @Override
-    @Transactional
     public Certificate findById(Long id) {
-        Certificate certificate = certificateRepository.findById(id)
+        return certificateRepository.findById(id)
                 .orElseThrow(() -> new NoSuchEntityException(String.format(translator.toLocale(CERTIFICATE_WITH_ID_NOT_FOUND), id)
                         , CERTIFICATE_NOT_FOUND.getErrorCode()));
-        certificate.setTags(tagService.findByCertificateId(certificate.getId()));
-
-        return certificate;
     }
 
     @Override

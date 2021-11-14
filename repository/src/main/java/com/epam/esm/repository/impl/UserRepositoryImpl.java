@@ -2,18 +2,18 @@ package com.epam.esm.repository.impl;
 
 import com.epam.esm.entity.User;
 import com.epam.esm.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.List;
 import java.util.Optional;
 
 @Repository
-@RequiredArgsConstructor
 public class UserRepositoryImpl implements UserRepository {
 
-    private final EntityManager entityManager;
+    @PersistenceContext
+    private EntityManager entityManager;
 
     private static final String FIND_ALL_QUERY = "select u from User u";
     private static final String COUNT_QUERY = "select count(u) from User u";
@@ -50,7 +50,7 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public Long count() {
-        return (Long) entityManager.createQuery(COUNT_QUERY)
+        return entityManager.createQuery(COUNT_QUERY, Long.class)
                 .getSingleResult();
     }
 

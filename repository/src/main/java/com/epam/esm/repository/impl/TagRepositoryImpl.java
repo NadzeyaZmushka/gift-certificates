@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -16,10 +17,10 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-@RequiredArgsConstructor
 public class TagRepositoryImpl implements TagRepository {
 
-    private final EntityManager entityManager;
+    @PersistenceContext
+    private EntityManager entityManager;
 
     private static final String FIND_ALL_QUERY = "select t from Tag t";
     private static final String FIND_BY_NAME_QUERY = "select t from Tag t where t.name =: name";
@@ -105,7 +106,7 @@ public class TagRepositoryImpl implements TagRepository {
 
     @Override
     public Long count() {
-        return (Long) entityManager.createQuery(COUNT_QUERY)
+        return entityManager.createQuery(COUNT_QUERY, Long.class)
                 .getSingleResult();
     }
 

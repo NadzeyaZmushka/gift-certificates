@@ -37,7 +37,7 @@ public class Certificate extends BaseEntity {
     private LocalDateTime createDate;
     @Column(name = "last_update_date", columnDefinition = "TIMESTAMP")
     private LocalDateTime lastUpdateDate;
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
     @JoinTable(name = "certificate_tag", schema = "gifts",
             joinColumns = {@JoinColumn(name = "certificate_id", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "tag_id", referencedColumnName = "id")})

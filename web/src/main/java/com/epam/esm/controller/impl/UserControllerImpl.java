@@ -2,14 +2,17 @@ package com.epam.esm.controller.impl;
 
 import com.epam.esm.controller.UserController;
 import com.epam.esm.dto.UserDTO;
+import com.epam.esm.entity.Order;
 import com.epam.esm.hateoas.UserLinkBuilder;
 import com.epam.esm.converter.UserConverter;
 import com.epam.esm.service.impl.OrderServiceImpl;
 import com.epam.esm.service.impl.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.PagedModel;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -42,11 +45,11 @@ public class UserControllerImpl implements UserController {
         return userDTO;
     }
 
-//    @Override
-//    public ResponseEntity<Void> createOrder(Long id, String certificateName) {
-//        Order order = orderService.create(id, , certificateName);
-//        URI location = URI.create(String.format("/orders/%d", order.getId()));
-//        return ResponseEntity.created(location).build();
-//    }
+    @Override
+    public ResponseEntity<Void> createOrder(Long id, Long certificateId) {
+        Order order = orderService.create(id, certificateId);
+        URI location = URI.create(String.format("/orders/%d", order.getId()));
+        return ResponseEntity.created(location).build();
+    }
 
 }

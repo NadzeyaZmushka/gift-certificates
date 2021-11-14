@@ -44,7 +44,7 @@ public class TagControllerImpl implements TagController {
     }
 
     @Override
-    public ResponseEntity<Void> add(TagDTO tagDTO) {
+    public ResponseEntity<Void> create(TagDTO tagDTO) {
         Tag tag = tagService.add(converter.toEntity(tagDTO));
         URI location = URI.create(String.format("/tags/%d", tag.getId()));
         return ResponseEntity.created(location).build();

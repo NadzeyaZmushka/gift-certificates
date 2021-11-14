@@ -23,10 +23,10 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-@RequiredArgsConstructor
 public class CertificateRepositoryImpl implements CertificateRepository {
 
-    private final EntityManager entityManager;
+    @PersistenceContext
+    private EntityManager entityManager;
 
     private static final String FIND_ALL_QUERY = "select c from Certificate c";
     private static final String FIND_BY_NAME_QUERY = "select c from Certificate c where c.name =: name";
@@ -115,7 +115,7 @@ public class CertificateRepositoryImpl implements CertificateRepository {
 
     @Override
     public Long count() {
-        return (Long) entityManager.createQuery(COUNT_QUERY)
+        return entityManager.createQuery(COUNT_QUERY, Long.class)
                 .getSingleResult();
     }
 

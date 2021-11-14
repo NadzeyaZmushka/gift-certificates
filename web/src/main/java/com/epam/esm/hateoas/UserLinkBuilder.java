@@ -1,6 +1,5 @@
 package com.epam.esm.hateoas;
 
-import com.epam.esm.controller.impl.OrderControllerImpl;
 import com.epam.esm.controller.impl.UserControllerImpl;
 import com.epam.esm.dto.UserDTO;
 import org.springframework.hateoas.Link;
@@ -20,8 +19,8 @@ public class UserLinkBuilder {
         Link linkForAll = linkTo(methodOn(UserControllerImpl.class)
                 .findAll(1, 10))
                 .withRel("findAll");
-        Link linForCreateOrder = linkTo(methodOn(OrderControllerImpl.class)
-                .create(userDTO.getId(), null))
+        Link linForCreateOrder = linkTo(methodOn(UserControllerImpl.class)
+                .createOrder(userDTO.getId(), null))
                 .withRel("createOrder");
 
         userDTO.add(linkForSelf, linkForAll, linForCreateOrder);

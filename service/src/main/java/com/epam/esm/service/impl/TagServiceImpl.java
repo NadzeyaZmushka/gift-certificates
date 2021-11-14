@@ -5,7 +5,6 @@ import com.epam.esm.entity.Tag;
 import com.epam.esm.exception.DuplicateException;
 import com.epam.esm.exception.NoSuchEntityException;
 import com.epam.esm.repository.TagRepository;
-import com.epam.esm.repository.impl.TagRepositoryImpl;
 import com.epam.esm.service.TagService;
 import com.epam.esm.validator.TagValidator;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +23,6 @@ import static com.epam.esm.exception.ErrorMessageCodeConstant.TAG_WITH_NAME_NOT_
 
 @Slf4j
 @Service
-@Transactional
 @RequiredArgsConstructor
 public class TagServiceImpl implements TagService {
 
@@ -44,7 +42,6 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    @Transactional
     public List<Tag> findAll(int limit, int page) {
         return tagRepository.findAll(page, limit);
     }

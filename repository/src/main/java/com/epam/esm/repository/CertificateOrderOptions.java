@@ -9,8 +9,8 @@ public enum CertificateOrderOptions {
     DESCRIPTION("description"),
     PRICE("price"),
     DURATION("duration"),
-    CREATE_DATE("create_date"),
-    LAST_UPDATE_DATE("last_update_date");
+    CREATE_DATE("createDate"),
+    LAST_UPDATE_DATE("lastUpdateDate");
 
     private final String orderBy;
 

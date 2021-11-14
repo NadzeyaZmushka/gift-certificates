@@ -12,8 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import java.util.List;
-
 @RequestMapping("/api/orders")
 public interface OrderController {
 
@@ -27,15 +25,8 @@ public interface OrderController {
     OrderDTO findOne(@PathVariable Long id);
 
 
-//    //http://localhost:8080/api/orders?users=2
-//    @GetMapping
-//    @ResponseStatus(HttpStatus.OK)
-//    List<OrderDTO> findAllByUserId(@RequestParam(required = false, name = "user") Long id);
-
-
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    ResponseEntity<Void> create(@RequestBody Long userId,
-                                @RequestBody Long certificateId);
+    ResponseEntity<Void> create(@RequestBody OrderDTO orderDTO);
 
 }

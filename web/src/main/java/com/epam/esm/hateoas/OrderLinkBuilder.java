@@ -20,7 +20,7 @@ public class OrderLinkBuilder {
                 .findAll(1, 10))
                 .withRel("findAll");
         Link linkForCreateOrder = linkTo(methodOn(OrderControllerImpl.class)
-                .create(null, null))
+                .create(null))
                 .withRel("create");
 
         orderDTO.add(linkForSelf, linkForAll, linkForCreateOrder);

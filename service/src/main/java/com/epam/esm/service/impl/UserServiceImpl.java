@@ -17,7 +17,6 @@ import static com.epam.esm.exception.ErrorMessageCodeConstant.USER_WITH_ID_NOT_F
 
 @Slf4j
 @Service
-@Transactional
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
@@ -31,13 +30,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional
     public List<User> findAll(int limit, int page) {
         return userRepository.findAll(page, limit);
     }
 
     @Override
-    @Transactional
     public User findById(Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new NoSuchEntityException(String.format(translator.toLocale(USER_WITH_ID_NOT_FOUND), id),

@@ -63,7 +63,7 @@ public interface CertificateController {
      */
     @PostMapping("/")
     @ResponseStatus(HttpStatus.CREATED)
-    ResponseEntity<Void> add(@RequestBody CertificateDTO certificateDTO);
+    ResponseEntity<Void> create(@RequestBody CertificateDTO certificateDTO);
 
     /**
      * Realizes REST's delete operation of a resource

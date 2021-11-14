@@ -43,19 +43,9 @@ public class OrderControllerImpl implements OrderController {
         return orderDTO;
     }
 
-//    @Override
-//    public List<OrderDTO> findAllByUserId(Long id) {
-//        List<OrderDTO> orderDTOList = orderService.findByUserId(id, 1, 10)
-//                .stream()
-//                .map(mapper::toDTO)
-//                .collect(Collectors.toList());
-//        orderDTOList.forEach(hateoasLinkBuilder::addLinksForOrder);
-//        return orderDTOList;
-//    }
-
     @Override
-    public ResponseEntity<Void> create(Long userId, Long certificateId) {
-        Order order = orderService.create(userId, certificateId);
+    public ResponseEntity<Void> create(OrderDTO orderDTO) {
+        Order order = orderService.add(converter.toEntity(orderDTO));
         URI location = URI.create(String.format("/orders/%d", order.getId()));
         return ResponseEntity.created(location).build();
     }

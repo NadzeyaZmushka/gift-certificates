@@ -22,7 +22,6 @@ import static com.epam.esm.exception.ErrorMessageCodeConstant.ORDER_WITH_ID_NOT_
 
 @Slf4j
 @Service
-@Transactional
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
 
@@ -34,7 +33,15 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public Order add(Order order) {
-        return orderRepository.add(order);
+        User user = userService.findById(order.getUser().getId());
+        Certificate certificate = certificateService.findById(order.getCertificate().getId());
+        BigDecimal cost = certificate.getPrice();
+        Order newOrder = Order.builder()
+                .cost(cost)
+                .createDate(LocalDateTime.now())
+                .user(user)
+                .certificate(certificate).build();
+        return orderRepository.add(newOrder);
     }
 
     @Override
@@ -53,13 +60,11 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    @Transactional
     public List<Order> findAll(int limit, int page) {
         return orderRepository.findAll(page, limit);
     }
 
     @Override
-    @Transactional
     public Order findById(Long id) {
         return orderRepository.findById(id)
                 .orElseThrow(() -> new NoSuchEntityException(String.format(translator.toLocale(ORDER_WITH_ID_NOT_FOUND), id),

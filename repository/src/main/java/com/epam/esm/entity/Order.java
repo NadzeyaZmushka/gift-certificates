@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -28,7 +27,7 @@ public class Order extends BaseEntity {
     private BigDecimal cost;
     @Column(name = "create_date", columnDefinition = "TIMESTAMP")
     private LocalDateTime createDate;
-    @ManyToOne(targetEntity = User.class, cascade = {CascadeType.REMOVE, CascadeType.MERGE})
+    @ManyToOne(targetEntity = User.class)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
     @ManyToOne(targetEntity = Certificate.class)

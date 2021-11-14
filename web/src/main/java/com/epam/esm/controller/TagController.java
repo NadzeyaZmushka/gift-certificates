@@ -47,7 +47,7 @@ public interface TagController {
      */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    ResponseEntity<Void> add(@RequestBody TagDTO tagDTO);
+    ResponseEntity<Void> create(@RequestBody TagDTO tagDTO);
 
     /**
      * Realizes REST's delete operation of a resource

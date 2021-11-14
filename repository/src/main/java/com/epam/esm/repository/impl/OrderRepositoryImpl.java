@@ -3,19 +3,19 @@ package com.epam.esm.repository.impl;
 import com.epam.esm.entity.Order;
 import com.epam.esm.entity.User;
 import com.epam.esm.repository.OrderRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 @Repository
-@RequiredArgsConstructor
 public class OrderRepositoryImpl implements OrderRepository {
 
-    private final EntityManager entityManager;
+    @PersistenceContext
+    private EntityManager entityManager;
 
     private static final String FIND_ORDER_BY_USER_ID_QUERY = "select o from Order o where o.user =: user";
     private static final String FIND_ALL_QUERY = "select o from Order o";
@@ -62,7 +62,7 @@ public class OrderRepositoryImpl implements OrderRepository {
 
     @Override
     public Long count() {
-        return (Long) entityManager.createQuery(COUNT_QUERY)
+        return entityManager.createQuery(COUNT_QUERY, Long.class)
                 .getSingleResult();
     }
 
