@@ -45,21 +45,6 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    @Transactional
-    public Order create(Long userId, Long certificateId) {
-        User user = userService.findById(userId);
-        Certificate certificate = certificateService.findById(certificateId);
-        BigDecimal cost = certificate.getPrice();
-        Order order = Order.builder()
-                .cost(cost)
-                .createDate(LocalDateTime.now())
-                .user(user)
-                .certificate(certificate).build();
-        orderRepository.add(order);
-        return order;
-    }
-
-    @Override
     public List<Order> findAll(int limit, int page) {
         return orderRepository.findAll(page, limit);
     }
@@ -80,7 +65,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Long count() {
-        return certificateService.count();
+        return orderRepository.count();
     }
 
     @Override

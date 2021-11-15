@@ -53,7 +53,7 @@ class TagServiceImplTest {
         assertNotNull(actual.getId());
     }
 
-        @Test
+    @Test
     void testShouldReturnAllTags() {
         //given
         List<Tag> tags = Arrays.asList(new Tag(1L, "tag"), new Tag(2L, "tag2"));
@@ -162,11 +162,38 @@ class TagServiceImplTest {
         assertEquals(tag, actual);
     }
 
-//    @Test
-//    void testThrowsExceptionWhenNameIsBlank() {
-//        Tag tag = new Tag("");
-//        Mockito.when(translator.toLocale(any())).thenReturn("message");
-//        assertThrows(IncorrectDataException.class, () -> tagService.add(tag));
-//    }
+    @Test
+    void testShouldReturnCountOfTags() {
+        when(tagRepository.count()).thenReturn(10L);
+        Long actual = tagService.count();
+        assertEquals(10, actual);
+    }
+
+    @Test
+    void testShouldReturnTagWithName() {
+        //given
+        Tag tag = new Tag(1L, "tag");
+        Tag addTag = new Tag("tag");
+        when(tagRepository.findByName(addTag.getName())).thenReturn(Optional.of(tag));
+        //when
+        Tag actual = tagService.findByNameOrCreate(addTag.getName());
+        //then
+        assertEquals(tag.getName(), actual.getName());
+        assertEquals(1L, actual.getId());
+        assertNotNull(actual.getId());
+    }
+
+    @Test
+    void testShouldCreateTagIfItDoesNotExist() {
+        //given
+        Tag tag = new Tag(1L, "name");
+        Tag addTag = new Tag("name");
+        when(tagRepository.findByName(addTag.getName())).thenReturn(Optional.empty());
+        when(tagRepository.add(addTag)).thenReturn(tag);
+        //when
+        Tag actual = tagService.findByNameOrCreate(addTag.getName());
+        //then
+        assertEquals(tag.getName(), actual.getName());
+    }
 
 }

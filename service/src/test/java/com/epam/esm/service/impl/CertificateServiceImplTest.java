@@ -66,22 +66,17 @@ class CertificateServiceImplTest {
         assertNotNull(actual.getId());
     }
 
-//    @Test
-//    void testShouldReturnCertificateWithSuchId() {
-//        //given
-//        List<Tag> tags = new ArrayList<>();
-//        Certificate certificate = new Certificate(1L, "name", "description",
-//                new BigDecimal(100), 10, LocalDateTime.now(), LocalDateTime.now(),
-//                tags);
-//        when(certificateRepository.findById(1L)).thenReturn(Optional.of(certificate));
-//        when(tagRepository.findByCertificateId(1L)).thenReturn(tags);
-//        //when
-//        Certificate actual = certificateService.findById(1L);
-//        List<Tag> actualTags = tagService.findByCertificateId(1L);
-//        actual.setTags(actualTags);
-//        //then
-//        assertEquals(certificate.getName(), actual.getName());
-//    }
+    @Test
+    void testShouldReturnCertificateWithSuchId() {
+        //given
+        Certificate certificate = new Certificate();
+        certificate.setId(1L);
+        when(certificateRepository.findById(1L)).thenReturn(Optional.of(certificate));
+        //when
+        Certificate actual = certificateService.findById(1L);
+        //then
+        assertEquals(certificate.getName(), actual.getName());
+    }
 
     @Test
     void testShouldReturnAllCertificates() {
@@ -143,6 +138,13 @@ class CertificateServiceImplTest {
         when(certificateRepository.findByName(anyString())).thenReturn(Optional.empty());
         when(translator.toLocale(any())).thenReturn("message");
         assertThrows(NoSuchEntityException.class, () -> certificateService.findByName("name"));
+    }
+
+    @Test
+    void testShouldReturnCountOfCertificates() {
+        when(certificateRepository.count()).thenReturn(10L);
+        Long actual = certificateService.count();
+        assertEquals(10, actual);
     }
 
 }

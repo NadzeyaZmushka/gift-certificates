@@ -19,7 +19,7 @@ public class OrderRepositoryImpl implements OrderRepository {
 
     private static final String FIND_ORDER_BY_USER_ID_QUERY = "select o from Order o where o.user =: user";
     private static final String FIND_ALL_QUERY = "select o from Order o";
-    private static final String COUNT_QUERY = "select o from Order o";
+    private static final String COUNT_QUERY = "select count(o) from Order o";
 
     @Override
     public List<Order> findAll(int page, int pageSize) {

@@ -91,4 +91,11 @@ public class UserServiceImplTest {
         verify(userRepository, times(1)).remove(user);
     }
 
+    @Test
+    void testShouldReturnCountOfUsers() {
+        when(userRepository.count()).thenReturn(10L);
+        Long actual = userService.count();
+        assertEquals(10, actual);
+    }
+
 }

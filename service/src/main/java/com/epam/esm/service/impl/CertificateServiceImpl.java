@@ -62,10 +62,6 @@ public class CertificateServiceImpl implements CertificateService {
     @Transactional
     public void delete(Long id) {
         Certificate certificate = findById(id);
-        if (certificate == null) {
-            throw new NoSuchEntityException(String.format(translator.toLocale(CERTIFICATE_WITH_ID_NOT_FOUND), id)
-                    , CERTIFICATE_NOT_FOUND.getErrorCode());
-        }
         certificateRepository.remove(certificate);
     }
 
@@ -83,7 +79,6 @@ public class CertificateServiceImpl implements CertificateService {
         fromDB.setPrice(certificate.getPrice() == null ? fromDB.getPrice() : certificate.getPrice());
         fromDB.setDuration((certificate.getDuration() == null ? fromDB.getDuration() : certificate.getDuration()));
         fromDB.setCreateDate(fromDB.getCreateDate());
-        //?
         fromDB.setTags(certificate.getTags());
         validator.validCertificate(fromDB);
         fromDB.setLastUpdateDate(LocalDateTime.now());

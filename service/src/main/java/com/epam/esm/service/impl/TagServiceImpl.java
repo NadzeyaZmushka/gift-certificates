@@ -56,10 +56,6 @@ public class TagServiceImpl implements TagService {
     @Transactional
     public void delete(Long id) {
         Tag tag = findById(id);
-        if (tag == null) {
-            throw new NoSuchEntityException(String.format(translator.toLocale(TAG_WITH_ID_NOT_FOUND), id),
-                    TAG_NOT_FOUND.getErrorCode());
-        }
         tagRepository.remove(tag);
     }
 

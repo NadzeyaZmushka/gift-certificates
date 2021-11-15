@@ -45,10 +45,6 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void delete(Long id) {
         User user = findById(id);
-        if (user == null) {
-            throw new NoSuchEntityException(String.format(translator.toLocale(USER_WITH_ID_NOT_FOUND), id),
-                    USER_NOT_FOUND.getErrorCode());
-        }
         userRepository.remove(user);
     }
 
