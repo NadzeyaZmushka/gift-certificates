@@ -2,6 +2,8 @@ package com.epam.esm.service.impl;
 
 import com.epam.esm.config.Translator;
 import com.epam.esm.entity.Certificate;
+import com.epam.esm.entity.Tag;
+import com.epam.esm.exception.NoSuchEntityException;
 import com.epam.esm.repository.impl.CertificateRepositoryImpl;
 import com.epam.esm.repository.impl.TagRepositoryImpl;
 import com.epam.esm.validator.CertificateValidator;
@@ -17,9 +19,16 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -60,15 +69,16 @@ class CertificateServiceImplTest {
 //    @Test
 //    void testShouldReturnCertificateWithSuchId() {
 //        //given
+//        List<Tag> tags = new ArrayList<>();
 //        Certificate certificate = new Certificate(1L, "name", "description",
 //                new BigDecimal(100), 10, LocalDateTime.now(), LocalDateTime.now(),
-//                new ArrayList<>());
+//                tags);
 //        when(certificateRepository.findById(1L)).thenReturn(Optional.of(certificate));
-//        when(tagRepository.findByCertificateId(1L)).thenReturn(new ArrayList<>());
+//        when(tagRepository.findByCertificateId(1L)).thenReturn(tags);
 //        //when
 //        Certificate actual = certificateService.findById(1L);
-//        List<Tag> tags = tagService.findByCertificateId(1L);
-//        actual.setTags(tags);
+//        List<Tag> actualTags = tagService.findByCertificateId(1L);
+//        actual.setTags(actualTags);
 //        //then
 //        assertEquals(certificate.getName(), actual.getName());
 //    }
@@ -93,6 +103,46 @@ class CertificateServiceImplTest {
         List<Certificate> actual = certificateService.findAll(10, 1);
         //then
         assertEquals(Collections.emptyList(), actual);
+    }
+
+    @Test
+    void testThrowsNoSuchEntityException() {
+        //given
+        when(certificateRepository.findById(anyLong())).thenReturn(Optional.empty());
+        when(translator.toLocale(any())).thenReturn("message");
+        //then
+        assertThrows(NoSuchEntityException.class, () -> certificateService.findById(1L));
+    }
+
+    @Test
+    void testShouldDeleteCertificate() {
+        //given
+        Certificate certificate = new Certificate();
+        certificate.setId(1L);
+        when(certificateRepository.findById(1L)).thenReturn(Optional.of(certificate));
+        //when
+        certificateService.delete(1L);
+        //then
+        verify(certificateRepository, times(1)).remove(certificate);
+    }
+
+    @Test
+    void testShouldReturnCertificateWithSuchName() {
+        //given
+        Certificate certificate = new Certificate();
+        certificate.setName("name");
+        when(certificateRepository.findByName("name")).thenReturn(Optional.of(certificate));
+        //when
+        Certificate actual = certificateService.findByName("name");
+        //then
+        assertEquals(certificate, actual);
+    }
+
+    @Test
+    void testThrowsNoSuchEntityExceptionWithSuchName() {
+        when(certificateRepository.findByName(anyString())).thenReturn(Optional.empty());
+        when(translator.toLocale(any())).thenReturn("message");
+        assertThrows(NoSuchEntityException.class, () -> certificateService.findByName("name"));
     }
 
 }

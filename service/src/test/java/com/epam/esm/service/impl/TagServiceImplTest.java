@@ -2,12 +2,15 @@ package com.epam.esm.service.impl;
 
 import com.epam.esm.config.Translator;
 import com.epam.esm.entity.Tag;
+import com.epam.esm.exception.IncorrectDataException;
+import com.epam.esm.exception.NoSuchEntityException;
 import com.epam.esm.repository.impl.TagRepositoryImpl;
 import com.epam.esm.validator.TagValidator;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Arrays;
@@ -16,6 +19,10 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -69,9 +76,17 @@ class TagServiceImplTest {
         assertEquals(expectedTag, tag);
     }
 
+    @Test
+    void testThrowsNoSuchEntityException() {
+        //given
+        when(tagRepository.findById(anyLong())).thenReturn(Optional.empty());
+        when(translator.toLocale(any())).thenReturn("message");
+        //then
+        assertThrows(NoSuchEntityException.class, () -> tagService.findById(1L));
+    }
 
     @Test
-    void delete() {
+    void testShouldDeleteTag() {
         //given
         Tag tag = new Tag(1L, "tag");
         when(tagRepository.findById(1L)).thenReturn(Optional.of(tag));
@@ -90,7 +105,16 @@ class TagServiceImplTest {
         Tag actual = tagService.findByName("tag");
         //then
         assertEquals(tag, actual);
+    }
 
+    @Test
+    void testThrowsNoSuchEntityExceptionWithSuchName() {
+        //given
+        Tag tag = new Tag(1L, "name");
+        when(tagRepository.findByName(tag.getName())).thenReturn(Optional.empty());
+        when(translator.toLocale(any())).thenReturn("message");
+        //then
+        assertThrows(NoSuchEntityException.class, () -> tagService.findByName(tag.getName()));
     }
 
     @Test
@@ -117,5 +141,32 @@ class TagServiceImplTest {
         assertEquals(tags.size(), actual.size());
         assertEquals(tags, actual);
     }
+
+    @Test
+    void testWidelyUsedTagThrowsNoSuchEntityException() {
+        //given
+        when(tagRepository.findMostPopularTag()).thenReturn(Optional.empty());
+        when(translator.toLocale(any())).thenReturn("message");
+        //then
+        assertThrows(NoSuchEntityException.class, () -> tagService.findWidelyUsed());
+    }
+
+    @Test
+    void testShouldReturnWidelyUsedTag() {
+        //given
+        Tag tag = new Tag(1L, "popular");
+        when(tagRepository.findMostPopularTag()).thenReturn(Optional.of(tag));
+        //when
+        Tag actual = tagService.findWidelyUsed();
+        //then
+        assertEquals(tag, actual);
+    }
+
+//    @Test
+//    void testThrowsExceptionWhenNameIsBlank() {
+//        Tag tag = new Tag("");
+//        Mockito.when(translator.toLocale(any())).thenReturn("message");
+//        assertThrows(IncorrectDataException.class, () -> tagService.add(tag));
+//    }
 
 }

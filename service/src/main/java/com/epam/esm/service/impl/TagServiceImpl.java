@@ -49,8 +49,7 @@ public class TagServiceImpl implements TagService {
     @Override
     public Tag findById(Long id) {
         return tagRepository.findById(id)
-                .orElseThrow(() -> new NoSuchEntityException(String.format(translator.toLocale(TAG_WITH_ID_NOT_FOUND), id),
-                        TAG_NOT_FOUND.getErrorCode()));
+                .orElseThrow(() -> new NoSuchEntityException(String.format(translator.toLocale(TAG_WITH_ID_NOT_FOUND), id), TAG_NOT_FOUND.getErrorCode()));
     }
 
     @Override
