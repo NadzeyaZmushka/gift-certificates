@@ -26,9 +26,9 @@ public interface UserController {
     UserDTO findOne(@PathVariable Long id);
 
     //???
-    @PostMapping("/{id}/orders")
-    @ResponseStatus(HttpStatus.CREATED)
-    ResponseEntity<Void> createOrder(@PathVariable Long id,
-                                     @RequestBody Long certificateId);
+//    @PostMapping("/{id}/orders")
+//    @ResponseStatus(HttpStatus.CREATED)
+//    ResponseEntity<Void> createOrder(@PathVariable Long id,
+//                                     @RequestBody Long certificateId);
 
 }

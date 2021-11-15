@@ -25,14 +25,14 @@ public class CertificatesControllerImpl implements CertificateController {
 
     @Override
     public PagedModel<CertificateDTO> findAll(List<String> tagNames, String partName, String sortBy, String order, int page, int limit) {
-        List<CertificateDTO> certificateDTOList;
-            certificateDTOList = certificateService.findAllByCriteria(tagNames, partName, sortBy, order, limit, page)
+        List<CertificateDTO> certificates;
+            certificates = certificateService.findAllByCriteria(tagNames, partName, sortBy, order, limit, page)
                     .stream()
                     .map(converter::toDTO)
                     .collect(Collectors.toList());
-        certificateDTOList.forEach(hateoasLinkBuilder::addLinksForCertificate);
+        certificates.forEach(hateoasLinkBuilder::addLinksForCertificate);
         Long count = certificateService.count();
-        PagedModel<CertificateDTO> pagedModel = PagedModel.of(certificateDTOList, new PagedModel.PageMetadata(limit, page, count));
+        PagedModel<CertificateDTO> pagedModel = PagedModel.of(certificates, new PagedModel.PageMetadata(limit, page, count));
         hateoasLinkBuilder.createPaginationLinks(pagedModel, tagNames, partName, sortBy, order);
         return pagedModel;
     }

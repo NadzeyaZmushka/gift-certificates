@@ -25,7 +25,7 @@ public class User extends BaseEntity {
     private String name;
     @Column(name = "surname")
     private String surname;
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     List<Order> orders;
 
     public User(Long id, String name, String surname, List<Order> orders) {

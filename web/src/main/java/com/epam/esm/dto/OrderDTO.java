@@ -23,6 +23,7 @@ public class OrderDTO extends RepresentationModel<OrderDTO> {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
     private LocalDateTime createDate;
+    private Long userId;
     private Certificate certificate;
 
 }

@@ -45,11 +45,11 @@ public class UserControllerImpl implements UserController {
         return userDTO;
     }
 
-    @Override
-    public ResponseEntity<Void> createOrder(Long id, Long certificateId) {
-        Order order = orderService.create(id, certificateId);
-        URI location = URI.create(String.format("/orders/%d", order.getId()));
-        return ResponseEntity.created(location).build();
-    }
+//    @Override
+//    public ResponseEntity<Void> createOrder(Long id, Long certificateId) {
+//        Order order = orderService.create(id, certificateId);
+//        URI location = URI.create(String.format("/orders/%d", order.getId()));
+//        return ResponseEntity.created(location).build();
+//    }
 
 }
