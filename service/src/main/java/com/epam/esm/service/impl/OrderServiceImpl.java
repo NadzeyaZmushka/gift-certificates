@@ -33,8 +33,21 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public Order add(Order order) {
-        User user = userService.findById(order.getUser().getId());
-        Certificate certificate = certificateService.findById(order.getCertificate().getId());
+//        User user = userService.findById(order.getUser().getId());
+//        Certificate certificate = certificateService.findById(order.getCertificate().getId());
+//        BigDecimal cost = certificate.getPrice();
+//        Order newOrder = Order.builder()
+//                .cost(cost)
+//                .createDate(LocalDateTime.now())
+//                .user(user)
+//                .certificate(certificate).build();
+        return orderRepository.add(order);
+    }
+
+    @Override
+    public Order create(Long userId, Long certificateId) {
+        User user = userService.findById(userId);
+        Certificate certificate = certificateService.findById(certificateId);
         BigDecimal cost = certificate.getPrice();
         Order newOrder = Order.builder()
                 .cost(cost)

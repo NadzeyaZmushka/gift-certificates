@@ -1,6 +1,7 @@
 package com.epam.esm.controller.impl;
 
 import com.epam.esm.controller.OrderController;
+import com.epam.esm.dto.OrderCreateRequestDTO;
 import com.epam.esm.dto.OrderDTO;
 import com.epam.esm.entity.Order;
 import com.epam.esm.hateoas.OrderLinkBuilder;
@@ -44,8 +45,8 @@ public class OrderControllerImpl implements OrderController {
     }
 
     @Override
-    public ResponseEntity<Void> create(OrderDTO orderDTO) {
-        Order order = orderService.add(converter.toEntity(orderDTO));
+    public ResponseEntity<Void> create(OrderCreateRequestDTO orderDTO) {
+        Order order = orderService.create(orderDTO.getUserId(), orderDTO.getCertificateId());
         URI location = URI.create(String.format("/orders/%d", order.getId()));
         return ResponseEntity.created(location).build();
     }

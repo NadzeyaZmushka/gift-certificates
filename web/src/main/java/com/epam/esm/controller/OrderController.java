@@ -1,5 +1,6 @@
 package com.epam.esm.controller;
 
+import com.epam.esm.dto.OrderCreateRequestDTO;
 import com.epam.esm.dto.OrderDTO;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
@@ -27,6 +28,6 @@ public interface OrderController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    ResponseEntity<Void> create(@RequestBody OrderDTO orderDTO);
+    ResponseEntity<Void> create(@RequestBody OrderCreateRequestDTO orderDTO);
 
 }
