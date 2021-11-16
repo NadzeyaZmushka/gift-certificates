@@ -24,8 +24,7 @@ subprojects {
         implementation group: 'org.springframework.boot', name: 'spring-boot-starter'
         implementation group: 'org.springframework.boot', name :'spring-boot-starter-web'
         implementation group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
-        implementation group: 'org.springframework.boot', name: 'spring-boot-devtools'
-        implementation group: 'org.springframework.boot', name: 'spring-boot-starter-hateoas'
+
 
         implementation group: 'javax.validation', name: 'validation-api', version: '2.0.1.Final'
         implementation group: 'org.hibernate.validator', name: 'hibernate-validator', version: '6.1.5.Final'

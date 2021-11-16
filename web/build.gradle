@@ -8,13 +8,17 @@ dependencies {
     implementation project(":repository")
     implementation group: 'org.modelmapper', name: 'modelmapper', version: '2.3.2'
 
-    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web'
-    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-hateoas'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-validation'
 
     testImplementation group: 'io.rest-assured', name: 'rest-assured', version: '4.3.3'
 
 
 }
 bootJar {
-    mainClass = 'com.epam.esm.Application'
+    mainClass = 'com.epam.esm.config.Application'
+}
+
+bootRun {
+    mainClass = 'com.epam.esm.config.Application'
 }
