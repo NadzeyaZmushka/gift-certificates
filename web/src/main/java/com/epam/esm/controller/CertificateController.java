@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -63,7 +64,7 @@ public interface CertificateController {
      */
     @PostMapping("/")
     @ResponseStatus(HttpStatus.CREATED)
-    ResponseEntity<Void> create(@RequestBody CertificateDTO certificateDTO);
+    ResponseEntity<Void> create(@RequestBody @Valid CertificateDTO certificateDTO);
 
     /**
      * Realizes REST's delete operation of a resource

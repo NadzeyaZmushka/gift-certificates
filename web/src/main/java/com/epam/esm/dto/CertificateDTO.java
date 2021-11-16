@@ -24,19 +24,16 @@ import java.util.List;
 public class CertificateDTO extends RepresentationModel<CertificateDTO> {
 
     private Long id;
-    @Size(min = 2, max = 50, message = "")
-    @NotEmpty
-    @NotBlank
+    @Size(min = 2, max = 50, message = "{certificate.incorrectNameLength}")
+    @NotBlank(message = "{certificate.incorrectName}")
     private String name;
-    @Size(min = 2, max = 200, message = "")
-    @NotEmpty
-    @NotBlank
+    @NotBlank(message = "{certificate.incorrectDescription}")
     private String description;
-    @Min(value = 1)
-    @Max(value = 999)
+    @Min(value = 1, message = "{certificate.incorrectPrice.less}")
+    @Max(value = 999, message = "{certificate.incorrectPrice.more}")
     private BigDecimal price;
-    @Min(value = 1)
-    @Max(value = 100)
+    @Min(value = 1, message = "{certificate.incorrectDuration.less}")
+    @Max(value = 100, message = "{certificate.incorrectDuration.more}")
     private Integer duration;
     private List<TagDTO> tags;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")

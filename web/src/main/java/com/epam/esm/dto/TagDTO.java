@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import org.springframework.hateoas.RepresentationModel;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
 @Data
@@ -17,9 +16,8 @@ import javax.validation.constraints.Size;
 public class TagDTO extends RepresentationModel<TagDTO> {
 
     private Long id;
-    @Size(min = 2, max = 50, message = "")
-    @NotEmpty
-    @NotBlank
+    @Size(min = 2, max = 50, message = "{tag.incorrectNameLength}")
+    @NotBlank(message = "{tag.incorrectName}")
     private String name;
 
 }

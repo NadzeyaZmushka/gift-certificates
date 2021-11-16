@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 import static com.epam.esm.exception.CustomErrorCode.CERTIFICATE_NOT_FOUND;
 import static com.epam.esm.exception.ErrorMessageCodeConstant.CERTIFICATE_WITH_ID_NOT_FOUND;
 import static com.epam.esm.exception.ErrorMessageCodeConstant.CERTIFICATE_WITH_NAME_NOT_FOUND;
+import static java.util.Optional.ofNullable;
 
 @Slf4j
 @Service
@@ -74,10 +75,10 @@ public class CertificateServiceImpl implements CertificateService {
     @Transactional
     public Certificate update(Long id, Certificate certificate) {
         Certificate fromDB = findById(id);
-        fromDB.setName(certificate.getName() == null ? fromDB.getName() : certificate.getName());
-        fromDB.setDescription(certificate.getDescription() == null ? fromDB.getDescription() : certificate.getDescription());
-        fromDB.setPrice(certificate.getPrice() == null ? fromDB.getPrice() : certificate.getPrice());
-        fromDB.setDuration((certificate.getDuration() == null ? fromDB.getDuration() : certificate.getDuration()));
+        fromDB.setName(ofNullable(certificate.getName()).orElse(fromDB.getName()));
+        fromDB.setDescription(ofNullable(certificate.getDescription()).orElse(fromDB.getDescription()));
+        fromDB.setPrice(ofNullable(certificate.getPrice()).orElse(fromDB.getPrice()));
+        fromDB.setDuration(ofNullable(certificate.getDuration()).orElse(fromDB.getDuration()));
         fromDB.setCreateDate(fromDB.getCreateDate());
         fromDB.setTags(certificate.getTags());
         validator.validCertificate(fromDB);
@@ -105,7 +106,7 @@ public class CertificateServiceImpl implements CertificateService {
     public Certificate findByName(String name) {
         return certificateRepository.findByName(name)
                 .orElseThrow(() -> new NoSuchEntityException(String.format(translator.toLocale(CERTIFICATE_WITH_NAME_NOT_FOUND), name)
-                , CERTIFICATE_NOT_FOUND.getErrorCode()));
+                        , CERTIFICATE_NOT_FOUND.getErrorCode()));
     }
 
     private List<String> getTagsToAdd(List<Tag> tags, List<String> tagNames) {

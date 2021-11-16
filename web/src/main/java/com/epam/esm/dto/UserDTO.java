@@ -19,11 +19,9 @@ public class UserDTO extends RepresentationModel<UserDTO> {
 
     private Long id;
     @Size(min = 2, max = 50, message = "")
-    @NotEmpty
     @NotBlank
     private String name;
     @Size(min = 2, max = 50, message = "")
-    @NotEmpty
     @NotBlank
     private String surname;
     private List<OrderDTO> orders;

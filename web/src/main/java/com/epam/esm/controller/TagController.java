@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import javax.validation.Valid;
+
 @RequestMapping("/api/tags")
 public interface TagController {
 
@@ -47,7 +49,7 @@ public interface TagController {
      */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    ResponseEntity<Void> create(@RequestBody TagDTO tagDTO);
+    ResponseEntity<Void> create(@RequestBody @Valid TagDTO tagDTO);
 
     /**
      * Realizes REST's delete operation of a resource
