@@ -21,9 +21,9 @@ public interface TagController {
     /**
      * Realizes REST's read operation of resource
      *
+     * @param page  page
+     * @param limit limit
      * @return list of tag TagDTOs in JSON format
-     * @param page
-     * @param limit
      */
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
@@ -55,11 +55,10 @@ public interface TagController {
      * Realizes REST's delete operation of a resource
      *
      * @param id of tag to be deleted
-     * @return null
      */
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    TagDTO delete(@PathVariable Long id);
+    void delete(@PathVariable Long id);
 
     @GetMapping("/most-used")
     @ResponseStatus(HttpStatus.OK)

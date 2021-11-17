@@ -48,4 +48,5 @@ public class CertificateLinkBuilder {
                 .findAll(tagNames, partName, sortBy, order, curPage, size))
                 .withSelfRel());
     }
+
 }

@@ -9,13 +9,12 @@ public interface CertificateService extends EntityService<Certificate> {
     /**
      * Finds certificates that matches passed parameters
      *
-     *
-     * @param tagNames
+     * @param tagNames tags names
      * @param partName part of certificate name
      * @param sortBy   field by which to sort
      * @param order    in what order to sort
-     * @param limit
-     * @param page
+     * @param limit    limit
+     * @param page     page
      * @return list of certificates
      */
     List<Certificate> findAllByCriteria(List<String> tagNames, String partName, String sortBy, String order,
@@ -24,7 +23,7 @@ public interface CertificateService extends EntityService<Certificate> {
     /**
      * Updates certificate that has such id
      *
-     * @param id certificate id
+     * @param id     certificate id
      * @param entity that need to be update
      * @return updated certificate
      */
@@ -38,6 +37,12 @@ public interface CertificateService extends EntityService<Certificate> {
      */
     void addTagsToCertificate(Long certificateId, List<String> tagsNames);
 
+    /**
+     * Finds certificate with such name
+     *
+     * @param name certificate name
+     * @return certificate
+     */
     Certificate findByName(String name);
 
 

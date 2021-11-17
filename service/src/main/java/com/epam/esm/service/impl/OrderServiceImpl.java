@@ -33,18 +33,11 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public Order add(Order order) {
-//        User user = userService.findById(order.getUser().getId());
-//        Certificate certificate = certificateService.findById(order.getCertificate().getId());
-//        BigDecimal cost = certificate.getPrice();
-//        Order newOrder = Order.builder()
-//                .cost(cost)
-//                .createDate(LocalDateTime.now())
-//                .user(user)
-//                .certificate(certificate).build();
         return orderRepository.add(order);
     }
 
     @Override
+    @Transactional
     public Order create(Long userId, Long certificateId) {
         User user = userService.findById(userId);
         Certificate certificate = certificateService.findById(certificateId);
@@ -83,9 +76,15 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public List<Order> findByUserId(Long userId, int page, int pageSize) {
-        User user = userService.findById(userId);
-        return orderRepository.findByUserId(user, page, pageSize);
+    public List<Order> findAllByUserId(Long userId, int page, int limit) {
+        List<Order> orders;
+        if (userId == null) {
+            orders = findAll(limit, page);
+        } else {
+            User user = userService.findById(userId);
+            orders = orderRepository.findByUser(user, page, limit);
+        }
+        return orders;
     }
 
 }

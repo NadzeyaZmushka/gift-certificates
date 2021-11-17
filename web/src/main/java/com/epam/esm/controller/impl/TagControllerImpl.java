@@ -1,12 +1,13 @@
 package com.epam.esm.controller.impl;
 
 import com.epam.esm.controller.TagController;
+import com.epam.esm.converter.TagConvertor;
 import com.epam.esm.dto.TagDTO;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.hateoas.TagsLinkBuilder;
-import com.epam.esm.converter.TagConvertor;
 import com.epam.esm.service.impl.TagServiceImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.hateoas.Link;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,6 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequiredArgsConstructor
@@ -25,13 +29,13 @@ public class TagControllerImpl implements TagController {
 
     @Override
     public PagedModel<TagDTO> findAll(int page, int limit) {
-        List<TagDTO> tagDTOList = tagService.findAll(limit, page)
+        List<TagDTO> tags = tagService.findAll(limit, page)
                 .stream()
                 .map(converter::toDTO)
                 .collect(Collectors.toList());
-        tagDTOList.forEach(hateoasLinkBuilder::addLinksForTag);
+        tags.forEach(hateoasLinkBuilder::addLinksForTag);
         Long count = tagService.count();
-        PagedModel<TagDTO> pagedModel = PagedModel.of(tagDTOList, new PagedModel.PageMetadata(limit, page, count));
+        PagedModel<TagDTO> pagedModel = PagedModel.of(tags, new PagedModel.PageMetadata(limit, page, count));
         hateoasLinkBuilder.createPaginationLinks(pagedModel);
         return pagedModel;
     }
@@ -51,15 +55,21 @@ public class TagControllerImpl implements TagController {
     }
 
     @Override
-    public TagDTO delete(Long id) {
+    public void delete(Long id) {
         tagService.delete(id);
-        return null;
     }
 
     @Override
     public TagDTO findWidelyUsed() {
         TagDTO tagDTO = converter.toDTO(tagService.findWidelyUsed());
-        hateoasLinkBuilder.addLinksForTag(tagDTO);
+        Link linkForSelf = linkTo(methodOn(TagControllerImpl.class)
+                .findWidelyUsed())
+                .withSelfRel();
+        Link findAll = linkTo(methodOn(TagControllerImpl.class)
+                .findAll(1, 10))
+                .withRel("findAll");
+        tagDTO.add(linkForSelf, findAll);
+
         return tagDTO;
     }
 

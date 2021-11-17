@@ -16,8 +16,8 @@ public interface EntityService<T extends BaseEntity> {
     /**
      * Finds all entities
      *
-     * @param limit
-     * @param page
+     * @param limit limit
+     * @param page page
      * @return list of certificate. May return empty list if there is no entities
      */
     List<T> findAll(int limit, int page);

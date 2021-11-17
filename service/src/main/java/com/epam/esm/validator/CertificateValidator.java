@@ -13,6 +13,7 @@ import static com.epam.esm.exception.ErrorMessageCodeConstant.CERTIFICATE_INCORR
 import static com.epam.esm.exception.ErrorMessageCodeConstant.CERTIFICATE_INCORRECT_NAME;
 import static com.epam.esm.exception.ErrorMessageCodeConstant.CERTIFICATE_INCORRECT_NAME_LENGTH;
 import static com.epam.esm.exception.ErrorMessageCodeConstant.CERTIFICATE_INCORRECT_PRICE;
+import static com.epam.esm.exception.ErrorMessageCodeConstant.CERTIFICATE_INCORRECT_PRICE_MORE;
 
 @Component
 @RequiredArgsConstructor
@@ -37,8 +38,12 @@ public class CertificateValidator {
             throw new IncorrectDataException(translator.toLocale(CERTIFICATE_INCORRECT_DURATION),
                     CERTIFICATE_INCORRECT_DATA.getErrorCode());
         }
-        if (certificate.getPrice() == null) {
+        if (certificate.getPrice().doubleValue() <= 0) {
             throw new IncorrectDataException(translator.toLocale(CERTIFICATE_INCORRECT_PRICE),
+                    CERTIFICATE_INCORRECT_DATA.getErrorCode());
+        }
+        if (certificate.getPrice().doubleValue() > 999) {
+            throw new IncorrectDataException(translator.toLocale(CERTIFICATE_INCORRECT_PRICE_MORE),
                     CERTIFICATE_INCORRECT_DATA.getErrorCode());
         }
     }

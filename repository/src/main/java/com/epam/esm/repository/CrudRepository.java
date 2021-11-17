@@ -17,8 +17,8 @@ public interface CrudRepository<T extends BaseEntity> {
     /**
      * Finds objects in database
      *
-     * @param page
-     * @param pageSize
+     * @param page     page
+     * @param pageSize limit
      * @return list of objects
      */
     List<T> findAll(int page, int pageSize);
@@ -27,7 +27,7 @@ public interface CrudRepository<T extends BaseEntity> {
     /**
      * Finds one object in database
      *
-     * @param id
+     * @param id entity id
      * @return Optional of found object
      */
     Optional<T> findById(Long id);
@@ -36,7 +36,7 @@ public interface CrudRepository<T extends BaseEntity> {
      * Saves object to database
      *
      * @param entity the object to be saved to database
-     * @return
+     * @return new entity with id
      */
     T add(T entity);
 
@@ -54,6 +54,9 @@ public interface CrudRepository<T extends BaseEntity> {
      */
     void remove(T entity);
 
+    /**
+     * @return count of entities
+     */
     Long count();
 
 }

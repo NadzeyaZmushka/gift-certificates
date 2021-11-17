@@ -1,11 +1,11 @@
 package com.epam.esm.controller.impl;
 
 import com.epam.esm.controller.OrderController;
+import com.epam.esm.converter.OrderConverter;
 import com.epam.esm.dto.OrderCreateRequestDTO;
 import com.epam.esm.dto.OrderDTO;
 import com.epam.esm.entity.Order;
 import com.epam.esm.hateoas.OrderLinkBuilder;
-import com.epam.esm.converter.OrderConverter;
 import com.epam.esm.service.impl.OrderServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.PagedModel;
@@ -25,15 +25,15 @@ public class OrderControllerImpl implements OrderController {
     private final OrderLinkBuilder hateoasLinkBuilder;
 
     @Override
-    public PagedModel<OrderDTO> findAll(int page, int limit) {
-        List<OrderDTO> orderDTOList = orderService.findAll(limit, page)
-                .stream()
+    public PagedModel<OrderDTO> findAll(int page, int limit, Long userId) {
+        List<Order> orderList = orderService.findAllByUserId(userId, page, limit);
+        List<OrderDTO> orders = orderList.stream()
                 .map(converter::toDTO)
                 .collect(Collectors.toList());
-        orderDTOList.forEach(hateoasLinkBuilder::addLinksForOrder);
+        orders.forEach(hateoasLinkBuilder::addLinksForOrder);
         Long count = orderService.count();
-        PagedModel<OrderDTO> pagedModel = PagedModel.of(orderDTOList, new PagedModel.PageMetadata(limit, page, count));
-        hateoasLinkBuilder.createPaginationLinks(pagedModel);
+        PagedModel<OrderDTO> pagedModel = PagedModel.of(orders, new PagedModel.PageMetadata(limit, page, count));
+        hateoasLinkBuilder.createPaginationLinks(pagedModel, userId);
         return pagedModel;
     }
 

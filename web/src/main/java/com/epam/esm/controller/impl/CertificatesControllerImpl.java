@@ -1,10 +1,10 @@
 package com.epam.esm.controller.impl;
 
 import com.epam.esm.controller.CertificateController;
+import com.epam.esm.converter.CertificateConverter;
 import com.epam.esm.dto.CertificateDTO;
 import com.epam.esm.entity.Certificate;
 import com.epam.esm.hateoas.CertificateLinkBuilder;
-import com.epam.esm.converter.CertificateConverter;
 import com.epam.esm.service.impl.CertificateServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.PagedModel;
@@ -24,16 +24,16 @@ public class CertificatesControllerImpl implements CertificateController {
     private final CertificateLinkBuilder hateoasLinkBuilder;
 
     @Override
-    public PagedModel<CertificateDTO> findAll(List<String> tagNames, String partName, String sortBy, String order, int page, int limit) {
+    public PagedModel<CertificateDTO> findAll(List<String> tagNames, String name, String sortBy, String order, int page, int limit) {
         List<CertificateDTO> certificates;
-            certificates = certificateService.findAllByCriteria(tagNames, partName, sortBy, order, limit, page)
-                    .stream()
-                    .map(converter::toDTO)
-                    .collect(Collectors.toList());
+        certificates = certificateService.findAllByCriteria(tagNames, name, sortBy, order, limit, page)
+                .stream()
+                .map(converter::toDTO)
+                .collect(Collectors.toList());
         certificates.forEach(hateoasLinkBuilder::addLinksForCertificate);
         Long count = certificateService.count();
         PagedModel<CertificateDTO> pagedModel = PagedModel.of(certificates, new PagedModel.PageMetadata(limit, page, count));
-        hateoasLinkBuilder.createPaginationLinks(pagedModel, tagNames, partName, sortBy, order);
+        hateoasLinkBuilder.createPaginationLinks(pagedModel, tagNames, name, sortBy, order);
         return pagedModel;
     }
 
@@ -52,9 +52,8 @@ public class CertificatesControllerImpl implements CertificateController {
     }
 
     @Override
-    public CertificateDTO delete(Long id) {
+    public void delete(Long id) {
         certificateService.delete(id);
-        return null;
     }
 
     @Override

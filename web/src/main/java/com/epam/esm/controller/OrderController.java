@@ -19,7 +19,8 @@ public interface OrderController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     PagedModel<OrderDTO> findAll(@RequestParam(required = false, name = "page", defaultValue = "1") int page,
-                                 @RequestParam(required = false, name = "limit", defaultValue = "10") int limit);
+                                 @RequestParam(required = false, name = "limit", defaultValue = "10") int limit,
+                                 @RequestParam(required = false, name = "userId") Long userId);
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)

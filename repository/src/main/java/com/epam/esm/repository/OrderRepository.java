@@ -7,6 +7,14 @@ import java.util.List;
 
 public interface OrderRepository extends CrudRepository<Order> {
 
-    List<Order> findByUserId(User user, int page, int pageSize);
+    /**
+     * Find users orders
+     *
+     * @param user     User
+     * @param page     page
+     * @param pageSize limit
+     * @return list of users orders
+     */
+    List<Order> findByUser(User user, int page, int pageSize);
 
 }

@@ -35,7 +35,7 @@ public class OrderRepositoryImpl implements OrderRepository {
         return Optional.ofNullable(entityManager.find(Order.class, id));
     }
 
-    public List<Order> findByUserId(User user, int page, int pageSize) {
+    public List<Order> findByUser(User user, int page, int pageSize) {
         return entityManager.createQuery(FIND_ORDER_BY_USER_ID_QUERY, Order.class)
                 .setParameter("user", user)
                 .setFirstResult((page - 1) * pageSize)

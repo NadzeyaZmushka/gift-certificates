@@ -29,18 +29,18 @@ public interface CertificateController {
      * Realizes REST's read operation of resource.
      * May finds by criteria(tag name or part of name)
      *
-     * @param tagNames  tag name
-     * @param partName part of certificate name
+     * @param tagNames tag name
+     * @param name     part of certificate name
      * @param sortBy   field by which to sort
      * @param order    in what order to sort
-     * @param page
-     * @param limit
+     * @param page     page
+     * @param limit    limit
      * @return list of certificate DTO in JSON format
      */
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     PagedModel<CertificateDTO> findAll(@RequestParam(required = false, name = "tagName") List<String> tagNames,
-                                       @RequestParam(required = false, name = "partName") String partName,
+                                       @RequestParam(required = false, name = "name") String name,
                                        @RequestParam(required = false, defaultValue = "id", name = "sortBy") String sortBy,
                                        @RequestParam(required = false, defaultValue = "ASC", name = "order") String order,
                                        @RequestParam(required = false, name = "page", defaultValue = "1") int page,
@@ -70,11 +70,10 @@ public interface CertificateController {
      * Realizes REST's delete operation of a resource
      *
      * @param id of certificate to be deleted
-     * @return null
      */
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    CertificateDTO delete(@PathVariable Long id);
+    void delete(@PathVariable Long id);
 
     /**
      * Realizes REST's update operation of a resource

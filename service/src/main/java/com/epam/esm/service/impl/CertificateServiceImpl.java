@@ -36,6 +36,7 @@ public class CertificateServiceImpl implements CertificateService {
     @Transactional
     public Certificate add(Certificate certificate) {
         validator.validCertificate(certificate);
+        certificate.setTags(findAndSetTagsToCertificate(certificate));
         certificate.setCreateDate(LocalDateTime.now());
         certificate.setLastUpdateDate(LocalDateTime.now());
 
@@ -55,8 +56,8 @@ public class CertificateServiceImpl implements CertificateService {
     @Override
     public Certificate findById(Long id) {
         return certificateRepository.findById(id)
-                .orElseThrow(() -> new NoSuchEntityException(String.format(translator.toLocale(CERTIFICATE_WITH_ID_NOT_FOUND), id)
-                        , CERTIFICATE_NOT_FOUND.getErrorCode()));
+                .orElseThrow(() -> new NoSuchEntityException(String.format(translator.toLocale(CERTIFICATE_WITH_ID_NOT_FOUND), id),
+                        CERTIFICATE_NOT_FOUND.getErrorCode()));
     }
 
     @Override
@@ -80,7 +81,7 @@ public class CertificateServiceImpl implements CertificateService {
         fromDB.setPrice(ofNullable(certificate.getPrice()).orElse(fromDB.getPrice()));
         fromDB.setDuration(ofNullable(certificate.getDuration()).orElse(fromDB.getDuration()));
         fromDB.setCreateDate(fromDB.getCreateDate());
-        fromDB.setTags(certificate.getTags());
+        fromDB.setTags(findAndSetTagsToCertificate(certificate));
         validator.validCertificate(fromDB);
         fromDB.setLastUpdateDate(LocalDateTime.now());
         certificateRepository.update(fromDB);
@@ -117,6 +118,13 @@ public class CertificateServiceImpl implements CertificateService {
         return tagNames.stream()
                 .distinct()
                 .filter(name -> !certificatesTag.contains(name))
+                .collect(Collectors.toList());
+    }
+
+    private List<Tag> findAndSetTagsToCertificate(Certificate certificate) {
+        return certificate.getTags().stream()
+                .distinct()
+                .map(tag -> tagService.findByNameOrCreate(tag.getName()))
                 .collect(Collectors.toList());
     }
 

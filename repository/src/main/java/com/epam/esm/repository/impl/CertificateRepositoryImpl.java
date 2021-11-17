@@ -3,7 +3,6 @@ package com.epam.esm.repository.impl;
 import com.epam.esm.entity.Certificate;
 import com.epam.esm.repository.CertificateOrderOptions;
 import com.epam.esm.repository.CertificateRepository;
-import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Repository;
 
@@ -48,7 +47,7 @@ public class CertificateRepositoryImpl implements CertificateRepository {
                 .getResultList();
     }
 
-    public List<Certificate> findAll(List<String> tagNames, String namePart, String orderBy, String order,
+    public List<Certificate> findAll(List<String> tagNames, String name, String orderBy, String order,
                                      int page, int pageSize) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Certificate> query = criteriaBuilder.createQuery(Certificate.class);
@@ -56,8 +55,8 @@ public class CertificateRepositoryImpl implements CertificateRepository {
         query.select(root);
 
         List<Predicate> predicates = new ArrayList<>();
-        if (!StringUtils.isBlank(namePart)) {
-            Predicate predicateForName = criteriaBuilder.like(root.get("name"), "%" + namePart + "%");
+        if (!StringUtils.isBlank(name)) {
+            Predicate predicateForName = criteriaBuilder.like(root.get("name"), "%" + name + "%");
             predicates.add(predicateForName);
         }
         if (tagNames != null && tagNames.size() != 0) {

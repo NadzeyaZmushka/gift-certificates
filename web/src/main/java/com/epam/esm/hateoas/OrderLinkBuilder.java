@@ -17,7 +17,7 @@ public class OrderLinkBuilder {
                 .slash(orderDTO.getId())
                 .withSelfRel();
         Link linkForAll = linkTo(methodOn(OrderControllerImpl.class)
-                .findAll(1, 10))
+                .findAll(1, 10, null))
                 .withRel("findAll");
         Link linkForCreateOrder = linkTo(methodOn(OrderControllerImpl.class)
                 .create(null))
@@ -26,26 +26,26 @@ public class OrderLinkBuilder {
         orderDTO.add(linkForSelf, linkForAll, linkForCreateOrder);
     }
 
-    public void createPaginationLinks(PagedModel<OrderDTO> model) {
+    public void createPaginationLinks(PagedModel<OrderDTO> model, Long userId) {
         PagedModel.PageMetadata metadata = model.getMetadata();
         int curPage = (int) metadata.getNumber();
         int size = (int) metadata.getSize();
         int totalPages = (int) metadata.getTotalPages();
         if (curPage < totalPages) {
             model.add(linkTo(methodOn(OrderControllerImpl.class)
-                    .findAll(curPage + 1, size))
+                    .findAll(curPage + 1, size, userId))
                     .withRel("nextPage"));
             model.add(linkTo(methodOn(OrderControllerImpl.class)
-                    .findAll(totalPages, size))
+                    .findAll(totalPages, size, userId))
                     .withRel("lastPage"));
         }
         if (curPage > 1) {
             model.add(linkTo(methodOn(OrderControllerImpl.class)
-                    .findAll(curPage - 1, size))
+                    .findAll(curPage - 1, size, userId))
                     .withRel("prevPage"));
         }
         model.add(linkTo(methodOn(OrderControllerImpl.class)
-                .findAll(curPage, size))
+                .findAll(curPage, size, userId))
                 .withSelfRel());
     }
 }
