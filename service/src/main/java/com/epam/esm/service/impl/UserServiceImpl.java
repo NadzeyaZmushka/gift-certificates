@@ -2,6 +2,7 @@ package com.epam.esm.service.impl;
 
 import com.epam.esm.config.Translator;
 import com.epam.esm.entity.User;
+import com.epam.esm.exception.IncorrectDataException;
 import com.epam.esm.exception.NoSuchEntityException;
 import com.epam.esm.repository.impl.UserRepositoryImpl;
 import com.epam.esm.service.UserService;
@@ -12,7 +13,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static com.epam.esm.exception.CustomErrorCode.PAGE_INCORRECT_CODE;
 import static com.epam.esm.exception.CustomErrorCode.USER_NOT_FOUND;
+import static com.epam.esm.exception.ErrorMessageCodeConstant.PAGE_INCORRECT;
 import static com.epam.esm.exception.ErrorMessageCodeConstant.USER_WITH_ID_NOT_FOUND;
 
 @Slf4j
@@ -31,6 +34,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> findAll(int limit, int page) {
+        if (page <= 0 || limit <= 0) {
+            throw new IncorrectDataException(translator.toLocale(PAGE_INCORRECT), PAGE_INCORRECT_CODE.getErrorCode());
+        }
         return userRepository.findAll(page, limit);
     }
 

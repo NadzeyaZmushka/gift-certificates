@@ -4,6 +4,7 @@ import com.epam.esm.config.Translator;
 import com.epam.esm.entity.Certificate;
 import com.epam.esm.entity.Order;
 import com.epam.esm.entity.User;
+import com.epam.esm.exception.IncorrectDataException;
 import com.epam.esm.exception.NoSuchEntityException;
 import com.epam.esm.repository.OrderRepository;
 import com.epam.esm.service.CertificateService;
@@ -18,7 +19,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.epam.esm.exception.CustomErrorCode.ORDER_NOT_FOUND;
+import static com.epam.esm.exception.CustomErrorCode.PAGE_INCORRECT_CODE;
 import static com.epam.esm.exception.ErrorMessageCodeConstant.ORDER_WITH_ID_NOT_FOUND;
+import static com.epam.esm.exception.ErrorMessageCodeConstant.PAGE_INCORRECT;
 
 @Slf4j
 @Service
@@ -52,6 +55,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<Order> findAll(int limit, int page) {
+        if (page <= 0 || limit <= 0) {
+            throw new IncorrectDataException(translator.toLocale(PAGE_INCORRECT), 40400);
+        }
         return orderRepository.findAll(page, limit);
     }
 
@@ -77,6 +83,9 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public List<Order> findAllByUserId(Long userId, int page, int limit) {
+        if (page <= 0 || limit <= 0) {
+            throw new IncorrectDataException(translator.toLocale(PAGE_INCORRECT), PAGE_INCORRECT_CODE.getErrorCode());
+        }
         List<Order> orders;
         if (userId == null) {
             orders = findAll(limit, page);

@@ -36,7 +36,7 @@ public class EntityExceptionHandler {
     }
 
     @ExceptionHandler(DuplicateException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.CONFLICT)
     public ExceptionInfo handleDuplicateException(DuplicateException exception) {
         ExceptionInfo info = new ExceptionInfo();
         List<String> listErrors = new ArrayList<>();
@@ -47,13 +47,13 @@ public class EntityExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ExceptionInfo handleException() {
         ExceptionInfo info = new ExceptionInfo();
         List<String> listErrors = new ArrayList<>();
-        listErrors.add("Something went wrong");
+        listErrors.add("You entered incorrect data or parameters");
         info.setErrorMessage(listErrors);
-        info.setErrorCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+        info.setErrorCode(HttpStatus.BAD_REQUEST.value());
         return info;
     }
 

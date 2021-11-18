@@ -3,6 +3,7 @@ package com.epam.esm.service.impl;
 import com.epam.esm.config.Translator;
 import com.epam.esm.entity.Certificate;
 import com.epam.esm.entity.Tag;
+import com.epam.esm.exception.IncorrectDataException;
 import com.epam.esm.exception.NoSuchEntityException;
 import com.epam.esm.repository.CertificateRepository;
 import com.epam.esm.service.CertificateService;
@@ -18,8 +19,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.epam.esm.exception.CustomErrorCode.CERTIFICATE_NOT_FOUND;
+import static com.epam.esm.exception.CustomErrorCode.PAGE_INCORRECT_CODE;
 import static com.epam.esm.exception.ErrorMessageCodeConstant.CERTIFICATE_WITH_ID_NOT_FOUND;
 import static com.epam.esm.exception.ErrorMessageCodeConstant.CERTIFICATE_WITH_NAME_NOT_FOUND;
+import static com.epam.esm.exception.ErrorMessageCodeConstant.PAGE_INCORRECT;
 import static java.util.Optional.ofNullable;
 
 @Slf4j
@@ -36,7 +39,10 @@ public class CertificateServiceImpl implements CertificateService {
     @Transactional
     public Certificate add(Certificate certificate) {
         validator.validCertificate(certificate);
-        certificate.setTags(findAndSetTagsToCertificate(certificate));
+        List<Tag> tagsToAdd = getCertificateTagNames(certificate).stream()
+                .map(tagService::findByNameOrCreate)
+                .collect(Collectors.toList());
+        certificate.setTags(tagsToAdd);
         certificate.setCreateDate(LocalDateTime.now());
         certificate.setLastUpdateDate(LocalDateTime.now());
 
@@ -45,11 +51,17 @@ public class CertificateServiceImpl implements CertificateService {
 
     @Override
     public List<Certificate> findAll(int limit, int page) {
+        if (page <= 0 || limit <= 0) {
+            throw new IncorrectDataException(translator.toLocale(PAGE_INCORRECT), PAGE_INCORRECT_CODE.getErrorCode());
+        }
         return certificateRepository.findAll(page, limit);
     }
 
     @Override
     public List<Certificate> findAllByCriteria(List<String> tagNames, String partName, String sortBy, String order, int limit, int page) {
+        if (page <= 0 || limit <= 0) {
+            throw new IncorrectDataException(translator.toLocale(PAGE_INCORRECT), PAGE_INCORRECT_CODE.getErrorCode());
+        }
         return certificateRepository.findAll(tagNames, partName, sortBy, order, page, limit);
     }
 
@@ -81,7 +93,11 @@ public class CertificateServiceImpl implements CertificateService {
         fromDB.setPrice(ofNullable(certificate.getPrice()).orElse(fromDB.getPrice()));
         fromDB.setDuration(ofNullable(certificate.getDuration()).orElse(fromDB.getDuration()));
         fromDB.setCreateDate(fromDB.getCreateDate());
-        fromDB.setTags(findAndSetTagsToCertificate(certificate));
+        if (certificate.getTags() != null && !(certificate.getTags().isEmpty())) {
+            addTagsToCertificate(id, getCertificateTagNames(certificate));
+        } else {
+            fromDB.setTags(fromDB.getTags());
+        }
         validator.validCertificate(fromDB);
         fromDB.setLastUpdateDate(LocalDateTime.now());
         certificateRepository.update(fromDB);
@@ -121,11 +137,12 @@ public class CertificateServiceImpl implements CertificateService {
                 .collect(Collectors.toList());
     }
 
-    private List<Tag> findAndSetTagsToCertificate(Certificate certificate) {
+    private List<String> getCertificateTagNames(Certificate certificate) {
         return certificate.getTags().stream()
                 .distinct()
-                .map(tag -> tagService.findByNameOrCreate(tag.getName()))
+                .map(Tag::getName)
                 .collect(Collectors.toList());
+
     }
 
 }
