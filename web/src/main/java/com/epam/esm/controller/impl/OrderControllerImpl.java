@@ -28,13 +28,14 @@ public class OrderControllerImpl implements OrderController {
 
     @Override
     public PagedModel<OrderDTO> findAll(int page, int limit, Long userId) {
-        List<Order> orderList = orderService.findAllByUserId(userId, page, limit);
-        List<OrderDTO> orders = orderList.stream()
+        List<OrderDTO> orders = orderService.findAllByUserId(userId, page, limit).stream()
                 .map(converter::toDTO)
                 .collect(Collectors.toList());
         orders.forEach(hateoasLinkBuilder::addLinksForOrder);
-        Long count = orderService.count();
-        PagedModel<OrderDTO> pagedModel = PagedModel.of(orders, new PagedModel.PageMetadata(limit, page, count));
+        for (OrderDTO orderDTO : orders) {
+            certificateLinkBuilder.addLinksForCertificate(orderDTO.getCertificate());
+        }
+        PagedModel<OrderDTO> pagedModel = PagedModel.of(orders, new PagedModel.PageMetadata(limit, page, orders.size()));
         hateoasLinkBuilder.createPaginationLinks(pagedModel, userId);
         return pagedModel;
     }

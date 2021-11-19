@@ -45,7 +45,6 @@ public class OrderRepositoryImpl implements OrderRepository {
 
     @Override
     public Order add(Order entity) {
-        entity.setCreateDate(LocalDateTime.now());
         entityManager.persist(entity);
         return entity;
     }

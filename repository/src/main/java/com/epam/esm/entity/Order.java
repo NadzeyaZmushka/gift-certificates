@@ -10,6 +10,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -40,6 +41,12 @@ public class Order extends BaseEntity {
         this.createDate = createDate;
         this.user = user;
         this.certificate = certificate;
+    }
+
+    @PrePersist
+    public void prePersist() {
+        createDate = LocalDateTime.now();
+        cost = certificate.getPrice();
     }
 
 }

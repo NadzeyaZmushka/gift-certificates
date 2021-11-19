@@ -33,6 +33,9 @@ public class CertificatesControllerImpl implements CertificateController {
                 .map(converter::toDTO)
                 .collect(Collectors.toList());
         certificates.forEach(hateoasLinkBuilder::addLinksForCertificate);
+        for (CertificateDTO certificateDTO : certificates) {
+            certificateDTO.getTags().forEach(tagsLinkBuilder::addLinksForTag);
+        }
         Long count = certificateService.count();
         PagedModel<CertificateDTO> pagedModel = PagedModel.of(certificates, new PagedModel.PageMetadata(limit, page, certificates.size()));
         hateoasLinkBuilder.createPaginationLinks(pagedModel, tagNames, name, sortBy, order);

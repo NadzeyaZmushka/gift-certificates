@@ -44,10 +44,7 @@ public class OrderServiceImpl implements OrderService {
     public Order create(Long userId, Long certificateId) {
         User user = userService.findById(userId);
         Certificate certificate = certificateService.findById(certificateId);
-        BigDecimal cost = certificate.getPrice();
         Order newOrder = Order.builder()
-                .cost(cost)
-                .createDate(LocalDateTime.now())
                 .user(user)
                 .certificate(certificate).build();
         return orderRepository.add(newOrder);
