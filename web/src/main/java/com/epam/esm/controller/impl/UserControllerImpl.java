@@ -3,6 +3,7 @@ package com.epam.esm.controller.impl;
 import com.epam.esm.controller.UserController;
 import com.epam.esm.converter.UserConverter;
 import com.epam.esm.dto.UserDTO;
+import com.epam.esm.hateoas.OrderLinkBuilder;
 import com.epam.esm.hateoas.UserLinkBuilder;
 import com.epam.esm.service.impl.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,7 @@ public class UserControllerImpl implements UserController {
     private final UserServiceImpl userService;
     private final UserConverter converter;
     private final UserLinkBuilder hateoasLinkBuilder;
+    private final OrderLinkBuilder orderLinkBuilder;
 
     @Override
     public PagedModel<UserDTO> findAll(int page, int limit) {
@@ -37,6 +39,7 @@ public class UserControllerImpl implements UserController {
     public UserDTO findOne(Long id) {
         UserDTO userDTO = converter.toDTO(userService.findById(id));
         hateoasLinkBuilder.addLinksForUser(userDTO);
+        userDTO.getOrders().forEach(orderLinkBuilder::addLinksForOrder);
         return userDTO;
     }
 

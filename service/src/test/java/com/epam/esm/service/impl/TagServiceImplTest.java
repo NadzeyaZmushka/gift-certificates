@@ -2,7 +2,6 @@ package com.epam.esm.service.impl;
 
 import com.epam.esm.config.Translator;
 import com.epam.esm.entity.Tag;
-import com.epam.esm.exception.IncorrectDataException;
 import com.epam.esm.exception.NoSuchEntityException;
 import com.epam.esm.repository.impl.TagRepositoryImpl;
 import com.epam.esm.validator.TagValidator;
@@ -10,10 +9,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -145,21 +144,21 @@ class TagServiceImplTest {
     @Test
     void testWidelyUsedTagThrowsNoSuchEntityException() {
         //given
-        when(tagRepository.findMostPopularTag()).thenReturn(Optional.empty());
+        when(tagRepository.findMostPopularTag(, )).thenReturn(Collections.emptyList());
         when(translator.toLocale(any())).thenReturn("message");
         //then
-        assertThrows(NoSuchEntityException.class, () -> tagService.findWidelyUsed());
+        assertThrows(NoSuchEntityException.class, () -> tagService.findWidelyUsed(, ));
     }
 
     @Test
     void testShouldReturnWidelyUsedTag() {
         //given
         Tag tag = new Tag(1L, "popular");
-        when(tagRepository.findMostPopularTag()).thenReturn(Optional.of(tag));
+        when(tagRepository.findMostPopularTag(, )).thenReturn(List.of(tag));
         //when
-        Tag actual = tagService.findWidelyUsed();
+        List<Tag> actual = tagService.findWidelyUsed(, );
         //then
-        assertEquals(tag, actual);
+        assertEquals(0, actual.size());
     }
 
     @Test

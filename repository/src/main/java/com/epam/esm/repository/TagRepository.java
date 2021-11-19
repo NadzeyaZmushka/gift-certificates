@@ -35,7 +35,9 @@ public interface TagRepository extends CrudRepository<Tag> {
      * Find widely used tag
      *
      * @return optional of tag
+     * @param page
+     * @param pageSize
      */
-    Optional<Tag> findMostPopularTag();
+    List<Tag> findMostPopularTag(int page, int pageSize);
 
 }

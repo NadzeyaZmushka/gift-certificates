@@ -5,6 +5,7 @@ import com.epam.esm.converter.OrderConverter;
 import com.epam.esm.dto.OrderCreateRequestDTO;
 import com.epam.esm.dto.OrderDTO;
 import com.epam.esm.entity.Order;
+import com.epam.esm.hateoas.CertificateLinkBuilder;
 import com.epam.esm.hateoas.OrderLinkBuilder;
 import com.epam.esm.service.impl.OrderServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,7 @@ public class OrderControllerImpl implements OrderController {
     private final OrderServiceImpl orderService;
     private final OrderConverter converter;
     private final OrderLinkBuilder hateoasLinkBuilder;
+    private final CertificateLinkBuilder certificateLinkBuilder;
 
     @Override
     public PagedModel<OrderDTO> findAll(int page, int limit, Long userId) {
@@ -41,6 +43,7 @@ public class OrderControllerImpl implements OrderController {
     public OrderDTO findOne(Long id) {
         OrderDTO orderDTO = converter.toDTO(orderService.findById(id));
         hateoasLinkBuilder.addLinksForOrder(orderDTO);
+        certificateLinkBuilder.addLinksForCertificate(orderDTO.getCertificate());
         return orderDTO;
     }
 

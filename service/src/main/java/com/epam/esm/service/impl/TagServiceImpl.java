@@ -17,10 +17,8 @@ import java.util.List;
 
 import static com.epam.esm.exception.CustomErrorCode.PAGE_INCORRECT_CODE;
 import static com.epam.esm.exception.CustomErrorCode.TAG_DUPLICATE_CODE;
-import static com.epam.esm.exception.CustomErrorCode.TAG_INCORRECT_DATA;
 import static com.epam.esm.exception.CustomErrorCode.TAG_NOT_FOUND;
 import static com.epam.esm.exception.ErrorMessageCodeConstant.PAGE_INCORRECT;
-import static com.epam.esm.exception.ErrorMessageCodeConstant.SUCH_TAG_NOT_FOUND;
 import static com.epam.esm.exception.ErrorMessageCodeConstant.TAG_DUPLICATE;
 import static com.epam.esm.exception.ErrorMessageCodeConstant.TAG_WITH_ID_NOT_FOUND;
 import static com.epam.esm.exception.ErrorMessageCodeConstant.TAG_WITH_NAME_NOT_FOUND;
@@ -95,10 +93,8 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public Tag findWidelyUsed() {
-        return tagRepository.findMostPopularTag()
-                .orElseThrow(() -> new NoSuchEntityException(translator.toLocale(SUCH_TAG_NOT_FOUND),
-                        TAG_NOT_FOUND.getErrorCode()));
+    public List<Tag> findWidelyUsed(int limit, int page) {
+        return tagRepository.findMostPopularTag(page, limit);
     }
 
     @Override

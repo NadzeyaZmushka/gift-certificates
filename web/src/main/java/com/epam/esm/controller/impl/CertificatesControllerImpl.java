@@ -5,6 +5,7 @@ import com.epam.esm.converter.CertificateConverter;
 import com.epam.esm.dto.CertificateDTO;
 import com.epam.esm.entity.Certificate;
 import com.epam.esm.hateoas.CertificateLinkBuilder;
+import com.epam.esm.hateoas.TagsLinkBuilder;
 import com.epam.esm.service.impl.CertificateServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.PagedModel;
@@ -22,6 +23,7 @@ public class CertificatesControllerImpl implements CertificateController {
     private final CertificateServiceImpl certificateService;
     private final CertificateConverter converter;
     private final CertificateLinkBuilder hateoasLinkBuilder;
+    private final TagsLinkBuilder tagsLinkBuilder;
 
     @Override
     public PagedModel<CertificateDTO> findAll(List<String> tagNames, String name, String sortBy, String order, int page, int limit) {
@@ -32,7 +34,7 @@ public class CertificatesControllerImpl implements CertificateController {
                 .collect(Collectors.toList());
         certificates.forEach(hateoasLinkBuilder::addLinksForCertificate);
         Long count = certificateService.count();
-        PagedModel<CertificateDTO> pagedModel = PagedModel.of(certificates, new PagedModel.PageMetadata(limit, page, count));
+        PagedModel<CertificateDTO> pagedModel = PagedModel.of(certificates, new PagedModel.PageMetadata(limit, page, certificates.size()));
         hateoasLinkBuilder.createPaginationLinks(pagedModel, tagNames, name, sortBy, order);
         return pagedModel;
     }
@@ -41,6 +43,7 @@ public class CertificatesControllerImpl implements CertificateController {
     public CertificateDTO findOne(Long id) {
         CertificateDTO dto = converter.toDTO(certificateService.findById(id));
         hateoasLinkBuilder.addLinksForCertificate(dto);
+        dto.getTags().forEach(tagsLinkBuilder::addLinksForTag);
         return dto;
     }
 

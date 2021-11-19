@@ -93,11 +93,7 @@ public class CertificateServiceImpl implements CertificateService {
         fromDB.setPrice(ofNullable(certificate.getPrice()).orElse(fromDB.getPrice()));
         fromDB.setDuration(ofNullable(certificate.getDuration()).orElse(fromDB.getDuration()));
         fromDB.setCreateDate(fromDB.getCreateDate());
-        if (certificate.getTags() != null && !(certificate.getTags().isEmpty())) {
-            addTagsToCertificate(id, getCertificateTagNames(certificate));
-        } else {
-            fromDB.setTags(fromDB.getTags());
-        }
+        setUpdatedTags(fromDB, certificate.getTags());
         validator.validCertificate(fromDB);
         fromDB.setLastUpdateDate(LocalDateTime.now());
         certificateRepository.update(fromDB);
@@ -143,6 +139,17 @@ public class CertificateServiceImpl implements CertificateService {
                 .map(Tag::getName)
                 .collect(Collectors.toList());
 
+    }
+
+    private void setUpdatedTags(Certificate certificateFromDb, List<Tag> tags) {
+        if (tags.isEmpty()) {
+            return;
+        }
+        List<Tag> updatedTags = tags.stream()
+                .distinct()
+                .map(tag -> tagService.findByNameOrCreate(tag.getName()))
+                .collect(Collectors.toList());
+        certificateFromDb.setTags(updatedTags);
     }
 
 }

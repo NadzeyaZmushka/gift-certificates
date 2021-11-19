@@ -62,7 +62,8 @@ public interface TagController {
 
     @GetMapping("/most-used")
     @ResponseStatus(HttpStatus.OK)
-    TagDTO findWidelyUsed();
+    PagedModel<TagDTO> findWidelyUsed(@RequestParam(required = false, name = "page", defaultValue = "1") int page,
+                                      @RequestParam(required = false, name = "limit", defaultValue = "10") int limit);
 
 }
 

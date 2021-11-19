@@ -34,7 +34,7 @@ public class TagRepositoryImpl implements TagRepository {
             "FROM (SELECT SUM(gifts.order.cost) sumCost, user_id " +
             "FROM gifts.order GROUP BY user_id ORDER BY sumCost desc limit 1) as wu) " +
             "GROUP BY tag.id " +
-            "ORDER BY count(tag.id) desc limit 1";
+            "ORDER BY count(tag.id) desc";
 
     @Override
     public List<Tag> findAll(int page, int pageSize) {
@@ -93,14 +93,19 @@ public class TagRepositoryImpl implements TagRepository {
         return certificate.getTags();
     }
 
-    public Optional<Tag> findMostPopularTag() {
+    public List<Tag> findMostPopularTag(int page, int pageSize) {
         Query query = entityManager.createNativeQuery(MOST_POPULAR_TAG_SQL, Tag.class);
-        try {
-            Tag tag = (Tag) query.getSingleResult();
-            return Optional.ofNullable(tag);
-        } catch (NoResultException e) {
-            return Optional.empty();
-        }
+        return query.setFirstResult(pageSize * (page - 1))
+                .setMaxResults(pageSize)
+                .getResultList();
+//        Query query = entityManager.createNativeQuery(MOST_POPULAR_TAG_SQL, Tag.class);
+//        try {
+//            Tag tag = (Tag) query.getSingleResult();
+//            return Optional.ofNullable(tag);
+//        } catch (NoResultException e) {
+//            return Optional.empty();
+//        }
+
     }
 
     @Override

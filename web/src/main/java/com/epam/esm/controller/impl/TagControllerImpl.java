@@ -7,7 +7,6 @@ import com.epam.esm.entity.Tag;
 import com.epam.esm.hateoas.TagsLinkBuilder;
 import com.epam.esm.service.impl.TagServiceImpl;
 import lombok.RequiredArgsConstructor;
-import org.springframework.hateoas.Link;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,7 +16,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequiredArgsConstructor
@@ -60,17 +58,14 @@ public class TagControllerImpl implements TagController {
     }
 
     @Override
-    public TagDTO findWidelyUsed() {
-        TagDTO tagDTO = converter.toDTO(tagService.findWidelyUsed());
-        Link linkForSelf = linkTo(methodOn(TagControllerImpl.class)
-                .findWidelyUsed())
-                .withSelfRel();
-        Link findAll = linkTo(methodOn(TagControllerImpl.class)
-                .findAll(1, 10))
-                .withRel("findAll");
-        tagDTO.add(linkForSelf, findAll);
-
-        return tagDTO;
+    public PagedModel<TagDTO> findWidelyUsed(int page, int limit) {
+        List<TagDTO> tagDTOList = tagService.findWidelyUsed(limit, page).stream()
+                .map(converter::toDTO)
+                .collect(Collectors.toList());
+        tagDTOList.forEach(hateoasLinkBuilder::addLinksForTag);
+        PagedModel<TagDTO> pagedModel = PagedModel.of(tagDTOList, new PagedModel.PageMetadata(limit, page, tagDTOList.size()));
+        hateoasLinkBuilder.createPaginationLinks(pagedModel);
+        return pagedModel;
     }
 
 }
