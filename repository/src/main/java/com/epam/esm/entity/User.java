@@ -10,6 +10,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -24,11 +25,23 @@ public class User extends BaseEntity {
     private String name;
     @Column(name = "surname")
     private String surname;
+    @Column(name = "email", unique = true)
+    private String email;
+    @Column(name = "password")
+    private String password;
+    @Column(name = "role")
+    private Role userRole;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     List<Order> orders;
 
     public User(Long id, String name, String surname, List<Order> orders) {
         super(id);
+        this.name = name;
+        this.surname = surname;
+        this.orders = orders;
+    }
+
+    public User(String name, String surname, List<Order> orders) {
         this.name = name;
         this.surname = surname;
         this.orders = orders;

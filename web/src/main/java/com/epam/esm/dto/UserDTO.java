@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.hateoas.server.core.Relation;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.util.List;
@@ -25,6 +26,8 @@ public class UserDTO extends RepresentationModel<UserDTO> {
     @Size(min = 2, max = 50, message = "")
     @NotBlank
     private String surname;
+    @Email
+    private String email;
     private List<OrderDTO> orders;
 
 }
