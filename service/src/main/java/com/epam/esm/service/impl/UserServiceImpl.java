@@ -4,14 +4,17 @@ import com.epam.esm.config.Translator;
 import com.epam.esm.entity.User;
 import com.epam.esm.exception.IncorrectDataException;
 import com.epam.esm.exception.NoSuchEntityException;
+//import com.epam.esm.repository.impl.UserDao;
 import com.epam.esm.repository.impl.UserRepositoryImpl;
 import com.epam.esm.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 import static com.epam.esm.exception.CustomErrorCode.PAGE_INCORRECT_CODE;
 import static com.epam.esm.exception.CustomErrorCode.USER_NOT_FOUND;
@@ -25,10 +28,14 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepositoryImpl userRepository;
     private final Translator translator;
+    private final PasswordEncoder passwordEncoder;
 
+    //todo: добавить проверку email, если существует - exception
     @Override
     @Transactional
     public User add(User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setUserRole(2L);
         return userRepository.add(user);
     }
 
@@ -57,6 +64,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public Long count() {
         return userRepository.count();
+    }
+
+    @Override
+    public Optional<User> findByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
 
 }

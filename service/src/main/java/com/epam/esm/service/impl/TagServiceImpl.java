@@ -6,14 +6,21 @@ import com.epam.esm.exception.DuplicateException;
 import com.epam.esm.exception.IncorrectDataException;
 import com.epam.esm.exception.NoSuchEntityException;
 import com.epam.esm.repository.TagRepository;
+import com.epam.esm.repository.analytic.TagAnalytic;
 import com.epam.esm.service.TagService;
+import com.epam.esm.service.WidelyUsedTagsByUser;
 import com.epam.esm.validator.TagValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static com.epam.esm.exception.CustomErrorCode.PAGE_INCORRECT_CODE;
 import static com.epam.esm.exception.CustomErrorCode.TAG_DUPLICATE_CODE;
@@ -31,6 +38,7 @@ public class TagServiceImpl implements TagService {
     private final TagRepository tagRepository;
     private final TagValidator tagValidator;
     private final Translator translator;
+    private final UserServiceImpl userService;
 
     @Override
     @Transactional
@@ -93,8 +101,29 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public List<Tag> findWidelyUsed(int limit, int page) {
-        return tagRepository.findMostPopularTag(page, limit);
+    public List<WidelyUsedTagsByUser> findWidelyUsed() {
+        List<WidelyUsedTagsByUser> widelyUsedTagsByUserList = new ArrayList<>();
+        Set<Tag> tags = new HashSet<>();
+        Map<Long, List<TagAnalytic>> tagsByUserMap = tagRepository.findMostPopularTag()
+                .stream()
+                .collect(Collectors.groupingBy(TagAnalytic::getUserId));
+        int maxCount;
+        for (Map.Entry<Long, List<TagAnalytic>> item : tagsByUserMap.entrySet()) {
+            maxCount = item.getValue()
+                    .stream()
+                    .map(TagAnalytic::getCount)
+                    .mapToInt(value -> value)
+                    .max()
+                    .getAsInt();
+            for (TagAnalytic analytic : item.getValue()) {
+                if (analytic.getCount() == maxCount) {
+                    tags.add(analytic.getTag());
+                }
+            }
+            WidelyUsedTagsByUser tagsByUser = new WidelyUsedTagsByUser(item.getKey(), tags);
+            widelyUsedTagsByUserList.add(tagsByUser);
+        }
+        return widelyUsedTagsByUserList;
     }
 
     @Override

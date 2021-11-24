@@ -29,9 +29,6 @@ public class UserControllerImpl implements UserController {
                 .map(converter::toDTO)
                 .collect(Collectors.toList());
         users.forEach(hateoasLinkBuilder::addLinksForUser);
-        for (UserDTO userDTO : users) {
-            userDTO.getOrders().forEach(orderLinkBuilder::addLinksForOrder);
-        }
         Long count = userService.count();
         PagedModel<UserDTO> pagedModel = PagedModel.of(users, new PagedModel.PageMetadata(limit, page, count));
         hateoasLinkBuilder.createPaginationLinks(pagedModel);
@@ -42,7 +39,6 @@ public class UserControllerImpl implements UserController {
     public UserDTO findOne(Long id) {
         UserDTO userDTO = converter.toDTO(userService.findById(id));
         hateoasLinkBuilder.addLinksForUser(userDTO);
-        userDTO.getOrders().forEach(orderLinkBuilder::addLinksForOrder);
         return userDTO;
     }
 

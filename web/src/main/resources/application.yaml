@@ -12,9 +12,6 @@ spring:
       name: user
       password: password
 
-security.jwt.secret : 'secretKey'
-security.jwt.sessionTime: 10
-
 #management.endpoints.web.exposure.include= health,info,beans
 #management.endpoint.health.show-details=always
 

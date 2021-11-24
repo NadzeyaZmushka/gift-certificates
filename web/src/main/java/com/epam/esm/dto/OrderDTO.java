@@ -1,6 +1,5 @@
 package com.epam.esm.dto;
 
-import com.epam.esm.entity.Certificate;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -25,6 +24,7 @@ public class OrderDTO extends RepresentationModel<OrderDTO> {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
     private LocalDateTime createDate;
+    private UserDTO user;
     private CertificateDTO certificate;
 
 }

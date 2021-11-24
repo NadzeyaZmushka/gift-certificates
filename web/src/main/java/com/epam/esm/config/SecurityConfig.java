@@ -5,12 +5,11 @@ import com.epam.esm.security.jwt.JwtFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -22,25 +21,60 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final UserDetailServiceImpl userDetailsService;
     private final JwtFilter jwtFilter;
 
-    //для аутентификации
+    @Bean
     @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService);
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
     }
 
+//    //для аутентификации
+//    @Override
+//    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+////        auth.userDetailsService(userDetailsService);
+//        auth.authenticationProvider(daoAuthenticationProvider());
+//    }
+
     //для авторизации
+
+    /**
+     * sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) которая управляет сессией юзера в системе спринг секюрити.
+     * Так как авторизация пользователя по токену, не нужно создавать и хранить для него сессию. Поэтому STATELESS.
+     * authorizeRequests() - значит все запросы должны проходить через Spring Security
+     * antMatchers - какие урл адреса будут доступны для определенной роли, а какие нет
+     * addFilterBefore - чтобы спринг как-то увидел пользователя в системе. фильтр, который будет срабатывать при каждом запросе
+     * (будет доставать данные из токена, получать юзера из базы данных и сохранять данные пользователя и его роли в Spring Security,
+     * чтобы спринг мог дальше выполнять свою работу и определять доступен ли определенный адрес для пользователя)
+     * hasRole  спринг добавляет к имени роли префикс ROLE_
+     */
+    //todo: дописать остальные
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable()
+        http
+                .httpBasic().disable()
+                .csrf().disable()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)//отключить сессии и использовать только токен
+                .and()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.GET, "/api/certificates", "api/certificates/{\\d+}").permitAll() //todo: дописать остальные
-                .and().formLogin()
-                .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);//отключить сессии и использовать только токен
-        http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+                .antMatchers(HttpMethod.GET, "/api/certificates", "api/certificates/{\\d+}").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/tags", "api/tags/{\\d}").hasAnyRole("ADMIN", "USER")
+                .antMatchers(HttpMethod.POST, "/api/certificates", "/api/tags").hasRole("ADMIN")
+                .antMatchers(HttpMethod.DELETE, "/api/certificates/{\\d}", "/api/tags/{\\d}").hasRole("ADMIN")
+                .antMatchers(HttpMethod.PATCH, "/api/certificates/{\\d}").hasRole("ADMIN")
+                .and()
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
+//    @Bean
+//    protected DaoAuthenticationProvider daoAuthenticationProvider() {
+//        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+//        provider.setPasswordEncoder(passwordEncoder());
+//        provider.setUserDetailsService(userDetailsService);
+//        return provider;
+//    }
+
 }

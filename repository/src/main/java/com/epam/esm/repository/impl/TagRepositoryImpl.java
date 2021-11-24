@@ -3,12 +3,15 @@ package com.epam.esm.repository.impl;
 import com.epam.esm.entity.Certificate;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.repository.TagRepository;
+import com.epam.esm.repository.analytic.TagAnalytic;
+import com.epam.esm.repository.analytic.TagAnalyticMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -20,21 +23,31 @@ public class TagRepositoryImpl implements TagRepository {
 
     @PersistenceContext
     private EntityManager entityManager;
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     private static final String FIND_ALL_QUERY = "select t from Tag t";
     private static final String FIND_BY_NAME_QUERY = "select t from Tag t where t.name =: name";
     private static final String FIND_BY_CERTIFICATE_ID_QUERY = "select c from Certificate c where c.id = :id";
     private static final String COUNT_QUERY = "select count(t) from Tag t";
-    private static final String MOST_POPULAR_TAG_SQL = "SELECT gifts.tag.id, gifts.tag.name " +
-            "FROM gifts.tag INNER JOIN gifts.certificate_tag ct on tag.id = ct.tag_id " +
-            "INNER JOIN gifts.certificate c on c.id = ct.certificate_id " +
-            "INNER JOIN gifts.order o on c.id = o.certificate_id " +
-            "INNER JOIN gifts.user u on u.id = o.user_id " +
-            "WHERE u.id IN (SELECT wu.user_id " +
-            "FROM (SELECT SUM(gifts.order.cost) sumCost, user_id " +
-            "FROM gifts.order GROUP BY user_id ORDER BY sumCost desc limit 1) as wu) " +
-            "GROUP BY tag.id " +
-            "ORDER BY count(tag.id) desc";
+    private static final String MOST_POPULAR_TAG_SQL = "SELECT gifts.tag.id, gifts.tag.name, count(*) count, u.id as u_id\n" +
+            "FROM gifts.tag\n" +
+            "         INNER JOIN gifts.certificate_tag ct on tag.id = ct.tag_id\n" +
+            "         INNER JOIN gifts.certificate c on c.id = ct.certificate_id\n" +
+            "         INNER JOIN gifts.order o on c.id = o.certificate_id\n" +
+            "         INNER JOIN gifts.user u on u.id = o.user_id\n" +
+            "WHERE u.id IN (SELECT wu.user_id\n" +
+            "               FROM (SELECT SUM(gifts.order.cost) sumCost, user_id\n" +
+            "                     FROM gifts.order\n" +
+            "                     GROUP BY user_id\n" +
+            "                    ) as wu\n" +
+            "               WHERE sumCost IN (SELECT max(sCui.sumCost)\n" +
+            "                                 FROM (SELECT SUM(gifts.order.cost) sumCost\n" +
+            "                                       FROM gifts.order\n" +
+            "                                       GROUP BY user_id) as sCui\n" +
+            "               ))\n" +
+            "GROUP BY tag.id, u_id\n" +
+            "ORDER BY count desc";
 
     @Override
     public List<Tag> findAll(int page, int pageSize) {
@@ -93,19 +106,8 @@ public class TagRepositoryImpl implements TagRepository {
         return certificate.getTags();
     }
 
-    public List<Tag> findMostPopularTag(int page, int pageSize) {
-        Query query = entityManager.createNativeQuery(MOST_POPULAR_TAG_SQL, Tag.class);
-        return query.setFirstResult(pageSize * (page - 1))
-                .setMaxResults(pageSize)
-                .getResultList();
-//        Query query = entityManager.createNativeQuery(MOST_POPULAR_TAG_SQL, Tag.class);
-//        try {
-//            Tag tag = (Tag) query.getSingleResult();
-//            return Optional.ofNullable(tag);
-//        } catch (NoResultException e) {
-//            return Optional.empty();
-//        }
-
+    public List<TagAnalytic> findMostPopularTag() {
+        return jdbcTemplate.query(MOST_POPULAR_TAG_SQL, new TagAnalyticMapper<TagAnalytic>());
     }
 
     @Override

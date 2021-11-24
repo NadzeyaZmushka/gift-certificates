@@ -1,70 +1,66 @@
 package com.epam.esm.security.jwt;
 
 import com.epam.esm.entity.Role;
+import com.epam.esm.exception.JwtAuthenticationException;
+import com.epam.esm.security.UserDetailServiceImpl;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.SignatureException;
-import io.jsonwebtoken.UnsupportedJwtException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class JwtProvider {
 
-    @Value("${security.jwt.secret}")
-    private String secretKey;
-    @Value("${security.jwt.sessionTime}")
-    private Long sessionTime;
+    private final String secretKey = "secret";
 
-    public String generateToken(String login, Role role) {
+    private final UserDetailServiceImpl userDetailService;
+
+    public String generateToken(String login, String role) {
+        Claims claims = Jwts.claims().setSubject(login);
+        claims.put("Role", role);
         Instant issuedAt = Instant.now();
-        Instant expiration = issuedAt.plusMillis(sessionTime);
+        long sessionTime = 84600000L;
+        Instant expiration = issuedAt.plusSeconds(sessionTime);
         return Jwts.builder()
-                .setSubject(login)
-                .claim("Role", role)
+                .setClaims(claims)
+                .setIssuedAt(Date.from(issuedAt))
                 .setExpiration(Date.from(expiration))
                 .signWith(SignatureAlgorithm.HS512, secretKey)
                 .compact();
     }
 
-    //обработать ошибки
     public boolean validateToken(String token) {
         try {
-            Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
-            return true;
-        } catch (ExpiredJwtException expEx) {
-            log.error("Token expired");
-        } catch (UnsupportedJwtException unsEx) {
-            log.error("Unsupported jwt");
-        } catch (MalformedJwtException mjEx) {
-            log.error("Malformed jwt");
-        } catch (SignatureException sEx) {
-            log.error("Invalid signature");
-        } catch (Exception e) {
-            log.error("invalid token");
+            Jws<Claims> claimsJws = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
+            return !claimsJws.getBody().getExpiration().before(new Date());
+        } catch (JwtException | IllegalArgumentException e) {
+            throw new JwtAuthenticationException("JWT token is expired or invalid");
         }
-        return false;
     }
 
-    public String getLoginFromToken(String token) {
-        Claims claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
-        return claims.getSubject();
+    public Authentication getAuthentication(String token) {
+        UserDetails userDetails = userDetailService.loadUserByUsername(getUserName(token));
+        return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+    }
+
+    public String getUserName(String token) {
+        return Jwts.parser().setSigningKey(secretKey)
+                .parseClaimsJws(token)
+                .getBody()
+                .getSubject();
     }
 
 }

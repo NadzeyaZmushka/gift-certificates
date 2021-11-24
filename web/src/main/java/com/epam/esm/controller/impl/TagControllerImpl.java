@@ -5,6 +5,8 @@ import com.epam.esm.converter.TagConvertor;
 import com.epam.esm.dto.TagDTO;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.hateoas.TagsLinkBuilder;
+import com.epam.esm.hateoas.UserLinkBuilder;
+import com.epam.esm.service.WidelyUsedTagsByUser;
 import com.epam.esm.service.impl.TagServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.PagedModel;
@@ -15,8 +17,6 @@ import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-
 @RestController
 @RequiredArgsConstructor
 public class TagControllerImpl implements TagController {
@@ -24,6 +24,7 @@ public class TagControllerImpl implements TagController {
     private final TagServiceImpl tagService;
     private final TagConvertor converter;
     private final TagsLinkBuilder hateoasLinkBuilder;
+    private final UserLinkBuilder userLinkBuilder;
 
     @Override
     public PagedModel<TagDTO> findAll(int page, int limit) {
@@ -57,15 +58,27 @@ public class TagControllerImpl implements TagController {
         tagService.delete(id);
     }
 
+//    @Override
+//    public PagedModel<TagDTO> findWidelyUsed(int page, int limit) {
+//        List<TagDTO> tagDTOList = tagService.findWidelyUsed().stream()
+//                .map(converter::toDTO)
+//                .collect(Collectors.toList());
+//        tagDTOList.forEach(hateoasLinkBuilder::addLinksForTag);
+//        PagedModel<TagDTO> pagedModel = PagedModel.of(tagDTOList, new PagedModel.PageMetadata(limit, page, tagDTOList.size()));
+//        hateoasLinkBuilder.createPaginationLinks(pagedModel);
+//        return pagedModel;
+//    }
+
     @Override
-    public PagedModel<TagDTO> findWidelyUsed(int page, int limit) {
-        List<TagDTO> tagDTOList = tagService.findWidelyUsed(limit, page).stream()
-                .map(converter::toDTO)
-                .collect(Collectors.toList());
-        tagDTOList.forEach(hateoasLinkBuilder::addLinksForTag);
-        PagedModel<TagDTO> pagedModel = PagedModel.of(tagDTOList, new PagedModel.PageMetadata(limit, page, tagDTOList.size()));
-        hateoasLinkBuilder.createPaginationLinks(pagedModel);
-        return pagedModel;
+    public List<WidelyUsedTagsByUser> findWidelyUsed(int page, int limit) {
+        List<WidelyUsedTagsByUser> widelyUsedTags = tagService.findWidelyUsed();
+        for (WidelyUsedTagsByUser wut : widelyUsedTags) {
+            wut.getTags().stream()
+                    .map(converter::toDTO)
+                    .collect(Collectors.toList())
+                    .forEach(hateoasLinkBuilder::addLinksForTag);
+        }
+        return widelyUsedTags;
     }
 
 }

@@ -25,4 +25,6 @@ public interface OrderService extends EntityService<Order> {
      */
     Order create(Long userId, Long certificateId);
 
+    Long countFoundOrders(Long userId);
+
 }

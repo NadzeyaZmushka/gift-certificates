@@ -48,10 +48,11 @@ public class EntityExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ExceptionInfo handleException() {
+    public ExceptionInfo handleException(Exception exception) {
         ExceptionInfo info = new ExceptionInfo();
         List<String> listErrors = new ArrayList<>();
-        listErrors.add("You entered incorrect data or parameters");
+//        listErrors.add("You entered incorrect data or parameters");
+        listErrors.add(exception.getMessage());
         info.setErrorMessage(listErrors);
         info.setErrorCode(HttpStatus.BAD_REQUEST.value());
         return info;

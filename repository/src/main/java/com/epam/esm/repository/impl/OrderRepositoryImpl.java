@@ -65,4 +65,8 @@ public class OrderRepositoryImpl implements OrderRepository {
                 .getSingleResult();
     }
 
+//    public Long countFoundOrders(User user) {
+//
+//    }
+
 }

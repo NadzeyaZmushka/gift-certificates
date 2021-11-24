@@ -1,16 +1,29 @@
 package com.epam.esm.entity;
 
+import javax.lang.model.UnknownEntityException;
+import java.util.NoSuchElementException;
+
+
 public enum Role {
-    USER("USER"),
-    ADMIN("ADMIN");
+    ROLE_ADMIN(1L),
+    ROLE_USER(2L);
 
-    private final String role;
+    private final Long id;
 
-    Role(String role) {
-        this.role = role;
+    Role(Long id) {
+        this.id = id;
     }
 
-    public String getRole() {
-        return role;
+    public Long getId() {
+        return id;
+    }
+
+    public static Role resolveRoleById(Long id) {
+        for (Role role : values()) {
+            if (role.getId().equals(id)) {
+                return role;
+            }
+        }
+        throw new NoSuchElementException("Role is not found");
     }
 }

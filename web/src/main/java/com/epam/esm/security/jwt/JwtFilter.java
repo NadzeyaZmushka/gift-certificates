@@ -1,8 +1,10 @@
 package com.epam.esm.security.jwt;
 
+import com.epam.esm.exception.JwtAuthenticationException;
 import com.epam.esm.security.UserDetailServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,16 +25,21 @@ import java.util.List;
 public class JwtFilter extends OncePerRequestFilter {
 
     private final JwtProvider jwtProvider;
-    private final UserDetailServiceImpl userDetailService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
        String token = getTokenFromRequest(request);
-       if (token != null && jwtProvider.validateToken(token)) {
-           String userEmail = jwtProvider.getLoginFromToken(token);
-           UserDetails userDetails = userDetailService.loadUserByUsername(userEmail);
-           UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-           SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+       try {
+
+           if (token != null && jwtProvider.validateToken(token)) {
+               Authentication authentication = jwtProvider.getAuthentication(token);
+               if (authentication != null) {
+                   SecurityContextHolder.getContext().setAuthentication(authentication);
+               }
+           }
+       } catch (JwtAuthenticationException e) {
+           SecurityContextHolder.clearContext();
+           throw new JwtAuthenticationException("JWT token is expired or invalid");
        }
         filterChain.doFilter(request, response);
     }

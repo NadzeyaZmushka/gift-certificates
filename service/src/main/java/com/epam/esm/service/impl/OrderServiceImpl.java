@@ -78,6 +78,11 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public Long countFoundOrders(Long userId) {
+        return null;
+    }
+
+    @Override
     @Transactional
     public List<Order> findAllByUserId(Long userId, int page, int limit) {
         if (page <= 0 || limit <= 0) {

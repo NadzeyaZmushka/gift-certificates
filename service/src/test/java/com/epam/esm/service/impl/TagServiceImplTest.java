@@ -144,19 +144,19 @@ class TagServiceImplTest {
 //    @Test
 //    void testWidelyUsedTagThrowsNoSuchEntityException() {
 //        //given
-//        when(tagRepository.findMostPopularTag(1, 10)).thenReturn(Collections.emptyList());
+//        when(tagRepository.findMostPopularTag(, )).thenReturn(Collections.emptyList());
 //        when(translator.toLocale(any())).thenReturn("message");
 //        //then
-//        assertThrows(NoSuchEntityException.class, () -> tagService.findWidelyUsed(10, 1));
+//        assertThrows(NoSuchEntityException.class, () -> tagService.findWidelyUsed(, ));
 //    }
-
+//
 //    @Test
 //    void testShouldReturnWidelyUsedTag() {
 //        //given
 //        Tag tag = new Tag(1L, "popular");
-//        when(tagRepository.findMostPopularTag(1, 10)).thenReturn(List.of(tag));
+//        when(tagRepository.findMostPopularTag(, )).thenReturn(List.of(tag));
 //        //when
-//        List<Tag> actual = tagService.findWidelyUsed(10, 1);
+//        List<Tag> actual = tagService.findWidelyUsed(, );
 //        //then
 //        assertEquals(0, actual.size());
 //    }

@@ -80,11 +80,6 @@ public class CertificateServiceImpl implements CertificateService {
     }
 
     @Override
-    public Long count() {
-        return certificateRepository.count();
-    }
-
-    @Override
     @Transactional
     public Certificate update(Long id, Certificate certificate) {
         Certificate fromDB = findById(id);
@@ -122,6 +117,16 @@ public class CertificateServiceImpl implements CertificateService {
         return certificateRepository.findByName(name)
                 .orElseThrow(() -> new NoSuchEntityException(String.format(translator.toLocale(CERTIFICATE_WITH_NAME_NOT_FOUND), name)
                         , CERTIFICATE_NOT_FOUND.getErrorCode()));
+    }
+
+    @Override
+    public Long count(List<String> tagNames, String partName) {
+        return certificateRepository.countFoundCertificates(tagNames, partName);
+    }
+
+    @Override
+    public Long count() {
+        return certificateRepository.count();
     }
 
     private List<String> getTagsToAdd(List<Tag> tags, List<String> tagNames) {

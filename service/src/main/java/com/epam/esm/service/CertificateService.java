@@ -45,5 +45,6 @@ public interface CertificateService extends EntityService<Certificate> {
      */
     Certificate findByName(String name);
 
+    Long count(List<String> tagNames, String partName);
 
 }
