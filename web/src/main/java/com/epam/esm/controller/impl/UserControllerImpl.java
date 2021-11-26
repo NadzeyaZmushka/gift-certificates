@@ -8,6 +8,7 @@ import com.epam.esm.hateoas.UserLinkBuilder;
 import com.epam.esm.service.impl.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.PagedModel;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -40,6 +41,12 @@ public class UserControllerImpl implements UserController {
         UserDTO userDTO = converter.toDTO(userService.findById(id));
         hateoasLinkBuilder.addLinksForUser(userDTO);
         return userDTO;
+    }
+
+    @Override
+    @PreAuthorize("authentication.principal.id == #id")
+    public UserDTO update(Long id, UserDTO userDTO) {
+        return converter.toDTO(userService.update(id, converter.toEntity(userDTO)));
     }
 
 }

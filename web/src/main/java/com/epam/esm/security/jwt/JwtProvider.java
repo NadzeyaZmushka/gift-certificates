@@ -1,6 +1,5 @@
 package com.epam.esm.security.jwt;
 
-import com.epam.esm.entity.Role;
 import com.epam.esm.exception.JwtAuthenticationException;
 import com.epam.esm.security.UserDetailServiceImpl;
 import io.jsonwebtoken.Claims;
@@ -15,7 +14,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletRequest;
 import java.time.Instant;
 import java.util.Date;
 
@@ -32,7 +30,7 @@ public class JwtProvider {
         Claims claims = Jwts.claims().setSubject(login);
         claims.put("Role", role);
         Instant issuedAt = Instant.now();
-        long sessionTime = 84600000L;
+        long sessionTime = 84600L;
         Instant expiration = issuedAt.plusSeconds(sessionTime);
         return Jwts.builder()
                 .setClaims(claims)

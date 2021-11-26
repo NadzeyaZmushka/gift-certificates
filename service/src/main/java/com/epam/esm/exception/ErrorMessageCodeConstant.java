@@ -17,7 +17,7 @@ public class ErrorMessageCodeConstant {
     public static final String CERTIFICATE_INCORRECT_PRICE = "certificate.incorrectPrice";
     public static final String CERTIFICATE_INCORRECT_PRICE_MORE = "certificate.incorrectPrice.more";
     public static final String USER_WITH_ID_NOT_FOUND = "user.withIdNotFound";
-    public static final String SUCH_USER_FOUND = "user.suchUserNotFound";
+    public static final String USER_ALREADY_EXISTS = "user.alreadyExists";
     public static final String ORDER_WITH_ID_NOT_FOUND = "order.withIdNotFound";
     public static final String PAGE_INCORRECT = "page.incorrect";
 

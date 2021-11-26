@@ -6,9 +6,8 @@ import com.epam.esm.exception.DuplicateException;
 import com.epam.esm.exception.IncorrectDataException;
 import com.epam.esm.exception.NoSuchEntityException;
 import com.epam.esm.repository.TagRepository;
-import com.epam.esm.repository.analytic.TagAnalytic;
+import com.epam.esm.service.WidelyUsedTagStatistic;
 import com.epam.esm.service.TagService;
-import com.epam.esm.service.WidelyUsedTagsByUser;
 import com.epam.esm.validator.TagValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -38,7 +36,6 @@ public class TagServiceImpl implements TagService {
     private final TagRepository tagRepository;
     private final TagValidator tagValidator;
     private final Translator translator;
-    private final UserServiceImpl userService;
 
     @Override
     @Transactional
@@ -101,26 +98,25 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public List<WidelyUsedTagsByUser> findWidelyUsed() {
-        List<WidelyUsedTagsByUser> widelyUsedTagsByUserList = new ArrayList<>();
-        Set<Tag> tags = new HashSet<>();
-        Map<Long, List<TagAnalytic>> tagsByUserMap = tagRepository.findMostPopularTag()
-                .stream()
-                .collect(Collectors.groupingBy(TagAnalytic::getUserId));
-        int maxCount;
-        for (Map.Entry<Long, List<TagAnalytic>> item : tagsByUserMap.entrySet()) {
-            maxCount = item.getValue()
-                    .stream()
-                    .map(TagAnalytic::getCount)
-                    .mapToInt(value -> value)
+    public List<WidelyUsedTagStatistic> findWidelyUsed() {
+        List<WidelyUsedTagStatistic> widelyUsedTagsByUserList = new ArrayList<>();
+        var tagsByUserMap = tagRepository.findMostPopularTag().stream()
+                .collect(Collectors.groupingBy(map -> Long.parseLong(map.get("userId"))));
+        for (var item : tagsByUserMap.entrySet()) {
+            int maxCount = item.getValue().stream()
+                    .map(result -> result.get("count"))
+                    .mapToInt(Integer::parseInt)
                     .max()
                     .getAsInt();
-            for (TagAnalytic analytic : item.getValue()) {
-                if (analytic.getCount() == maxCount) {
-                    tags.add(analytic.getTag());
+            WidelyUsedTagStatistic tagsByUser = new WidelyUsedTagStatistic();
+            Set<Tag> tags = new HashSet<>();
+            for (var analytic : item.getValue()) {
+                if (Integer.parseInt(analytic.get("count")) == maxCount) {
+                    tags.add(new Tag(Long.valueOf(analytic.get("tagId")), analytic.get("tagName")));
                 }
+                tagsByUser.setUserId(Long.parseLong(analytic.get("userId")));
             }
-            WidelyUsedTagsByUser tagsByUser = new WidelyUsedTagsByUser(item.getKey(), tags);
+            tagsByUser.setTags(tags);
             widelyUsedTagsByUserList.add(tagsByUser);
         }
         return widelyUsedTagsByUserList;

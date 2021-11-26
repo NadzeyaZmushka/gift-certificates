@@ -10,6 +10,7 @@ import com.epam.esm.service.impl.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,13 +18,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/api")
 @RequiredArgsConstructor
 public class AuthenticationController {
 
@@ -31,7 +33,7 @@ public class AuthenticationController {
     private final JwtProvider jwtProvider;
     private final UserServiceImpl userService;
 
-    @PostMapping("/signUp")
+    @PostMapping("/signup")
     @ResponseStatus(HttpStatus.CREATED)
     public String registerUser(@RequestBody @Valid SignUpRequest request) {
         User user = User.builder()
@@ -48,20 +50,22 @@ public class AuthenticationController {
     public AuthResponse authenticate(@RequestBody @Valid AuthRequest authRequest) {
         String email = authRequest.getEmail();
         String password = authRequest.getPassword();
-
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
-
+        try {
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
+        } catch (BadCredentialsException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Имя или пароль неправильны", e);
+        }
         return userService.findByEmail(email)
                 .map(user -> {
-                    String token = jwtProvider.generateToken(user.getEmail(), Role.resolveRoleById(user.getUserRole()).name());
-                    return new AuthResponse(user.getId(), Role.resolveRoleById(user.getUserRole()), token);
+                    String token = jwtProvider.generateToken(user.getEmail(), user.getUserRole().name());
+                    return new AuthResponse(user.getId(), user.getUserRole(), token);
                 }).orElseGet(AuthResponse::new);
     }
 
     @PostMapping("/logout")
     public void logout(HttpServletRequest request, HttpServletResponse response) {
-        SecurityContextLogoutHandler securityContextLogoutHandler = new SecurityContextLogoutHandler();
-        securityContextLogoutHandler.logout(request, response, null);
+//        SecurityContextLogoutHandler securityContextLogoutHandler = new SecurityContextLogoutHandler();
+//        securityContextLogoutHandler.logout(request, response, null);
     }
 
 }

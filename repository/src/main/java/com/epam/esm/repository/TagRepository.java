@@ -1,9 +1,9 @@
 package com.epam.esm.repository;
 
 import com.epam.esm.entity.Tag;
-import com.epam.esm.repository.analytic.TagAnalytic;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public interface TagRepository extends CrudRepository<Tag> {
@@ -37,6 +37,6 @@ public interface TagRepository extends CrudRepository<Tag> {
      *
      * @return optional of tag
      */
-    List<TagAnalytic> findMostPopularTag();
+    List<Map<String, String>> findMostPopularTag();
 
 }

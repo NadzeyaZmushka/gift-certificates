@@ -9,6 +9,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -50,16 +51,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .httpBasic().disable()
-                .csrf().disable()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)//отключить сессии и использовать только токен
-                .and()
+                .httpBasic(AbstractHttpConfigurer::disable)
+                .csrf(AbstractHttpConfigurer::disable)
+                .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))//отключить сессии и использовать только токен
                 .authorizeRequests()
+                .antMatchers(HttpMethod.POST, "/api/login", "/api/signup").anonymous()
+                .antMatchers(HttpMethod.POST, "/api/logout").authenticated()
                 .antMatchers(HttpMethod.GET, "/api/certificates", "api/certificates/{\\d+}").permitAll()
-                .antMatchers(HttpMethod.GET, "/api/tags", "api/tags/{\\d}").hasAnyRole("ADMIN", "USER")
-                .antMatchers(HttpMethod.POST, "/api/certificates", "/api/tags").hasRole("ADMIN")
+                .antMatchers(HttpMethod.GET, "/api/tags/most-used").hasRole("ADMIN") // todo только для админа?
+                .antMatchers(HttpMethod.GET, "/api/tags", "api/tags/{\\d}").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/certificates", "/api/tags", "/api/certificates/{\\d}/tags").hasRole("ADMIN")
                 .antMatchers(HttpMethod.DELETE, "/api/certificates/{\\d}", "/api/tags/{\\d}").hasRole("ADMIN")
                 .antMatchers(HttpMethod.PATCH, "/api/certificates/{\\d}").hasRole("ADMIN")
+                .antMatchers(HttpMethod.POST, "/api/orders").hasRole("ADMIN")
                 .and()
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
     }

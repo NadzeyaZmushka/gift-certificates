@@ -3,8 +3,6 @@ package com.epam.esm.repository.impl;
 import com.epam.esm.entity.Certificate;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.repository.TagRepository;
-import com.epam.esm.repository.analytic.TagAnalytic;
-import com.epam.esm.repository.analytic.TagAnalyticMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -15,8 +13,12 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Repository
 public class TagRepositoryImpl implements TagRepository {
@@ -106,8 +108,20 @@ public class TagRepositoryImpl implements TagRepository {
         return certificate.getTags();
     }
 
-    public List<TagAnalytic> findMostPopularTag() {
-        return jdbcTemplate.query(MOST_POPULAR_TAG_SQL, new TagAnalyticMapper<TagAnalytic>());
+
+    public List<Map<String, String>> findMostPopularTag() {
+        List<Object[]> results = entityManager.createNativeQuery(MOST_POPULAR_TAG_SQL).getResultList();
+        List<Map<String, String>> mapList = new ArrayList<>();
+        for (Object[] result : results) {
+            HashMap<String, String> hashMap = new HashMap<>();
+            hashMap.put("tagId", result[0].toString());
+            hashMap.put("tagName", (String) result[1]);
+            hashMap.put("count", result[2].toString());
+            hashMap.put("userId", result[3].toString());
+            mapList.add(hashMap);
+        }
+        return mapList;
+
     }
 
     @Override

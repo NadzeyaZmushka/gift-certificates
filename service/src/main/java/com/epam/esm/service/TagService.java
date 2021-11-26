@@ -43,6 +43,6 @@ public interface TagService extends EntityService<Tag> {
      *
      * @return tag
      */
-    List<WidelyUsedTagsByUser> findWidelyUsed();
+    List<WidelyUsedTagStatistic> findWidelyUsed();
 
 }

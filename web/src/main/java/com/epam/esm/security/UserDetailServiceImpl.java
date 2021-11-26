@@ -28,7 +28,7 @@ public class UserDetailServiceImpl implements UserDetailsService {
         return org.springframework.security.core.userdetails.User.builder()
                 .username(user.getEmail())
                 .password(user.getPassword())
-                .roles(String.valueOf(Collections.singletonList(new SimpleGrantedAuthority(Role.resolveRoleById(user.getUserRole()).name()))))
+                .authorities(Collections.singletonList(new SimpleGrantedAuthority(user.getUserRole().name())))
                 .build();
     }
 

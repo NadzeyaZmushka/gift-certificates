@@ -2,11 +2,12 @@ package com.epam.esm.controller.impl;
 
 import com.epam.esm.controller.TagController;
 import com.epam.esm.converter.TagConvertor;
+import com.epam.esm.converter.WidelyUsedTagConverter;
 import com.epam.esm.dto.TagDTO;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.hateoas.TagsLinkBuilder;
 import com.epam.esm.hateoas.UserLinkBuilder;
-import com.epam.esm.service.WidelyUsedTagsByUser;
+import com.epam.esm.dto.WidelyUsedTagsDTO;
 import com.epam.esm.service.impl.TagServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.PagedModel;
@@ -23,13 +24,13 @@ public class TagControllerImpl implements TagController {
 
     private final TagServiceImpl tagService;
     private final TagConvertor converter;
+    private final WidelyUsedTagConverter usedTagConverter;
     private final TagsLinkBuilder hateoasLinkBuilder;
     private final UserLinkBuilder userLinkBuilder;
 
     @Override
     public PagedModel<TagDTO> findAll(int page, int limit) {
-        List<TagDTO> tags = tagService.findAll(limit, page)
-                .stream()
+        List<TagDTO> tags = tagService.findAll(limit, page).stream()
                 .map(converter::toDTO)
                 .collect(Collectors.toList());
         tags.forEach(hateoasLinkBuilder::addLinksForTag);
@@ -58,27 +59,15 @@ public class TagControllerImpl implements TagController {
         tagService.delete(id);
     }
 
-//    @Override
-//    public PagedModel<TagDTO> findWidelyUsed(int page, int limit) {
-//        List<TagDTO> tagDTOList = tagService.findWidelyUsed().stream()
-//                .map(converter::toDTO)
-//                .collect(Collectors.toList());
-//        tagDTOList.forEach(hateoasLinkBuilder::addLinksForTag);
-//        PagedModel<TagDTO> pagedModel = PagedModel.of(tagDTOList, new PagedModel.PageMetadata(limit, page, tagDTOList.size()));
-//        hateoasLinkBuilder.createPaginationLinks(pagedModel);
-//        return pagedModel;
-//    }
-
     @Override
-    public List<WidelyUsedTagsByUser> findWidelyUsed(int page, int limit) {
-        List<WidelyUsedTagsByUser> widelyUsedTags = tagService.findWidelyUsed();
-        for (WidelyUsedTagsByUser wut : widelyUsedTags) {
-            wut.getTags().stream()
-                    .map(converter::toDTO)
-                    .collect(Collectors.toList())
-                    .forEach(hateoasLinkBuilder::addLinksForTag);
+    public List<WidelyUsedTagsDTO> findWidelyUsed(int page, int limit) {
+        List<WidelyUsedTagsDTO> tags = tagService.findWidelyUsed().stream()
+                .map(usedTagConverter::toDTO)
+                .collect(Collectors.toList());
+        for (WidelyUsedTagsDTO tag : tags) {
+            tag.getTags().forEach(hateoasLinkBuilder::addLinksForTag);
         }
-        return widelyUsedTags;
+        return tags;
     }
 
 }

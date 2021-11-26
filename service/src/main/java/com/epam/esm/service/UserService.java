@@ -7,4 +7,6 @@ import java.util.Optional;
 public interface UserService extends EntityService<User> {
 
     Optional<User> findByEmail(String email);
+
+    User update(Long id, User user);
 }

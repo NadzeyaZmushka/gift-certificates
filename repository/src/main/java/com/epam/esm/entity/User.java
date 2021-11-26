@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.util.ArrayList;
@@ -31,8 +33,9 @@ public class User extends BaseEntity {
     private String email;
     @Column(name = "password")
     private String password;
-    @Column(name = "role_id")
-    private Long userRole;
+    @Column(name = "role")
+    @Enumerated(EnumType.STRING)
+    private Role userRole;
 //    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
 //    List<Order> orders;
 
