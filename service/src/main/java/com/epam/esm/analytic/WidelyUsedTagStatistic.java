@@ -1,4 +1,4 @@
-package com.epam.esm.service;
+package com.epam.esm.analytic;
 
 import com.epam.esm.entity.Tag;
 import lombok.AllArgsConstructor;

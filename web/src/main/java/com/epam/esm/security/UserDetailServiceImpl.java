@@ -1,10 +1,7 @@
 package com.epam.esm.security;
 
-import com.epam.esm.entity.Role;
 import com.epam.esm.entity.User;
 import com.epam.esm.repository.impl.UserRepositoryImpl;
-import com.epam.esm.service.UserService;
-import com.epam.esm.service.impl.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,18 +15,14 @@ import java.util.Collections;
 @RequiredArgsConstructor
 public class UserDetailServiceImpl implements UserDetailsService {
 
-    private final UserRepositoryImpl userService;
+    private final UserRepositoryImpl userRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userService.findByEmail(username)
+        User user = userRepository.findByEmail(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-        return org.springframework.security.core.userdetails.User.builder()
-                .username(user.getEmail())
-                .password(user.getPassword())
-                .authorities(Collections.singletonList(new SimpleGrantedAuthority(user.getUserRole().name())))
-                .build();
+        return UserDetailsMapper.mapToUserDetails(user);
     }
 
 }

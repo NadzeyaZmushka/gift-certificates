@@ -2,8 +2,7 @@ package com.epam.esm.controller;
 
 import com.epam.esm.dto.AuthRequest;
 import com.epam.esm.dto.AuthResponse;
-import com.epam.esm.dto.SignUpRequest;
-import com.epam.esm.entity.Role;
+import com.epam.esm.dto.SignupRequest;
 import com.epam.esm.entity.User;
 import com.epam.esm.security.jwt.JwtProvider;
 import com.epam.esm.service.impl.UserServiceImpl;
@@ -12,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,12 +33,13 @@ public class AuthenticationController {
 
     @PostMapping("/signup")
     @ResponseStatus(HttpStatus.CREATED)
-    public String registerUser(@RequestBody @Valid SignUpRequest request) {
+    public String registerUser(@RequestBody @Valid SignupRequest request) {
         User user = User.builder()
                 .name(request.getName())
                 .surname(request.getSurname())
                 .email(request.getEmail())
-                .password(request.getPassword()).build();
+                .password(request.getPassword())
+                .build();
         userService.add(user);
         return "OK";
     }

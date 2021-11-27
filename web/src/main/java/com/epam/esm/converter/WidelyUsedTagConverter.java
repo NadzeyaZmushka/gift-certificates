@@ -1,6 +1,6 @@
 package com.epam.esm.converter;
 
-import com.epam.esm.service.WidelyUsedTagStatistic;
+import com.epam.esm.analytic.WidelyUsedTagStatistic;
 import com.epam.esm.dto.WidelyUsedTagsDTO;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;

@@ -1,5 +1,6 @@
 package com.epam.esm.service;
 
+import com.epam.esm.analytic.WidelyUsedTagStatistic;
 import com.epam.esm.entity.Tag;
 
 import java.util.List;

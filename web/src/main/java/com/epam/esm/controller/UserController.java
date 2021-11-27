@@ -3,6 +3,7 @@ package com.epam.esm.controller;
 import com.epam.esm.dto.UserDTO;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,8 +25,9 @@ public interface UserController {
     @ResponseStatus(HttpStatus.OK)
     UserDTO findOne(@PathVariable Long id);
 
+    @PreAuthorize("hasRole('ROLE_ADMIN') OR authentication.principal.id == #id")
     @PatchMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    UserDTO update(@PathVariable Long id, @RequestBody UserDTO userDTO);
+    UserDTO update(@PathVariable("id") long id, @RequestBody UserDTO userDTO);
 
 }
