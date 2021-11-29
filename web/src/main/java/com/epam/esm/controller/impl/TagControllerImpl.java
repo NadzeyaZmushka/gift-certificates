@@ -10,6 +10,8 @@ import com.epam.esm.hateoas.UserLinkBuilder;
 import com.epam.esm.dto.WidelyUsedTagsDTO;
 import com.epam.esm.service.impl.TagServiceImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.Links;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,6 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
 import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequiredArgsConstructor
@@ -67,6 +72,10 @@ public class TagControllerImpl implements TagController {
         for (WidelyUsedTagsDTO tag : tags) {
             tag.getTags().forEach(hateoasLinkBuilder::addLinksForTag);
         }
+        Link linkForSelf = linkTo(methodOn(TagControllerImpl.class)
+                .findWidelyUsed(page, limit))
+                .withSelfRel();
+        tags.forEach(tag -> tag.add(linkForSelf));
         return tags;
     }
 

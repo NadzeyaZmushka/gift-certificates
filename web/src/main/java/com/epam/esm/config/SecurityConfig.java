@@ -1,6 +1,7 @@
 package com.epam.esm.config;
 
-import com.epam.esm.security.UserDetailServiceImpl;
+import com.epam.esm.exception.AccessDeniedHandlerImpl;
+import com.epam.esm.exception.AuthEntryPointImpl;
 import com.epam.esm.security.jwt.JwtFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -14,6 +15,8 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @EnableWebSecurity
@@ -21,7 +24,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableGlobalMethodSecurity(prePostEnabled = true) //для @PreAuthorize
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final UserDetailServiceImpl userDetailsService;
     private final JwtFilter jwtFilter;
 
     @Bean
@@ -55,25 +57,37 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
-                .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))//отключить сессии и использовать только токен
                 .authorizeRequests()
                 .antMatchers(HttpMethod.POST, "/api/login", "/api/signup").anonymous()
                 .antMatchers(HttpMethod.POST, "/api/logout").authenticated()
-                .antMatchers(HttpMethod.GET, "/api/certificates", "api/certificates/{\\d+}").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/users", "/api/users/{\\d}", "/api/orders").authenticated()
+                .antMatchers(HttpMethod.GET, "/api/certificates", "api/certificates/{\\d+}", "/api/tags", "api/tags/{\\d}").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/tags/most-used").hasRole("ADMIN") // todo только для админа?
-                .antMatchers(HttpMethod.GET, "/api/tags", "api/tags/{\\d}").permitAll()
-                .antMatchers(HttpMethod.POST, "/api/certificates", "/api/tags", "/api/certificates/{\\d}/tags").hasRole("ADMIN")
+                .antMatchers(HttpMethod.POST, "/api/certificates", "/api/tags", "/api/certificates/{\\d}/tags", "/api/orders").hasRole("ADMIN")
                 .antMatchers(HttpMethod.DELETE, "/api/certificates/{\\d}", "/api/tags/{\\d}").hasRole("ADMIN")
                 .antMatchers(HttpMethod.PATCH, "/api/certificates/{\\d}").hasRole("ADMIN")
-                .antMatchers(HttpMethod.POST, "/api/orders").hasRole("ADMIN")
                 .and()
-                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+                .exceptionHandling().authenticationEntryPoint(authenticationEntryPoint()).and()//будет вызван, если пользователь попытается получить доступ к конечной точке, требующей аутентификации
+//                .exceptionHandling().accessDeniedHandler(accessDeniedHandler()).and()
+                .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS));//отключить сессии и использовать только токен;
+        http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+
     }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
+    @Bean
+    public AuthenticationEntryPoint authenticationEntryPoint() {
+        return new AuthEntryPointImpl();
+    }
+
+//    @Bean
+//    public AccessDeniedHandler accessDeniedHandler() {
+//        return new AccessDeniedHandlerImpl();
+//    }
 
 //    @Bean
 //    protected DaoAuthenticationProvider daoAuthenticationProvider() {

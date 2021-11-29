@@ -1,14 +1,11 @@
 package com.epam.esm.security.jwt;
 
+import com.epam.esm.exception.ExceptionInfo;
 import com.epam.esm.exception.JwtAuthenticationException;
-import com.epam.esm.security.UserDetailServiceImpl;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -28,27 +25,39 @@ public class JwtFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-       try {
-           String token = getTokenFromRequest(request);
-           if (token != null && jwtProvider.validateToken(token)) {
-               Authentication authentication = jwtProvider.getAuthentication(token);
-               if (authentication != null) {
-                   SecurityContextHolder.getContext().setAuthentication(authentication);
-               }
-           }
-       } catch (JwtAuthenticationException e) {
-           SecurityContextHolder.clearContext();
-           throw new JwtAuthenticationException("JWT token is expired or invalid");
-       }
-        filterChain.doFilter(request, response);
+        try {
+            String token = getTokenFromRequest(request);
+            if (token != null && jwtProvider.validateToken(token)) {
+                Authentication authentication = jwtProvider.getAuthentication(token);
+                if (authentication != null) {
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                }
+//            } else {
+//                if (token != null) {
+//                    processError(response, "Invalid token");
+//                    return;
+//                }
+            }
+            filterChain.doFilter(request, response);
+        } catch (JwtAuthenticationException e) {
+            processError(response, e.getMessage());
+        }
     }
 
     protected String getTokenFromRequest(HttpServletRequest request) {
         String bearer = request.getHeader("Authorization");
-        if(StringUtils.hasText(bearer) && bearer.startsWith("Bearer ")) {
+        if (StringUtils.hasText(bearer) && bearer.startsWith("Bearer ")) {
             return bearer.substring(7);
         }
         return null;
+    }
+
+    private void processError(HttpServletResponse response, String message) throws IOException {
+        response.setContentType("application/json");
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        ObjectMapper mapper = new ObjectMapper();
+        ExceptionInfo info = new ExceptionInfo(List.of(message), HttpServletResponse.SC_UNAUTHORIZED);
+        response.getOutputStream().println(mapper.writeValueAsString(info));
     }
 
 }

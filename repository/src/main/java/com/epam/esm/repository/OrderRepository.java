@@ -17,4 +17,6 @@ public interface OrderRepository extends CrudRepository<Order> {
      */
     List<Order> findByUser(User user, int page, int pageSize);
 
+    Long countFoundOrders(Long userId);
+
 }

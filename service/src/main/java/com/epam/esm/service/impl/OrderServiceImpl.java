@@ -79,23 +79,29 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Long countFoundOrders(Long userId) {
-        return null;
-    }
-
-    @Override
-    @Transactional
-    public List<Order> findAllByUserId(Long userId, int page, int limit) {
-        if (page <= 0 || limit <= 0) {
-            throw new IncorrectDataException(translator.toLocale(PAGE_INCORRECT), PAGE_INCORRECT_CODE.getErrorCode());
-        }
-        List<Order> orders;
+        Long count;
         if (userId == null) {
-            orders = findAll(limit, page);
+            count = count();
         } else {
-            User user = userService.findById(userId);
-            orders = orderRepository.findByUser(user, page, limit);
+            count = orderRepository.countFoundOrders(userId);
         }
-        return orders;
+        return count;
     }
 
-}
+        @Override
+        @Transactional
+        public List<Order> findAllByUserId (Long userId,int page, int limit){
+            if (page <= 0 || limit <= 0) {
+                throw new IncorrectDataException(translator.toLocale(PAGE_INCORRECT), PAGE_INCORRECT_CODE.getErrorCode());
+            }
+            List<Order> orders;
+            if (userId == null) {
+                orders = findAll(limit, page);
+            } else {
+                User user = userService.findById(userId);
+                orders = orderRepository.findByUser(user, page, limit);
+            }
+            return orders;
+        }
+
+    }

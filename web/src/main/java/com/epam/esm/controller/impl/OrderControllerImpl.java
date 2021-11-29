@@ -38,7 +38,7 @@ public class OrderControllerImpl implements OrderController {
             certificateLinkBuilder.addLinksForCertificate(orderDTO.getCertificate());
             userLinkBuilder.addLinksForUser(orderDTO.getUser());
         }
-        Long count = orderService.count();
+        Long count = orderService.countFoundOrders(userId);
         PagedModel<OrderDTO> pagedModel = PagedModel.of(orders, new PagedModel.PageMetadata(limit, page, count));
         hateoasLinkBuilder.createPaginationLinks(pagedModel, userId);
         return pagedModel;

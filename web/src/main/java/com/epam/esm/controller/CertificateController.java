@@ -62,7 +62,7 @@ public interface CertificateController {
      * @param certificateDTO CertificateDTO with all information
      * @return response with status OK if certificate was created
      */
-    @PostMapping("/")
+    @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
     ResponseEntity<Void> create(@RequestBody @Valid CertificateDTO certificateDTO);
 
