@@ -1,6 +1,7 @@
 package com.epam.esm.controller;
 
 import com.epam.esm.dto.TagDTO;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -9,26 +10,26 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import java.util.List;
+import javax.validation.Valid;
 
-/**
- * Interface to perform REST's CRUD operations with tags
- *
- * @author Nadzeya Zmushka
- */
 @RequestMapping("/api/tags")
 public interface TagController {
 
     /**
      * Realizes REST's read operation of resource
      *
+     * @param page  page
+     * @param limit limit
      * @return list of tag TagDTOs in JSON format
      */
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    List<TagDTO> findAll();
+    PagedModel<TagDTO> findAll(@RequestParam(required = false, name = "page", defaultValue = "1") int page,
+                               @RequestParam(required = false, name = "limit", defaultValue = "10") int limit
+    );
 
     /**
      * Realizes REST's read operation a resource with id in a request path
@@ -48,7 +49,7 @@ public interface TagController {
      */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    ResponseEntity<Void> add(@RequestBody TagDTO tagDTO);
+    ResponseEntity<Void> create(@RequestBody @Valid TagDTO tagDTO);
 
     /**
      * Realizes REST's delete operation of a resource
@@ -59,4 +60,10 @@ public interface TagController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     void delete(@PathVariable Long id);
 
+    @GetMapping("/most-used")
+    @ResponseStatus(HttpStatus.OK)
+    PagedModel<TagDTO> findWidelyUsed(@RequestParam(required = false, name = "page", defaultValue = "1") int page,
+                                      @RequestParam(required = false, name = "limit", defaultValue = "10") int limit);
+
 }
+

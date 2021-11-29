@@ -16,7 +16,7 @@ public class TagValidator {
     private final Translator translator;
 
     public void validTag(Tag tag) {
-        if (StringUtils.isBlank(tag.getName())) {
+        if (StringUtils.isBlank(tag.getName()) || StringUtils.isNumeric(tag.getName())) {
             throw new IncorrectDataException(translator.toLocale(ErrorMessageCodeConstant.TAG_INCORRECT_NAME),
                     CustomErrorCode.TAG_INCORRECT_DATA.getErrorCode());
         }

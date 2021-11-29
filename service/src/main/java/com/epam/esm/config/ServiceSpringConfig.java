@@ -4,7 +4,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver;
 
@@ -15,7 +14,6 @@ import java.util.Locale;
 
 @Configuration
 @ComponentScan("com.epam.esm")
-@Import(DBConfiguration.class)
 public class ServiceSpringConfig extends AcceptHeaderLocaleResolver {
 
     List<Locale> LOCALES = Arrays.asList(

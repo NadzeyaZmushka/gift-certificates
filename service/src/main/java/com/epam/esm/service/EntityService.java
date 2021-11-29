@@ -16,9 +16,11 @@ public interface EntityService<T extends BaseEntity> {
     /**
      * Finds all entities
      *
+     * @param limit limit
+     * @param page page
      * @return list of certificate. May return empty list if there is no entities
      */
-    List<T> findAll();
+    List<T> findAll(int limit, int page);
 
     /**
      * Finds entity that has such id
@@ -32,8 +34,9 @@ public interface EntityService<T extends BaseEntity> {
      * Deletes entities.
      *
      * @param id of entity that need to be deleted
-     * @return true when entity is deleted
      */
-    boolean delete(Long id);
+    void delete(Long id);
+
+    Long count();
 
 }

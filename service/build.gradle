@@ -1,12 +1,19 @@
-
+plugins {
+    id "org.springframework.boot"
+}
 dependencies {
 
-    implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.10'
-    compile group: 'org.modelmapper', name: 'modelmapper', version: '2.3.2'
-    implementation group: 'org.springframework', name: 'spring-jdbc', version: springVersion
+    implementation group: 'org.modelmapper', name: 'modelmapper', version: '2.3.2'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-jdbc'
 
     implementation project(":repository")
 }
 test {
     useJUnitPlatform()
+}
+bootJar {
+    enabled = false
+}
+jar {
+    enabled = true
 }

@@ -1,18 +1,20 @@
 package com.epam.esm.controller;
 
 import com.epam.esm.dto.CertificateDTO;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -27,18 +29,22 @@ public interface CertificateController {
      * Realizes REST's read operation of resource.
      * May finds by criteria(tag name or part of name)
      *
-     * @param tagName  tag name
-     * @param partName part of certificate name
+     * @param tagNames tag name
+     * @param name     part of certificate name
      * @param sortBy   field by which to sort
      * @param order    in what order to sort
+     * @param page     page
+     * @param limit    limit
      * @return list of certificate DTO in JSON format
      */
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    List<CertificateDTO> findAll(@RequestParam(required = false, name = "tagName") String tagName,
-                                 @RequestParam(required = false, name = "partName") String partName,
-                                 @RequestParam(required = false, defaultValue = "certificate.id", name = "sortBy") String sortBy,
-                                 @RequestParam(required = false, defaultValue = "ASC", name = "order") String order);
+    PagedModel<CertificateDTO> findAll(@RequestParam(required = false, name = "tagName") List<String> tagNames,
+                                       @RequestParam(required = false, name = "name") String name,
+                                       @RequestParam(required = false, defaultValue = "id", name = "sortBy") String sortBy,
+                                       @RequestParam(required = false, defaultValue = "ASC", name = "order") String order,
+                                       @RequestParam(required = false, name = "page", defaultValue = "1") int page,
+                                       @RequestParam(required = false, name = "limit", defaultValue = "10") int limit);
 
     /**
      * Realizes REST's read operation a resource with id in a request path
@@ -58,7 +64,7 @@ public interface CertificateController {
      */
     @PostMapping("/")
     @ResponseStatus(HttpStatus.CREATED)
-    ResponseEntity<Void> add(@RequestBody CertificateDTO certificateDTO);
+    ResponseEntity<Void> create(@RequestBody @Valid CertificateDTO certificateDTO);
 
     /**
      * Realizes REST's delete operation of a resource
@@ -74,10 +80,11 @@ public interface CertificateController {
      *
      * @param id             of certificate to be updated
      * @param certificateDTO an object with new fields of a resource
+     * @return updated certificate
      */
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    void update(@PathVariable Long id, @RequestBody CertificateDTO certificateDTO);
+    CertificateDTO update(@PathVariable Long id, @RequestBody CertificateDTO certificateDTO);
 
     /**
      * Adds new or existing tags to the certificate
@@ -88,15 +95,5 @@ public interface CertificateController {
     @PostMapping("/{id}/tags")
     @ResponseStatus(HttpStatus.CREATED)
     void addTag(@PathVariable Long id, @RequestBody List<String> tagsNames);
-
-    /**
-     * Deletes tags from the certificate
-     *
-     * @param id       of certificate to be updated
-     * @param tagNames list of tag names in JSON format to be deleted
-     */
-    @DeleteMapping("/{id}/tags")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    void deleteTag(@PathVariable Long id, @RequestBody List<String> tagNames);
 
 }

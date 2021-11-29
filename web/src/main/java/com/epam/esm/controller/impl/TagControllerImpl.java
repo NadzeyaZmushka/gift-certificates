@@ -1,11 +1,13 @@
 package com.epam.esm.controller.impl;
 
 import com.epam.esm.controller.TagController;
+import com.epam.esm.converter.TagConvertor;
 import com.epam.esm.dto.TagDTO;
 import com.epam.esm.entity.Tag;
-import com.epam.esm.mapper.TagConvertor;
+import com.epam.esm.hateoas.TagsLinkBuilder;
 import com.epam.esm.service.impl.TagServiceImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -13,29 +15,39 @@ import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+
 @RestController
 @RequiredArgsConstructor
 public class TagControllerImpl implements TagController {
 
     private final TagServiceImpl tagService;
-    private final TagConvertor mapper;
+    private final TagConvertor converter;
+    private final TagsLinkBuilder hateoasLinkBuilder;
 
     @Override
-    public List<TagDTO> findAll() {
-        return tagService.findAll()
+    public PagedModel<TagDTO> findAll(int page, int limit) {
+        List<TagDTO> tags = tagService.findAll(limit, page)
                 .stream()
-                .map(mapper::toDTO)
+                .map(converter::toDTO)
                 .collect(Collectors.toList());
+        tags.forEach(hateoasLinkBuilder::addLinksForTag);
+        Long count = tagService.count();
+        PagedModel<TagDTO> pagedModel = PagedModel.of(tags, new PagedModel.PageMetadata(limit, page, count));
+        hateoasLinkBuilder.createPaginationLinks(pagedModel);
+        return pagedModel;
     }
 
     @Override
     public TagDTO findOne(Long id) {
-        return mapper.toDTO(tagService.findById(id));
+        TagDTO tagDTO = converter.toDTO(tagService.findById(id));
+        hateoasLinkBuilder.addLinksForTag(tagDTO);
+        return tagDTO;
     }
 
     @Override
-    public ResponseEntity<Void> add(TagDTO tagDTO) {
-        Tag tag = tagService.add(mapper.toEntity(tagDTO));
+    public ResponseEntity<Void> create(TagDTO tagDTO) {
+        Tag tag = tagService.add(converter.toEntity(tagDTO));
         URI location = URI.create(String.format("/tags/%d", tag.getId()));
         return ResponseEntity.created(location).build();
     }
@@ -43,6 +55,17 @@ public class TagControllerImpl implements TagController {
     @Override
     public void delete(Long id) {
         tagService.delete(id);
+    }
+
+    @Override
+    public PagedModel<TagDTO> findWidelyUsed(int page, int limit) {
+        List<TagDTO> tagDTOList = tagService.findWidelyUsed(limit, page).stream()
+                .map(converter::toDTO)
+                .collect(Collectors.toList());
+        tagDTOList.forEach(hateoasLinkBuilder::addLinksForTag);
+        PagedModel<TagDTO> pagedModel = PagedModel.of(tagDTOList, new PagedModel.PageMetadata(limit, page, tagDTOList.size()));
+        hateoasLinkBuilder.createPaginationLinks(pagedModel);
+        return pagedModel;
     }
 
 }
