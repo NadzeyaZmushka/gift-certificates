@@ -1,6 +1,6 @@
 package com.epam.esm.service.impl;
 
-import com.epam.esm.config.Translator;
+import com.epam.esm.configuration.Translator;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.exception.DuplicateException;
 import com.epam.esm.exception.IncorrectDataException;

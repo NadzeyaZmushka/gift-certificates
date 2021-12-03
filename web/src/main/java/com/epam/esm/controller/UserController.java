@@ -25,7 +25,8 @@ public interface UserController {
     @ResponseStatus(HttpStatus.OK)
     UserDTO findOne(@PathVariable Long id);
 
-    @PreAuthorize("hasRole('ROLE_ADMIN') OR authentication.principal.id == #id")
+
+    @PreAuthorize("hasRole('ROLE_ADMIN') OR authentication.principal.claims['user_id'] == #id")
     @PatchMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     UserDTO update(@PathVariable("id") long id, @RequestBody UserDTO userDTO);

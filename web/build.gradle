@@ -10,8 +10,15 @@ dependencies {
 
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-hateoas'
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
+    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-oauth2', version: '2.2.5.RELEASE'
+    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap', version: '3.0.4'
+    implementation group: 'org.springframework.security', name: 'spring-security-oauth2-jose',
+            version: '5.4.2'
+    implementation("org.springframework.security:spring-security-jwt:1.1.0.RELEASE")
+    implementation group: 'com.nimbusds', name: 'nimbus-jose-jwt', version: '9.7'
+
     implementation 'io.jsonwebtoken:jjwt:0.9.1'
-    implementation 'com.google.code.gson:gson:2.8.6'
 
     implementation 'org.springframework.security:spring-security-test'
     testImplementation group: 'io.rest-assured', name: 'rest-assured', version: '4.3.3'

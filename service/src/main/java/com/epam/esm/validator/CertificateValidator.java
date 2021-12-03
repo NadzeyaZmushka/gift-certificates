@@ -1,6 +1,6 @@
 package com.epam.esm.validator;
 
-import com.epam.esm.config.Translator;
+import com.epam.esm.configuration.Translator;
 import com.epam.esm.entity.Certificate;
 import com.epam.esm.exception.IncorrectDataException;
 import lombok.RequiredArgsConstructor;

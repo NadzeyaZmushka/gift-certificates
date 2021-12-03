@@ -33,4 +33,9 @@ public interface OrderController {
     @ResponseStatus(HttpStatus.CREATED)
     ResponseEntity<Void> create(@RequestBody OrderCreateRequestDTO orderDTO);
 
+//    @PreAuthorize("hasRole('ROLE_ADMIN') OR authentication.principal.id == #id")
+//    @GetMapping("/{id}/orders")
+//    @ResponseStatus(HttpStatus.OK)
+//    PagedModel<OrderDTO> findAllUsersOrders(@PathVariable("id") Long id);
+
 }

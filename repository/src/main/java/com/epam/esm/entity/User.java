@@ -11,6 +11,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.util.ArrayList;
@@ -36,8 +37,8 @@ public class User extends BaseEntity {
     @Column(name = "role")
     @Enumerated(EnumType.STRING)
     private Role userRole;
-//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-//    List<Order> orders;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    List<Order> orders;
 
 //    public User(Long id, String name, String surname, List<Order> orders) {
 //        super(id);

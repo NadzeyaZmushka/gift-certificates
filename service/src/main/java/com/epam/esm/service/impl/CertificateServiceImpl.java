@@ -1,6 +1,6 @@
 package com.epam.esm.service.impl;
 
-import com.epam.esm.config.Translator;
+import com.epam.esm.configuration.Translator;
 import com.epam.esm.entity.Certificate;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.exception.IncorrectDataException;
@@ -39,10 +39,12 @@ public class CertificateServiceImpl implements CertificateService {
     @Transactional
     public Certificate add(Certificate certificate) {
         validator.validCertificate(certificate);
-        List<Tag> tagsToAdd = getCertificateTagNames(certificate).stream()
-                .map(tagService::findByNameOrCreate)
-                .collect(Collectors.toList());
-        certificate.setTags(tagsToAdd);
+        if (certificate.getTags() != null) {
+            List<Tag> tagsToAdd = getCertificateTagNames(certificate).stream()
+                    .map(tagService::findByNameOrCreate)
+                    .collect(Collectors.toList());
+            certificate.setTags(tagsToAdd);
+        }
         certificate.setCreateDate(LocalDateTime.now());
         certificate.setLastUpdateDate(LocalDateTime.now());
 

@@ -1,6 +1,6 @@
 package com.epam.esm.service.impl;
 
-import com.epam.esm.config.Translator;
+import com.epam.esm.configuration.Translator;
 import com.epam.esm.entity.Role;
 import com.epam.esm.entity.User;
 import com.epam.esm.exception.DuplicateException;

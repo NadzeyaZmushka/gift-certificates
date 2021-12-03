@@ -2,9 +2,12 @@ package com.epam.esm.controller.impl;
 
 import com.epam.esm.controller.UserController;
 import com.epam.esm.converter.UserConverter;
+import com.epam.esm.dto.OrderDTO;
 import com.epam.esm.dto.UserDTO;
 import com.epam.esm.hateoas.OrderLinkBuilder;
 import com.epam.esm.hateoas.UserLinkBuilder;
+import com.epam.esm.service.OrderService;
+import com.epam.esm.service.UserService;
 import com.epam.esm.service.impl.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.PagedModel;
@@ -17,7 +20,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserControllerImpl implements UserController {
 
-    private final UserServiceImpl userService;
+    private final UserService userService;
+    private final OrderService orderService;
     private final UserConverter converter;
     private final UserLinkBuilder hateoasLinkBuilder;
     private final OrderLinkBuilder orderLinkBuilder;

@@ -28,5 +28,6 @@ public class UserDTO extends RepresentationModel<UserDTO> {
     private String surname;
     @Email
     private String email;
+    private List<OrderDTO> order;
 
 }
