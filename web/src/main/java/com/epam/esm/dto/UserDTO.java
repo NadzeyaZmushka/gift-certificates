@@ -1,5 +1,6 @@
 package com.epam.esm.dto;
 
+import com.epam.esm.entity.Role;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -28,6 +29,7 @@ public class UserDTO extends RepresentationModel<UserDTO> {
     private String surname;
     @Email
     private String email;
-    private List<OrderDTO> order;
+//    private List<OrderDTO> order;
+    private Role role;
 
 }

@@ -19,7 +19,6 @@ public interface OrderController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-//    @PreAuthorize("hasRole('ROLE_ADMIN') OR authentication.principal.id == #userId")
     PagedModel<OrderDTO> findAll(@RequestParam(required = false, name = "page", defaultValue = "1") int page,
                                  @RequestParam(required = false, name = "limit", defaultValue = "10") int limit,
                                  @RequestParam(required = false, name = "userId") Long userId);
@@ -31,11 +30,8 @@ public interface OrderController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasRole('ROLE_ADMIN') OR (hasRole('ROLE_USER') " +
+            "and authentication.principal.claims['user_id'] == #orderDTO.userId)")
     ResponseEntity<Void> create(@RequestBody OrderCreateRequestDTO orderDTO);
-
-//    @PreAuthorize("hasRole('ROLE_ADMIN') OR authentication.principal.id == #id")
-//    @GetMapping("/{id}/orders")
-//    @ResponseStatus(HttpStatus.OK)
-//    PagedModel<OrderDTO> findAllUsersOrders(@PathVariable("id") Long id);
 
 }

@@ -34,7 +34,7 @@ public class Order extends BaseEntity {
     @Column(name = "create_date", columnDefinition = "TIMESTAMP")
 //    @CreatedDate
     private LocalDateTime createDate;
-    @ManyToOne(targetEntity = User.class, fetch = FetchType.LAZY)
+    @ManyToOne(targetEntity = User.class)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
     @ManyToOne(targetEntity = Certificate.class)

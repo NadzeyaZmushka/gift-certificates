@@ -10,8 +10,7 @@ import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 
 @Configuration
-//@RequiredArgsConstructor
-public class JwtKeyGenConfiguration {
+public class SecurityConfiguration {
 
     @SneakyThrows
     @Bean
@@ -25,6 +24,5 @@ public class JwtKeyGenConfiguration {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
 
 }

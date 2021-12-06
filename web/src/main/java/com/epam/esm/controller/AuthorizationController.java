@@ -23,6 +23,7 @@ public class AuthorizationController {
 
     private final UserServiceImpl userService;
 
+    //todo to user controller
     @PostMapping("/signup")
     @ResponseStatus(HttpStatus.CREATED)
     public void registerUser(@RequestBody @Valid SignupRequest request) {

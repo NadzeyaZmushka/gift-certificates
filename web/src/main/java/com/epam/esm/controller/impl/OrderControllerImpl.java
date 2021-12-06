@@ -36,7 +36,7 @@ public class OrderControllerImpl implements OrderController {
         orders.forEach(hateoasLinkBuilder::addLinksForOrder);
         for (OrderDTO orderDTO : orders) {
             certificateLinkBuilder.addLinksForCertificate(orderDTO.getCertificate());
-            userLinkBuilder.addLinksForUser(orderDTO.getUser());
+//            userLinkBuilder.addLinksForUser(orderDTO.getUser());
         }
         Long count = orderService.countFoundOrders(userId);
         PagedModel<OrderDTO> pagedModel = PagedModel.of(orders, new PagedModel.PageMetadata(limit, page, count));
@@ -49,14 +49,12 @@ public class OrderControllerImpl implements OrderController {
         OrderDTO orderDTO = converter.toDTO(orderService.findById(id));
         hateoasLinkBuilder.addLinksForOrder(orderDTO);
         certificateLinkBuilder.addLinksForCertificate(orderDTO.getCertificate());
-        userLinkBuilder.addLinksForUser(orderDTO.getUser());
+//        userLinkBuilder.addLinksForUser(orderDTO.getUser());
         return orderDTO;
     }
 
     @Override
-
     public ResponseEntity<Void> create(OrderCreateRequestDTO orderDTO) {
-        //
         Order order = orderService.create(orderDTO.getUserId(), orderDTO.getCertificateId());
         URI location = URI.create(String.format("/orders/%d", order.getId()));
         return ResponseEntity.created(location).build();

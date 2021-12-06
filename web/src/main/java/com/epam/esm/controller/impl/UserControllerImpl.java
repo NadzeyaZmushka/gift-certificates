@@ -1,14 +1,15 @@
 package com.epam.esm.controller.impl;
 
 import com.epam.esm.controller.UserController;
+import com.epam.esm.converter.OrderConverter;
 import com.epam.esm.converter.UserConverter;
 import com.epam.esm.dto.OrderDTO;
 import com.epam.esm.dto.UserDTO;
+import com.epam.esm.hateoas.CertificateLinkBuilder;
 import com.epam.esm.hateoas.OrderLinkBuilder;
 import com.epam.esm.hateoas.UserLinkBuilder;
 import com.epam.esm.service.OrderService;
 import com.epam.esm.service.UserService;
-import com.epam.esm.service.impl.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,8 +24,10 @@ public class UserControllerImpl implements UserController {
     private final UserService userService;
     private final OrderService orderService;
     private final UserConverter converter;
+    private final OrderConverter orderConverter;
     private final UserLinkBuilder hateoasLinkBuilder;
     private final OrderLinkBuilder orderLinkBuilder;
+    private final CertificateLinkBuilder certificateLinkBuilder;
 
     @Override
     public PagedModel<UserDTO> findAll(int page, int limit) {
@@ -51,4 +54,19 @@ public class UserControllerImpl implements UserController {
         return converter.toDTO(userService.update(id, converter.toEntity(userDTO)));
     }
 
+    @Override
+    public PagedModel<OrderDTO> findAllByUser(Long id, int page, int limit) {
+        List<OrderDTO> orders = orderService.findAllByUserId(id, page, limit).stream()
+                .map(orderConverter::toDTO)
+                .collect(Collectors.toList());
+        orders.forEach(orderLinkBuilder::addLinksForOrder);
+        for (OrderDTO orderDTO : orders) {
+            certificateLinkBuilder.addLinksForCertificate(orderDTO.getCertificate());
+        }
+        Long count = orderService.countFoundOrders(id);
+        PagedModel<OrderDTO> pagedModel = PagedModel.of(orders, new PagedModel.PageMetadata(limit, page, count));
+        orderLinkBuilder.createPaginationLinks(pagedModel, id);
+        return pagedModel;
+
+    }
 }

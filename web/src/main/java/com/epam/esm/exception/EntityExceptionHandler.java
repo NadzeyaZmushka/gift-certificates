@@ -27,6 +27,7 @@ public class EntityExceptionHandler implements AuthenticationEntryPoint {
 
     private final Translator translator;
 
+    //будет вызван, если пользователь попытается получить доступ к конечной точке, требующей аутентификации
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
         response.setContentType("application/json");

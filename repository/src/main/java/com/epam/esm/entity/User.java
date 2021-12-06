@@ -12,9 +12,9 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -37,7 +37,10 @@ public class User extends BaseEntity {
     @Column(name = "role")
     @Enumerated(EnumType.STRING)
     private Role userRole;
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    //joinColumns = {@JoinColumn(name = "certificate_id", referencedColumnName = "id")},
+    //            inverseJoinColumns = {@JoinColumn(name = "tag_id", referencedColumnName = "id")})
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     List<Order> orders;
 
 //    public User(Long id, String name, String surname, List<Order> orders) {

@@ -45,29 +45,29 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
         resources.resourceId("api");
     }
 
+    //antMatcher(..) - задает, для каких url собран весь HttpSecurity
+    //antMatchers(..) - используется уже внутри для выдачи разрешений
     @Override
     public void configure(HttpSecurity http) throws Exception {
         http
-                .httpBasic(AbstractHttpConfigurer::disable)//??
+                .httpBasic(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeRequests(authorizeRequests -> {
                     authorizeRequests
-                            .antMatchers(HttpMethod.GET, "/api/tags/most-used").hasRole("ADMIN");
+                            .antMatchers(HttpMethod.GET, "/api/tags/most-used", "/api/orders", "/api/orders/{\\d}", "/api/users").hasRole("ADMIN");
                     authorizeRequests
-                            .antMatchers(HttpMethod.POST, "/api/certificates", "/api/tags", "/api/certificates/{\\d}/tags", "/api/orders").hasRole("ADMIN");
+                            .antMatchers(HttpMethod.POST, "/api/certificates", "/api/tags", "/api/certificates/{\\d}/tags").hasRole("ADMIN");
+                    authorizeRequests
+                            .antMatchers(HttpMethod.POST, "/api/orders").hasAnyRole("ADMIN", "USER");
                     authorizeRequests
                             .antMatchers(HttpMethod.DELETE, "/api/certificates/{\\d}", "/api/tags/{\\d}").hasRole("ADMIN");
                     authorizeRequests
-                            .antMatchers(HttpMethod.PATCH, "/api/certificates/{\\d}").hasRole("ADMIN");
-                    authorizeRequests
                             .antMatchers(HttpMethod.GET, "/api/certificates", "api/certificates/{\\d+}", "/api/tags", "api/tags/{\\d}").permitAll();
                     authorizeRequests
-                            .antMatchers(HttpMethod.POST, "/api/login", "/api/signup").anonymous();
-                    authorizeRequests
-                            .antMatchers(HttpMethod.POST, "/api/logout").authenticated();
-                    authorizeRequests
-                            .antMatchers(HttpMethod.GET, "/api/users", "/api/users/{\\d}", "/api/orders", "/api/orders/{\\d}").authenticated();
+                            .antMatchers(HttpMethod.POST, "/api/signup").anonymous();
+//                    authorizeRequests
+//                            .antMatchers(HttpMethod.GET, "/api/users", "/api/users/{\\d}").authenticated();
                 })
                 .exceptionHandling(exceptionHandling ->
                         exceptionHandling.authenticationEntryPoint(entityExceptionHandler)//будет вызван, если пользователь попытается получить доступ к конечной точке, требующей аутентификации
@@ -82,14 +82,10 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
         NimbusJwtDecoder jwtDecoder = NimbusJwtDecoder.withPublicKey((RSAPublicKey) keyPair.getPublic()).build();
         OAuth2TokenValidator<Jwt> customAccessTokenValidator = new DelegatingOAuth2TokenValidator<>(
                 JwtValidators.createDefaultWithIssuer(issuerUri),
-                audienceValidator()
+                new JwtAudienceValidator("api")
         );
         jwtDecoder.setJwtValidator(customAccessTokenValidator);
         return jwtDecoder;
-    }
-
-    public OAuth2TokenValidator<Jwt> audienceValidator() {
-        return new JwtAudienceValidator("api");
     }
 
 }

@@ -1,5 +1,6 @@
 package com.epam.esm.controller;
 
+import com.epam.esm.dto.OrderDTO;
 import com.epam.esm.dto.UserDTO;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
@@ -23,12 +24,18 @@ public interface UserController {
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ROLE_ADMIN') OR authentication.principal.claims['user_id'] == #id")
     UserDTO findOne(@PathVariable Long id);
 
-
-    @PreAuthorize("hasRole('ROLE_ADMIN') OR authentication.principal.claims['user_id'] == #id")
     @PatchMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasRole('ROLE_ADMIN') OR authentication.principal.claims['user_id'] == #id")
     UserDTO update(@PathVariable("id") long id, @RequestBody UserDTO userDTO);
+
+    @GetMapping("/{id}/orders")
+    @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ROLE_ADMIN') OR authentication.principal.claims['user_id'] == #id")
+    PagedModel<OrderDTO> findAllByUser(@PathVariable Long id, @RequestParam(required = false, name = "page", defaultValue = "1") int page,
+                                       @RequestParam(required = false, name = "limit", defaultValue = "10") int limit);
 
 }
