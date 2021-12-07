@@ -4,7 +4,9 @@ import com.epam.esm.controller.UserController;
 import com.epam.esm.converter.OrderConverter;
 import com.epam.esm.converter.UserConverter;
 import com.epam.esm.dto.OrderDTO;
+import com.epam.esm.dto.SignupRequest;
 import com.epam.esm.dto.UserDTO;
+import com.epam.esm.entity.User;
 import com.epam.esm.hateoas.CertificateLinkBuilder;
 import com.epam.esm.hateoas.OrderLinkBuilder;
 import com.epam.esm.hateoas.UserLinkBuilder;
@@ -12,8 +14,10 @@ import com.epam.esm.service.OrderService;
 import com.epam.esm.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.PagedModel;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -69,4 +73,18 @@ public class UserControllerImpl implements UserController {
         return pagedModel;
 
     }
+
+    @Override
+    public ResponseEntity<Void> registerUser(SignupRequest request) {
+        User user = User.builder()
+                .name(request.getName())
+                .surname(request.getSurname())
+                .email(request.getEmail())
+                .password(request.getPassword())
+                .build();
+        userService.add(user);
+        URI location = URI.create(String.format("/users/%d", user.getId()));
+        return ResponseEntity.created(location).build();
+    }
+
 }

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -33,8 +34,10 @@ public class CustomTokenEnhancer implements TokenEnhancer {
         extraInfo.put("iss", "http://localhost:8080"); //используется для указания приложения, из которого отправляется токен
         extraInfo.put("user_role", user.getUserRole().name());
         enhanced.setAdditionalInformation(extraInfo);
-//        Date date = Date.from(LocalDateTime.now().plusHours(1L).toInstant(ZoneOffset.UTC));
-//        enhanced.setExpiration(date);
+//        Calendar c = Calendar.getInstance();
+//        c.add(Calendar.MINUTE, 15);
+//        Date expirationDate = c.getTime();
+//        enhanced.setExpiration(expirationDate);
         return enhanced;
     }
 

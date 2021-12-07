@@ -27,10 +27,8 @@ import java.security.KeyPair;
 import java.security.interfaces.RSAPublicKey;
 
 @Configuration
-@EnableWebSecurity
 @EnableResourceServer
 @RequiredArgsConstructor
-@EnableGlobalMethodSecurity(prePostEnabled = true) //для @PreAuthorize
 public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter {
 
     @Value("${spring.security.oauth2.resourceserver.jwt.issuer-uri}")
@@ -65,12 +63,13 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
                     authorizeRequests
                             .antMatchers(HttpMethod.GET, "/api/certificates", "api/certificates/{\\d+}", "/api/tags", "api/tags/{\\d}").permitAll();
                     authorizeRequests
-                            .antMatchers(HttpMethod.POST, "/api/signup").anonymous();
-//                    authorizeRequests
-//                            .antMatchers(HttpMethod.GET, "/api/users", "/api/users/{\\d}").authenticated();
+                            .antMatchers(HttpMethod.POST, "/api/users/signup").anonymous();
                 })
                 .exceptionHandling(exceptionHandling ->
                         exceptionHandling.authenticationEntryPoint(entityExceptionHandler)//будет вызван, если пользователь попытается получить доступ к конечной точке, требующей аутентификации
+                )
+                .exceptionHandling(exceptionHandling ->
+                        exceptionHandling.accessDeniedHandler(entityExceptionHandler)//будет вызван, если пользователь попытается получить доступ к конечной точке, к которой у него нет доступа
                 )
                 .oauth2ResourceServer()
                 .jwt()

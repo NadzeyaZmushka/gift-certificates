@@ -2,6 +2,7 @@ package com.epam.esm.configuration;
 
 import com.epam.esm.repository.UserRepository;
 import com.epam.esm.security.jwt.CustomTokenEnhancer;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -23,6 +24,7 @@ import java.util.Arrays;
 
 @Configuration
 @EnableAuthorizationServer
+@RequiredArgsConstructor
 public class AuthorizationServerConfiguration extends AuthorizationServerConfigurerAdapter {
 
     private final AuthenticationManager authenticationManager;
@@ -31,26 +33,20 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
     private final KeyPair keyPair;
     private final PasswordEncoder passwordEncoder;
 
-    public AuthorizationServerConfiguration(AuthenticationConfiguration authenticationConfiguration, UserDetailsService userDetailsService, UserRepository userRepository, KeyPair keyPair, PasswordEncoder passwordEncoder) throws Exception {
-        this.authenticationManager = authenticationConfiguration.getAuthenticationManager(); //почему именно так?
-        this.userDetailsService = userDetailsService;
-        this.userRepository = userRepository;
-        this.keyPair = keyPair;
-        this.passwordEncoder = passwordEncoder;
-    }
-
     @Override
     public void configure(AuthorizationServerSecurityConfigurer security) {
         security
                 .tokenKeyAccess("permitAll()")
                 .checkTokenAccess("isAuthenticated()")
-                .allowFormAuthenticationForClients();
+                .allowFormAuthenticationForClients(); //Заменяет обычную аутентификацию и позволяет передавать все необходимые параметры как часть тела запроса.
     }
 
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
         clients.inMemory().withClient("certificates")
                 .secret(passwordEncoder.encode("secret"))
+                .accessTokenValiditySeconds(900)
+                .refreshTokenValiditySeconds(86400)
                 .scopes("any")
                 .autoApprove(true)
                 .authorities("ADMIN", "USER")
@@ -81,6 +77,5 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
         jwtAccessTokenConverter.setKeyPair(keyPair);
         return jwtAccessTokenConverter;
     }
-
 
 }
