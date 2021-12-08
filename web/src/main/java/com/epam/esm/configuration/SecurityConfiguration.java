@@ -15,7 +15,7 @@ import java.security.KeyPairGenerator;
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true) //для @PreAuthorize
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     //Создает пару открытого/закрытого ключей, чтобы предоставить позже для accessTokenCoverter как часть его конфигурации

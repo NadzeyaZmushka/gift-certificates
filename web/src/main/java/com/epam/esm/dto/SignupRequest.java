@@ -13,7 +13,6 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 public class SignupRequest {
 
-    //todo messages
     @Email
     @NotBlank
     private String email;

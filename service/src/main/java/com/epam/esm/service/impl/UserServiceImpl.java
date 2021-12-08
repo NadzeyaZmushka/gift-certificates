@@ -55,7 +55,6 @@ public class UserServiceImpl implements UserService {
             throw new IncorrectDataException(translator.toLocale(PAGE_INCORRECT), PAGE_INCORRECT_CODE.getErrorCode());
         }
         List<User> users = userRepository.findAll(page, limit);
-//        users.forEach(user -> user.setOrders(orderRepository.findByUser(user, 1, 10)));
         return users;
     }
 

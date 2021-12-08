@@ -37,23 +37,8 @@ public class User extends BaseEntity {
     @Column(name = "role")
     @Enumerated(EnumType.STRING)
     private Role userRole;
-    //joinColumns = {@JoinColumn(name = "certificate_id", referencedColumnName = "id")},
-    //            inverseJoinColumns = {@JoinColumn(name = "tag_id", referencedColumnName = "id")})
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     List<Order> orders;
-
-//    public User(Long id, String name, String surname, List<Order> orders) {
-//        super(id);
-//        this.name = name;
-//        this.surname = surname;
-//        this.orders = orders;
-//    }
-//
-//    public User(String name, String surname, List<Order> orders) {
-//        this.name = name;
-//        this.surname = surname;
-//        this.orders = orders;
-//    }
 
 }

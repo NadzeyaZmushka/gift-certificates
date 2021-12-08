@@ -7,7 +7,6 @@ import com.epam.esm.dto.OrderDTO;
 import com.epam.esm.entity.Order;
 import com.epam.esm.hateoas.CertificateLinkBuilder;
 import com.epam.esm.hateoas.OrderLinkBuilder;
-import com.epam.esm.hateoas.UserLinkBuilder;
 import com.epam.esm.service.impl.OrderServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.PagedModel;
@@ -26,7 +25,6 @@ public class OrderControllerImpl implements OrderController {
     private final OrderConverter converter;
     private final OrderLinkBuilder hateoasLinkBuilder;
     private final CertificateLinkBuilder certificateLinkBuilder;
-    private final UserLinkBuilder userLinkBuilder;
 
     @Override
     public PagedModel<OrderDTO> findAll(int page, int limit, Long userId) {
@@ -36,7 +34,6 @@ public class OrderControllerImpl implements OrderController {
         orders.forEach(hateoasLinkBuilder::addLinksForOrder);
         for (OrderDTO orderDTO : orders) {
             certificateLinkBuilder.addLinksForCertificate(orderDTO.getCertificate());
-//            userLinkBuilder.addLinksForUser(orderDTO.getUser());
         }
         Long count = orderService.countFoundOrders(userId);
         PagedModel<OrderDTO> pagedModel = PagedModel.of(orders, new PagedModel.PageMetadata(limit, page, count));
@@ -49,7 +46,6 @@ public class OrderControllerImpl implements OrderController {
         OrderDTO orderDTO = converter.toDTO(orderService.findById(id));
         hateoasLinkBuilder.addLinksForOrder(orderDTO);
         certificateLinkBuilder.addLinksForCertificate(orderDTO.getCertificate());
-//        userLinkBuilder.addLinksForUser(orderDTO.getUser());
         return orderDTO;
     }
 

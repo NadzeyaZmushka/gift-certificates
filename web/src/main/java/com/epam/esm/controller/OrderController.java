@@ -30,7 +30,6 @@ public interface OrderController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    //проверять разрешения перед обработкой запроса
     @PreAuthorize("hasRole('ROLE_ADMIN') OR (hasRole('ROLE_USER') " +
             "and authentication.principal.claims['user_id'] == #orderDTO.userId)")
     ResponseEntity<Void> create(@RequestBody OrderCreateRequestDTO orderDTO);

@@ -28,7 +28,6 @@ public class EntityExceptionHandler implements AuthenticationEntryPoint, AccessD
 
     private final Translator translator;
 
-    //будет вызван, если пользователь попытается получить доступ к конечной точке, требующей аутентификации
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
         response.setContentType("application/json");
@@ -86,7 +85,6 @@ public class EntityExceptionHandler implements AuthenticationEntryPoint, AccessD
         ExceptionInfo info = new ExceptionInfo();
         List<String> listErrors = new ArrayList<>();
         listErrors.add("You entered incorrect data or parameters");
-//        listErrors.add(exception.getMessage());
         info.setErrorMessage(listErrors);
         info.setErrorCode(HttpStatus.BAD_REQUEST.value());
         return info;
@@ -119,7 +117,7 @@ public class EntityExceptionHandler implements AuthenticationEntryPoint, AccessD
 
     @ExceptionHandler(AccessDeniedException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
-    public ExceptionInfo handleAccessDeniedException(AccessDeniedException exception){
+    public ExceptionInfo handleAccessDeniedException(AccessDeniedException exception) {
         List<String> listErrors = new ArrayList<>();
         listErrors.add(exception.getMessage());
         return new ExceptionInfo(listErrors, HttpStatus.FORBIDDEN.value());

@@ -29,7 +29,6 @@ public interface UserController {
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    //проверять разрешения перед обработкой запроса
     @PreAuthorize("hasRole('ROLE_ADMIN') OR authentication.principal.claims['user_id'] == #id")
     UserDTO findOne(@PathVariable Long id);
 
@@ -40,7 +39,6 @@ public interface UserController {
 
     @GetMapping("/{id}/orders")
     @ResponseStatus(HttpStatus.OK)
-    //проверять разрешения перед обработкой запроса
     @PreAuthorize("hasRole('ROLE_ADMIN') OR authentication.principal.claims['user_id'] == #id")
     PagedModel<OrderDTO> findAllByUser(@PathVariable Long id, @RequestParam(required = false, name = "page", defaultValue = "1") int page,
                                        @RequestParam(required = false, name = "limit", defaultValue = "10") int limit);

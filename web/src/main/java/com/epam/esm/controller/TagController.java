@@ -62,11 +62,6 @@ public interface TagController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     void delete(@PathVariable Long id);
 
-//    @GetMapping("/most-used")
-//    @ResponseStatus(HttpStatus.OK)
-//    PagedModel<TagDTO> findWidelyUsed(@RequestParam(required = false, name = "page", defaultValue = "1") int page,
-//                                      @RequestParam(required = false, name = "limit", defaultValue = "10") int limit);
-
     @GetMapping("/most-used")
     @ResponseStatus(HttpStatus.OK)
     List<WidelyUsedTagsDTO> findWidelyUsed(@RequestParam(required = false, name = "page", defaultValue = "1") int page,

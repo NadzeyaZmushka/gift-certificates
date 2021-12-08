@@ -5,7 +5,6 @@ import org.springframework.security.oauth2.core.OAuth2TokenValidator;
 import org.springframework.security.oauth2.core.OAuth2TokenValidatorResult;
 import org.springframework.security.oauth2.jwt.Jwt;
 
-//audience для кого или для чего предназначен токен
 public class JwtAudienceValidator implements OAuth2TokenValidator<Jwt> {
 
     private final String resourceId;

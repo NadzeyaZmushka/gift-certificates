@@ -24,7 +24,6 @@ public class OrderLinkBuilder {
         Link linkForCreateOrder = linkTo(methodOn(OrderControllerImpl.class)
                 .create(new OrderCreateRequestDTO()))
                 .withRel("create");
-        //todo нужно ли?
         Link linkForUser = linkTo(methodOn(UserControllerImpl.class)
                 .findOne(orderDTO.getUserId()))
                 .withRel("findUser");

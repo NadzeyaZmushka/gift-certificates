@@ -26,13 +26,11 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-//@EntityListeners(AuditingEntityListener.class)
 public class Order extends BaseEntity {
 
     @Column(name = "cost")
     private BigDecimal cost;
     @Column(name = "create_date", columnDefinition = "TIMESTAMP")
-//    @CreatedDate
     private LocalDateTime createDate;
     @ManyToOne(targetEntity = User.class)
     @JoinColumn(name = "user_id", referencedColumnName = "id")

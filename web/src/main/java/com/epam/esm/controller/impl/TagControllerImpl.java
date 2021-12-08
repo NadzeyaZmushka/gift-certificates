@@ -4,14 +4,13 @@ import com.epam.esm.controller.TagController;
 import com.epam.esm.converter.TagConvertor;
 import com.epam.esm.converter.WidelyUsedTagConverter;
 import com.epam.esm.dto.TagDTO;
+import com.epam.esm.dto.WidelyUsedTagsDTO;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.hateoas.TagsLinkBuilder;
 import com.epam.esm.hateoas.UserLinkBuilder;
-import com.epam.esm.dto.WidelyUsedTagsDTO;
 import com.epam.esm.service.impl.TagServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.Link;
-import org.springframework.hateoas.Links;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -31,7 +30,6 @@ public class TagControllerImpl implements TagController {
     private final TagConvertor converter;
     private final WidelyUsedTagConverter usedTagConverter;
     private final TagsLinkBuilder hateoasLinkBuilder;
-    private final UserLinkBuilder userLinkBuilder;
 
     @Override
     public PagedModel<TagDTO> findAll(int page, int limit) {

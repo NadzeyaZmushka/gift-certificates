@@ -25,7 +25,6 @@ public class OrderDTO extends RepresentationModel<OrderDTO> {
     @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
     private LocalDateTime createDate;
     private Long userId;
-//    private UserDTO user;
     private CertificateDTO certificate;
 
 }

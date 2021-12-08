@@ -8,9 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
@@ -43,13 +41,12 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
         resources.resourceId("api");
     }
 
-    //antMatcher(..) - задает, для каких url собран весь HttpSecurity
-    //antMatchers(..) - используется уже внутри для выдачи разрешений
     @Override
     public void configure(HttpSecurity http) throws Exception {
         http
                 .httpBasic(AbstractHttpConfigurer::disable)
-                .csrf(AbstractHttpConfigurer::disable)
+//                .csrf(AbstractHttpConfigurer::disable)
+//                .cors()
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeRequests(authorizeRequests -> {
                     authorizeRequests
@@ -65,12 +62,10 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
                     authorizeRequests
                             .antMatchers(HttpMethod.POST, "/api/users/signup").anonymous();
                 })
-                .exceptionHandling(exceptionHandling ->
-                        exceptionHandling.authenticationEntryPoint(entityExceptionHandler)//будет вызван, если пользователь попытается получить доступ к конечной точке, требующей аутентификации
-                )
-                .exceptionHandling(exceptionHandling ->
-                        exceptionHandling.accessDeniedHandler(entityExceptionHandler)//будет вызван, если пользователь попытается получить доступ к конечной точке, к которой у него нет доступа
-                )
+                .exceptionHandling(exceptionHandling -> {
+                    exceptionHandling.authenticationEntryPoint(entityExceptionHandler);
+                    exceptionHandling.accessDeniedHandler(entityExceptionHandler);
+                })
                 .oauth2ResourceServer()
                 .jwt()
                 .jwtAuthenticationConverter(jwtAuthenticationConverter);
