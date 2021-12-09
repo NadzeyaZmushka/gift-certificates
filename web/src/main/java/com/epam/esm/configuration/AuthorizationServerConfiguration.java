@@ -3,6 +3,7 @@ package com.epam.esm.configuration;
 import com.epam.esm.repository.UserRepository;
 import com.epam.esm.security.jwt.CustomTokenEnhancer;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -27,24 +28,26 @@ import java.util.Arrays;
 public class AuthorizationServerConfiguration extends AuthorizationServerConfigurerAdapter {
 
     private final AuthenticationManager authenticationManager;
-    private final UserDetailsService userDetailsService;
     private final UserRepository userRepository;
+    private final UserDetailsService userDetailsService;
     private final KeyPair keyPair;
     private final PasswordEncoder passwordEncoder;
+    @Value("${spring.security.oauth2.resourceserver.jwt.issuer-uri}")
+    private String issuerUri;
 
     @Override
     public void configure(AuthorizationServerSecurityConfigurer security) {
         security
-                .tokenKeyAccess("permitAll()")
-                .checkTokenAccess("isAuthenticated()")
-                .allowFormAuthenticationForClients(); //Заменяет обычную аутентификацию и позволяет передавать все необходимые параметры как часть тела запроса.
+                .tokenKeyAccess("permitAll()") //Access Rule for Token Key Endpoint
+                .checkTokenAccess("isAuthenticated()") //Access Rule for Control Token Endpoint
+                .allowFormAuthenticationForClients(); //Replaces basic authentication and allows all required parameters to be passed as part of the request body
     }
 
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
         clients.inMemory().withClient("certificates")
                 .secret(passwordEncoder.encode("secret"))
-                .accessTokenValiditySeconds(180)
+                .accessTokenValiditySeconds(600)
                 .refreshTokenValiditySeconds(86400)
                 .scopes("any")
                 .autoApprove(true)
@@ -53,11 +56,11 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
                 .resourceIds("api");
     }
 
-    //настраиваем свойства и расширенную функциональность конечных точек сервера авторизации
+    //configuring properties and advanced functionality of the authorization server endpoints
     @Override
-    public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
+    public void configure(AuthorizationServerEndpointsConfigurer endpoints) {
         TokenEnhancerChain tokenEnhancerChain = new TokenEnhancerChain();
-        tokenEnhancerChain.setTokenEnhancers(Arrays.asList(new CustomTokenEnhancer(userRepository), jwtAccessTokenConverter()));
+        tokenEnhancerChain.setTokenEnhancers(Arrays.asList(new CustomTokenEnhancer(issuerUri, userRepository), jwtAccessTokenConverter()));
         endpoints
                 .authenticationManager(authenticationManager)
                 .tokenEnhancer(tokenEnhancerChain)
@@ -70,6 +73,7 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
         return new JwtTokenStore(jwtAccessTokenConverter());
     }
 
+    //translates JWT-encoded token values and OAuth authentication information
     @Bean
     public JwtAccessTokenConverter jwtAccessTokenConverter() {
         JwtAccessTokenConverter jwtAccessTokenConverter = new JwtAccessTokenConverter();

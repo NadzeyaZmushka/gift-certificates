@@ -5,6 +5,7 @@ import com.epam.esm.repository.CertificateOrderOptions;
 import com.epam.esm.repository.CertificateRepository;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.CollectionUtils;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -122,11 +123,11 @@ public class CertificateRepositoryImpl implements CertificateRepository {
     private <T> void prepareSearchQuery(AbstractQuery<T> query, Root<Certificate> root, List<String> tagNames, String name) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         List<Predicate> predicates = new ArrayList<>();
-        if (!StringUtils.isBlank(name)) {
+        if (StringUtils.isNotBlank(name)) {
             Predicate predicateForName = criteriaBuilder.like(root.get("name"), "%" + name + "%");
             predicates.add(predicateForName);
         }
-        if (tagNames != null && tagNames.size() != 0) {
+        if (!CollectionUtils.isEmpty(tagNames)) {
             Join<Object, Object> tagListJoin = root.join("tags", JoinType.LEFT);
             Expression<Long> countOfTagsInGroup = criteriaBuilder.count(root);
             Predicate predicateTagsList = tagListJoin.get("name").in(tagNames);

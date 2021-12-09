@@ -20,7 +20,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -139,26 +138,6 @@ class TagServiceImplTest {
         assertEquals(tags.size(), actual.size());
         assertEquals(tags, actual);
     }
-
-//    @Test
-//    void testWidelyUsedTagThrowsNoSuchEntityException() {
-//        //given
-//        when(tagRepository.findMostPopularTag(, )).thenReturn(Collections.emptyList());
-//        when(translator.toLocale(any())).thenReturn("message");
-//        //then
-//        assertThrows(NoSuchEntityException.class, () -> tagService.findWidelyUsed(, ));
-//    }
-//
-//    @Test
-//    void testShouldReturnWidelyUsedTag() {
-//        //given
-//        Tag tag = new Tag(1L, "popular");
-//        when(tagRepository.findMostPopularTag(, )).thenReturn(List.of(tag));
-//        //when
-//        List<Tag> actual = tagService.findWidelyUsed(, );
-//        //then
-//        assertEquals(0, actual.size());
-//    }
 
     @Test
     void testShouldReturnCountOfTags() {

@@ -1,5 +1,6 @@
 package com.epam.esm.configuration;
 
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,9 +17,9 @@ import java.security.KeyPairGenerator;
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
+@RequiredArgsConstructor
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-    //Создает пару открытого/закрытого ключей, чтобы предоставить позже для accessTokenCoverter как часть его конфигурации
     @Bean
     @SneakyThrows
     public KeyPair keyPair() {

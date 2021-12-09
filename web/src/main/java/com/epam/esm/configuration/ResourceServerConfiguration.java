@@ -30,7 +30,7 @@ import java.security.interfaces.RSAPublicKey;
 public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter {
 
     @Value("${spring.security.oauth2.resourceserver.jwt.issuer-uri}")
-    private String issuerUri; // Issuer - кто создал и подписал токен
+    private String issuerUri;
 
     private final EntityExceptionHandler entityExceptionHandler;
     private final CustomJwtAuthenticationConverter jwtAuthenticationConverter;
@@ -45,10 +45,10 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
     public void configure(HttpSecurity http) throws Exception {
         http
                 .httpBasic(AbstractHttpConfigurer::disable)
-//                .csrf(AbstractHttpConfigurer::disable)
-//                .cors()
+                .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeRequests(authorizeRequests -> {
+                    //Allows to restrict access based on HttpServletRequest using RequestMatcher implementations (i.e. via URL patterns)
                     authorizeRequests
                             .antMatchers(HttpMethod.GET, "/api/tags/most-used", "/api/orders", "/api/orders/{\\d}", "/api/users").hasRole("ADMIN");
                     authorizeRequests
@@ -66,9 +66,9 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
                     exceptionHandling.authenticationEntryPoint(entityExceptionHandler);
                     exceptionHandling.accessDeniedHandler(entityExceptionHandler);
                 })
-                .oauth2ResourceServer()
-                .jwt()
-                .jwtAuthenticationConverter(jwtAuthenticationConverter);
+                .oauth2ResourceServer() //Configures OAuth 2 resource server support
+                .jwt()                  //includes support for the Jwt token
+                .jwtAuthenticationConverter(jwtAuthenticationConverter); //configuring conversion from Jwt to Authentication
     }
 
     @Bean

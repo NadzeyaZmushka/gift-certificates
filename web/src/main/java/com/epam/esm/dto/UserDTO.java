@@ -20,13 +20,8 @@ import javax.validation.constraints.Size;
 public class UserDTO extends RepresentationModel<UserDTO> {
 
     private Long id;
-    @Size(min = 2, max = 50, message = "")
-    @NotBlank
     private String name;
-    @Size(min = 2, max = 50, message = "")
-    @NotBlank
     private String surname;
-    @Email
     private String email;
     private Role role;
 
