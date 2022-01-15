@@ -27,9 +27,9 @@ dependencies {
 
 }
 bootJar {
-    mainClass = 'com.epam.esm.config.Application'
+    mainClass = 'com.epam.esm.Application'
 }
 
 bootRun {
-    mainClass = 'com.epam.esm.config.Application'
+    mainClass = 'com.epam.esm.Application'
 }
