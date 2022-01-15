@@ -1,6 +1,7 @@
 package com.epam.esm.service.impl;
 
-import com.epam.esm.config.Translator;
+import com.epam.esm.analytic.WidelyUsedTagStatistic;
+import com.epam.esm.configuration.Translator;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.exception.DuplicateException;
 import com.epam.esm.exception.IncorrectDataException;
@@ -13,7 +14,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static com.epam.esm.exception.CustomErrorCode.PAGE_INCORRECT_CODE;
 import static com.epam.esm.exception.CustomErrorCode.TAG_DUPLICATE_CODE;
@@ -93,8 +98,28 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public List<Tag> findWidelyUsed(int limit, int page) {
-        return tagRepository.findMostPopularTag(page, limit);
+    public List<WidelyUsedTagStatistic> findWidelyUsed() {
+        List<WidelyUsedTagStatistic> widelyUsedTagsByUserList = new ArrayList<>();
+        var tagsByUserMap = tagRepository.findMostPopularTag().stream()
+                .collect(Collectors.groupingBy(map -> Long.parseLong(map.get("userId"))));
+        for (var item : tagsByUserMap.entrySet()) {
+            int maxCount = item.getValue().stream()
+                    .map(result -> result.get("count"))
+                    .mapToInt(Integer::parseInt)
+                    .max()
+                    .getAsInt();
+            WidelyUsedTagStatistic tagsByUser = new WidelyUsedTagStatistic();
+            Set<Tag> tags = new HashSet<>();
+            for (var analytic : item.getValue()) {
+                if (Integer.parseInt(analytic.get("count")) == maxCount) {
+                    tags.add(new Tag(Long.valueOf(analytic.get("tagId")), analytic.get("tagName")));
+                }
+                tagsByUser.setUserId(Long.parseLong(analytic.get("userId")));
+            }
+            tagsByUser.setTags(tags);
+            widelyUsedTagsByUserList.add(tagsByUser);
+        }
+        return widelyUsedTagsByUserList;
     }
 
     @Override

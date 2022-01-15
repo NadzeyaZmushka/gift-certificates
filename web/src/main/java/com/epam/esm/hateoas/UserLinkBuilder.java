@@ -2,6 +2,7 @@ package com.epam.esm.hateoas;
 
 import com.epam.esm.controller.impl.OrderControllerImpl;
 import com.epam.esm.controller.impl.UserControllerImpl;
+import com.epam.esm.dto.OrderCreateRequestDTO;
 import com.epam.esm.dto.UserDTO;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.PagedModel;
@@ -21,10 +22,13 @@ public class UserLinkBuilder {
                 .findAll(1, 10))
                 .withRel("findAll");
         Link linForCreateOrder = linkTo(methodOn(OrderControllerImpl.class)
-                .create(null))
+                .create(new OrderCreateRequestDTO()))
                 .withRel("createOrder");
+        Link userOrders = linkTo(methodOn(UserControllerImpl.class)
+                .findAllByUser(userDTO.getId(), 1, 10))
+                .withRel("userOrders");
 
-        userDTO.add(linkForSelf, linkForAll, linForCreateOrder);
+        userDTO.add(linkForSelf, linkForAll, linForCreateOrder, userOrders);
     }
 
     public void createPaginationLinks(PagedModel<UserDTO> model) {

@@ -1,6 +1,6 @@
 package com.epam.esm.service.impl;
 
-import com.epam.esm.config.Translator;
+import com.epam.esm.configuration.Translator;
 import com.epam.esm.entity.Certificate;
 import com.epam.esm.entity.Order;
 import com.epam.esm.entity.User;
@@ -14,8 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.epam.esm.exception.CustomErrorCode.ORDER_NOT_FOUND;
@@ -78,19 +76,30 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    @Transactional
-    public List<Order> findAllByUserId(Long userId, int page, int limit) {
-        if (page <= 0 || limit <= 0) {
-            throw new IncorrectDataException(translator.toLocale(PAGE_INCORRECT), PAGE_INCORRECT_CODE.getErrorCode());
-        }
-        List<Order> orders;
+    public Long countFoundOrders(Long userId) {
+        Long count;
         if (userId == null) {
-            orders = findAll(limit, page);
+            count = count();
         } else {
-            User user = userService.findById(userId);
-            orders = orderRepository.findByUser(user, page, limit);
+            count = orderRepository.countFoundOrders(userId);
         }
-        return orders;
+        return count;
     }
 
-}
+        @Override
+        @Transactional
+        public List<Order> findAllByUserId (Long userId,int page, int limit){
+            if (page <= 0 || limit <= 0) {
+                throw new IncorrectDataException(translator.toLocale(PAGE_INCORRECT), PAGE_INCORRECT_CODE.getErrorCode());
+            }
+            List<Order> orders;
+            if (userId == null) {
+                orders = findAll(limit, page);
+            } else {
+                User user = userService.findById(userId);
+                orders = orderRepository.findByUser(user, page, limit);
+            }
+            return orders;
+        }
+
+    }

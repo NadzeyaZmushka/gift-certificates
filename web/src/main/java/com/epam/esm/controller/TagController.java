@@ -1,6 +1,7 @@
 package com.epam.esm.controller;
 
 import com.epam.esm.dto.TagDTO;
+import com.epam.esm.dto.WidelyUsedTagsDTO;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RequestMapping("/api/tags")
 public interface TagController {
@@ -62,8 +64,11 @@ public interface TagController {
 
     @GetMapping("/most-used")
     @ResponseStatus(HttpStatus.OK)
-    PagedModel<TagDTO> findWidelyUsed(@RequestParam(required = false, name = "page", defaultValue = "1") int page,
-                                      @RequestParam(required = false, name = "limit", defaultValue = "10") int limit);
+    List<WidelyUsedTagsDTO> findWidelyUsed(@RequestParam(required = false, name = "page", defaultValue = "1") int page,
+                                           @RequestParam(required = false, name = "limit", defaultValue = "10") int limit);
+
 
 }
+
+
 

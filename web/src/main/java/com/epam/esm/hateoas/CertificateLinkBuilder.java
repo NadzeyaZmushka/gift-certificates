@@ -29,7 +29,7 @@ public class CertificateLinkBuilder {
                                       String partName, String sortBy, String order) {
         PagedModel.PageMetadata metadata = model.getMetadata();
         int curPage = (int) metadata.getNumber();
-        int size = (int) metadata.getSize();
+        int size = (int) metadata.getTotalElements();
         int totalPages = (int) metadata.getTotalPages();
         if (curPage < totalPages) {
             model.add(linkTo(methodOn(CertificatesControllerImpl.class)

@@ -1,5 +1,6 @@
 package com.epam.esm.service;
 
+import com.epam.esm.analytic.WidelyUsedTagStatistic;
 import com.epam.esm.entity.Tag;
 
 import java.util.List;
@@ -42,9 +43,7 @@ public interface TagService extends EntityService<Tag> {
      * Finds widely used tag
      *
      * @return tag
-     * @param limit
-     * @param page
      */
-    List<Tag> findWidelyUsed(int limit, int page);
+    List<WidelyUsedTagStatistic> findWidelyUsed();
 
 }

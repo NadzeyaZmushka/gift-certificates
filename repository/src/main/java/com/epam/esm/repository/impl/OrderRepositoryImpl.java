@@ -7,7 +7,10 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.time.LocalDateTime;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import java.util.List;
 import java.util.Optional;
 
@@ -63,6 +66,19 @@ public class OrderRepositoryImpl implements OrderRepository {
     public Long count() {
         return entityManager.createQuery(COUNT_QUERY, Long.class)
                 .getSingleResult();
+    }
+
+    public Long countFoundOrders(Long userId) {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Long> query = criteriaBuilder.createQuery(Long.class);
+        Root<Order> root = query.from(Order.class);
+        Predicate predicate = null;
+        if (userId != null) {
+            predicate = criteriaBuilder.equal(root.get("user"), userId);
+        }
+        query.where(predicate);
+        query.select(criteriaBuilder.countDistinct(root));
+        return entityManager.createQuery(query).getSingleResult();
     }
 
 }

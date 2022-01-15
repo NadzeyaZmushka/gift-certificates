@@ -29,4 +29,6 @@ public interface CertificateRepository extends CrudRepository<Certificate> {
      */
     Optional<Certificate> findByName(String name);
 
+    Long countFoundCertificates(List<String> tagNames, String name);
+
 }

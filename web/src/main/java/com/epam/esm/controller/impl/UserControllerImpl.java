@@ -1,15 +1,23 @@
 package com.epam.esm.controller.impl;
 
 import com.epam.esm.controller.UserController;
+import com.epam.esm.converter.OrderConverter;
 import com.epam.esm.converter.UserConverter;
+import com.epam.esm.dto.OrderDTO;
+import com.epam.esm.dto.SignupRequest;
 import com.epam.esm.dto.UserDTO;
+import com.epam.esm.entity.User;
+import com.epam.esm.hateoas.CertificateLinkBuilder;
 import com.epam.esm.hateoas.OrderLinkBuilder;
 import com.epam.esm.hateoas.UserLinkBuilder;
-import com.epam.esm.service.impl.UserServiceImpl;
+import com.epam.esm.service.OrderService;
+import com.epam.esm.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.PagedModel;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,10 +25,13 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserControllerImpl implements UserController {
 
-    private final UserServiceImpl userService;
+    private final UserService userService;
+    private final OrderService orderService;
     private final UserConverter converter;
+    private final OrderConverter orderConverter;
     private final UserLinkBuilder hateoasLinkBuilder;
     private final OrderLinkBuilder orderLinkBuilder;
+    private final CertificateLinkBuilder certificateLinkBuilder;
 
     @Override
     public PagedModel<UserDTO> findAll(int page, int limit) {
@@ -29,9 +40,6 @@ public class UserControllerImpl implements UserController {
                 .map(converter::toDTO)
                 .collect(Collectors.toList());
         users.forEach(hateoasLinkBuilder::addLinksForUser);
-        for (UserDTO userDTO : users) {
-            userDTO.getOrders().forEach(orderLinkBuilder::addLinksForOrder);
-        }
         Long count = userService.count();
         PagedModel<UserDTO> pagedModel = PagedModel.of(users, new PagedModel.PageMetadata(limit, page, count));
         hateoasLinkBuilder.createPaginationLinks(pagedModel);
@@ -42,8 +50,41 @@ public class UserControllerImpl implements UserController {
     public UserDTO findOne(Long id) {
         UserDTO userDTO = converter.toDTO(userService.findById(id));
         hateoasLinkBuilder.addLinksForUser(userDTO);
-        userDTO.getOrders().forEach(orderLinkBuilder::addLinksForOrder);
         return userDTO;
+    }
+
+    @Override
+    public UserDTO update(long id, UserDTO userDTO) {
+        return converter.toDTO(userService.update(id, converter.toEntity(userDTO)));
+    }
+
+    @Override
+    public PagedModel<OrderDTO> findAllByUser(Long id, int page, int limit) {
+        List<OrderDTO> orders = orderService.findAllByUserId(id, page, limit).stream()
+                .map(orderConverter::toDTO)
+                .collect(Collectors.toList());
+        orders.forEach(orderLinkBuilder::addLinksForOrder);
+        for (OrderDTO orderDTO : orders) {
+            certificateLinkBuilder.addLinksForCertificate(orderDTO.getCertificate());
+        }
+        Long count = orderService.countFoundOrders(id);
+        PagedModel<OrderDTO> pagedModel = PagedModel.of(orders, new PagedModel.PageMetadata(limit, page, count));
+        orderLinkBuilder.createPaginationLinks(pagedModel, id);
+        return pagedModel;
+
+    }
+
+    @Override
+    public ResponseEntity<Void> registerUser(SignupRequest request) {
+        User user = User.builder()
+                .name(request.getName())
+                .surname(request.getSurname())
+                .email(request.getEmail())
+                .password(request.getPassword())
+                .build();
+        userService.add(user);
+        URI location = URI.create(String.format("/users/%d", user.getId()));
+        return ResponseEntity.created(location).build();
     }
 
 }

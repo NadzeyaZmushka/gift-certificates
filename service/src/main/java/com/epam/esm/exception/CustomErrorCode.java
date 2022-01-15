@@ -13,6 +13,7 @@ public enum CustomErrorCode {
     TAG_INCORRECT_DATA(40002),
     PAGE_INCORRECT_CODE(40011),
     USER_NOT_FOUND(40403),
+    USER_DUPLICATE_CODE(40903),
     ORDER_NOT_FOUND(40404);
 
     private final int errorCode;

@@ -1,6 +1,6 @@
 package com.epam.esm.service.impl;
 
-import com.epam.esm.config.Translator;
+import com.epam.esm.configuration.Translator;
 import com.epam.esm.entity.Certificate;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.exception.IncorrectDataException;
@@ -39,10 +39,12 @@ public class CertificateServiceImpl implements CertificateService {
     @Transactional
     public Certificate add(Certificate certificate) {
         validator.validCertificate(certificate);
-        List<Tag> tagsToAdd = getCertificateTagNames(certificate).stream()
-                .map(tagService::findByNameOrCreate)
-                .collect(Collectors.toList());
-        certificate.setTags(tagsToAdd);
+        if (certificate.getTags() != null) {
+            List<Tag> tagsToAdd = getCertificateTagNames(certificate).stream()
+                    .map(tagService::findByNameOrCreate)
+                    .collect(Collectors.toList());
+            certificate.setTags(tagsToAdd);
+        }
         certificate.setCreateDate(LocalDateTime.now());
         certificate.setLastUpdateDate(LocalDateTime.now());
 
@@ -77,11 +79,6 @@ public class CertificateServiceImpl implements CertificateService {
     public void delete(Long id) {
         Certificate certificate = findById(id);
         certificateRepository.remove(certificate);
-    }
-
-    @Override
-    public Long count() {
-        return certificateRepository.count();
     }
 
     @Override
@@ -122,6 +119,16 @@ public class CertificateServiceImpl implements CertificateService {
         return certificateRepository.findByName(name)
                 .orElseThrow(() -> new NoSuchEntityException(String.format(translator.toLocale(CERTIFICATE_WITH_NAME_NOT_FOUND), name)
                         , CERTIFICATE_NOT_FOUND.getErrorCode()));
+    }
+
+    @Override
+    public Long count(List<String> tagNames, String partName) {
+        return certificateRepository.countFoundCertificates(tagNames, partName);
+    }
+
+    @Override
+    public Long count() {
+        return certificateRepository.count();
     }
 
     private List<String> getTagsToAdd(List<Tag> tags, List<String> tagNames) {
