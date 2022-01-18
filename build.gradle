@@ -1,6 +1,14 @@
 plugins{
     id 'org.springframework.boot' version '2.5.5' apply true
+    id "org.sonarqube" version "3.3"
 }
+
+sonarqube {
+    properties {
+        property "sonar.projectKey", "certificates"
+    }
+}
+
 allprojects {
     group 'com.epam.esm'
     version '1.0-SNAPSHOT'
