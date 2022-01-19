@@ -1,5 +1,4 @@
 node {
-   agent any
    stage('test') {
        steps {
        start "./gradlew.bat test "
