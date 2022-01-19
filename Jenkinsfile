@@ -8,6 +8,11 @@ node {
         }
    }
    stage("Deploy") {
-        bat "java -jar web-1.0-SNAPSHOT.jar"
+      step {
+        bat "./gradlew.bat bootJar"
+      }
+      step {
+        bat "java -jar web/build/libs/web-1.0-SNAPSHOT.jar"
+      }
    }
 }
