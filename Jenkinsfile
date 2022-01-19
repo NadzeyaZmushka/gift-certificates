@@ -1,10 +1,10 @@
 node {
    stage('test') {
-       start "./gradlew.bat test "
+       bat "./gradlew.bat test "
    }
    stage('SonarQube Analysis') {
     withSonarQubeEnv() {
-      start "./gradlew.bat sonarqube"
+      bat "./gradlew.bat sonarqube"
     }
   }
 }
