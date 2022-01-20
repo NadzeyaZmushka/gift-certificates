@@ -1,16 +1,19 @@
 node {
    stage('Test') {
-     bat "./gradlew.bat test "
+        steps{
+        bat "./gradlew.bat clean"
+        }
+        bat "./gradlew.bat test "
+   }
+   stage("Build") {
+        bat "./gradlew.bat bootJar"
    }
    stage('SonarQube Analysis') {
-     withSonarQubeEnv() {
-      bat "./gradlew.bat sonarqube"
-     }
-   }
-   stage("Jar") {
-     bat "./gradlew.bat bootJar"
+        withSonarQubeEnv() {
+            bat "./gradlew.bat sonarqube"
+        }
    }
    stage("Deploy") {
-      bat "java -jar web/build/libs/web-1.0-SNAPSHOT.jar"
+        bat "java -jar web/build/libs/web-1.0-SNAPSHOT.jar"
    }
 }

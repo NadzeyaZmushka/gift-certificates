@@ -4,7 +4,6 @@ plugins {
 }
 jacoco {
     toolVersion = "0.8.7"
-    reportsDirectory = layout.buildDirectory.dir('customJacocoReportDir')
 }
 dependencies {
 
@@ -14,9 +13,22 @@ dependencies {
 
     implementation project(":repository")
 }
+
+jacocoTestReport {
+    dependsOn test
+    reports {
+        xml.enabled true
+        html.enabled false
+        csv.enabled false
+        xml.destination file("C:\\Users\\Nadzeya_Zmushka\\Documents\\epam_java-lab\\gift-certificates\\reports.xml")
+    }
+}
+
 test {
     useJUnitPlatform()
+    finalizedBy jacocoTestReport
 }
+
 bootJar {
     enabled = false
 }
