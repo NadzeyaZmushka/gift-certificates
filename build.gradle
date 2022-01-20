@@ -9,7 +9,7 @@ sonarqube {
         property "sonar.host.url", "http://localhost:9000"
         property "sonar.login", "e999771b4ed97479b4f7c01a591fb872c56d2f72"
         property "sonar.java.coveragePlugin", "jacoco"
-        property "sonar.coverage.jacoco.xmlReportPaths", "C:\\Users\\Nadzeya_Zmushka\\Documents\\epam_java-lab\\gift-certificates\\reports.xml"
+//        property "sonar.coverage.jacoco.xmlReportPaths", "C:\\Users\\Nadzeya_Zmushka\\Documents\\epam_java-lab\\gift-certificates\\reports.xml"
     }
 }
 
