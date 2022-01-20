@@ -1,8 +1,6 @@
 node {
    stage('Test') {
-        steps{
         bat "./gradlew.bat clean"
-        }
         bat "./gradlew.bat test "
    }
    stage("Build") {
