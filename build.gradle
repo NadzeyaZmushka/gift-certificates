@@ -1,6 +1,18 @@
 plugins{
     id 'org.springframework.boot' version '2.5.5' apply true
+    id "org.sonarqube" version "3.3"
 }
+
+sonarqube {
+    properties {
+        property "sonar.projectKey", "certificates"
+        property "sonar.host.url", "http://localhost:9000"
+        property "sonar.login", "e999771b4ed97479b4f7c01a591fb872c56d2f72"
+        property "sonar.java.coveragePlugin", "jacoco"
+        property "sonar.coverage.jacoco.xmlReportPaths", "C:\\Users\\Nadzeya_Zmushka\\Documents\\epam_java-lab\\gift-certificates\\reports.xml"
+    }
+}
+
 allprojects {
     group 'com.epam.esm'
     version '1.0-SNAPSHOT'
@@ -10,6 +22,7 @@ subprojects {
     apply plugin: 'java'
     apply plugin: 'io.spring.dependency-management'
     apply plugin: 'java-library'
+
 
     configurations {
         compileOnly {
