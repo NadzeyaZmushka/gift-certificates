@@ -20,7 +20,6 @@ jacocoTestReport {
         xml.enabled true
         html.enabled false
         csv.enabled false
-//        xml.destination file("C:\\Users\\Nadzeya_Zmushka\\Documents\\epam_java-lab\\gift-certificates\\reports.xml")
     }
 }
 
