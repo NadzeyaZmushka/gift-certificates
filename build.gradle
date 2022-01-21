@@ -1,15 +1,14 @@
 plugins{
     id 'org.springframework.boot' version '2.5.5' apply true
     id "org.sonarqube" version "3.3"
+    id 'jacoco'
+}
+
+jacoco {
+    toolVersion = "0.8.7"
 }
 
 sonarqube {
-    properties {
-        property "sonar.projectKey", "certificates"
-        property "sonar.host.url", "http://localhost:9000"
-        property "sonar.login", "e999771b4ed97479b4f7c01a591fb872c56d2f72"
-        property "sonar.java.coveragePlugin", "jacoco"
-    }
 }
 
 allprojects {
@@ -21,7 +20,7 @@ subprojects {
     apply plugin: 'java'
     apply plugin: 'io.spring.dependency-management'
     apply plugin: 'java-library'
-
+    apply plugin: 'jacoco'
 
     configurations {
         compileOnly {
@@ -30,6 +29,15 @@ subprojects {
     }
     repositories {
         mavenCentral()
+    }
+
+    jacocoTestReport {
+        dependsOn test
+        reports {
+            xml.required = true
+            html.required = false
+            csv.required = false
+        }
     }
 
     dependencies {
@@ -53,6 +61,7 @@ subprojects {
     }
     test {
         useJUnitPlatform()
+        finalizedBy jacocoTestReport
     }
 }
 

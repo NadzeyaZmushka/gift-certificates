@@ -1,10 +1,7 @@
 plugins {
     id "org.springframework.boot"
-    id 'jacoco'
 }
-jacoco {
-    toolVersion = "0.8.7"
-}
+
 dependencies {
 
     implementation group: 'org.modelmapper', name: 'modelmapper', version: '2.3.2'
@@ -14,18 +11,8 @@ dependencies {
     implementation project(":repository")
 }
 
-jacocoTestReport {
-    dependsOn test
-    reports {
-        xml.enabled true
-        html.enabled false
-        csv.enabled false
-    }
-}
-
 test {
     useJUnitPlatform()
-    finalizedBy jacocoTestReport
 }
 
 bootJar {
