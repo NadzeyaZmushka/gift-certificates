@@ -12,7 +12,7 @@ node {
         bat "./gradlew.bat bootJar"
    }
 
-   stage("Deploy") {
-        bat "java -jar web/build/libs/web-1.0-SNAPSHOT.jar"
-   }
+//    stage("Deploy") {
+//         bat "java -jar web/build/libs/web-1.0-SNAPSHOT.jar"
+//    }
 }
