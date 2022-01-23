@@ -12,7 +12,7 @@ sonarqube {
 }
 
 allprojects {
-    group 'com.epam.esm'
+      group 'com.epam.esm'
     version '1.0-SNAPSHOT'
 }
 
@@ -64,5 +64,6 @@ subprojects {
         finalizedBy jacocoTestReport
     }
 }
+
 
 
