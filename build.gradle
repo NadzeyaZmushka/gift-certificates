@@ -44,7 +44,7 @@ subprojects {
     dependencies {
         implementation group: 'org.springframework.boot', name: 'spring-boot-starter'
         implementation group: 'org.springframework.boot', name :'spring-boot-starter-web'
-        implementation group: 'org.springframework.boot', name: 'spring-boot-starter-tomcat', version: '2.5.5'
+        runtimeOnly  group: 'org.springframework.boot', name: 'spring-boot-starter-tomcat', version: '2.5.5'
 
         implementation group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
         implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa'
