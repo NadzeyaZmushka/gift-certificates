@@ -34,6 +34,6 @@ bootJar {
 bootRun {
     mainClass = 'com.epam.esm.Application'
 }
-bootWar {
-    mainClass = 'com.epam.esm.Application'
-}
+//bootWar {
+//    mainClass = 'com.epam.esm.Application'
+//}

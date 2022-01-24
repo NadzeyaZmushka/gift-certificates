@@ -11,10 +11,6 @@ node {
    stage("Build") {
         bat "./gradlew.bat build"
         bat "./gradlew.bat bootJar"
-//         bat "robocopy web/build/libs  C:/Users/Nadzeya_Zmushka/Documents/epam_java-lab/jenkins"
    }
 
-//    stage("Deploy") {
-//         bat "java -jar web/build/libs/web-1.0-SNAPSHOT.jar"
-//    }
 }
