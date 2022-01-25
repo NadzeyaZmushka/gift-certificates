@@ -14,7 +14,8 @@ node {
 
    }
    stage("Build") {
-        bat "cd C:/ProgramData/nssm-2.24/win64"
+        bat "copy C:/ProgramData/nssm-2.24/win64 C:/ProgramData/Jenkins/.jenkins/workspace/Certificates" "Pipeline"
+        //bat "cd C:/ProgramData/nssm-2.24/win64"
         bat "nssm start App"
    }
 
