@@ -12,7 +12,8 @@ node {
         bat "./gradlew.bat build"
         bat "./gradlew.bat bootJar"
 
-   } stage("Build") {
+   }
+   stage("Build") {
         bat "cd C:/ProgramData/nssm-2.24/win64"
         bat "nssm restart App"
    }
