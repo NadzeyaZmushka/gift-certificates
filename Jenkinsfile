@@ -1,6 +1,6 @@
 node {
    stage('Test') {
-//         bat "gradle clean"
+        bat "gradle clean"
         bat "gradle test "
    }
    stage('SonarQube Analysis') {
@@ -14,8 +14,9 @@ node {
 
    }
    stage("Deploy") {
-        bat "copy C:\\ProgramData\\nssm-2.24\\win64\\nssm.exe"
-        bat "nssm start gifts"
+//         bat "copy C:\\ProgramData\\nssm-2.24\\win64\\nssm.exe"
+//         bat "nssm start gifts"
+        bat "deploy.bat"
    }
 
 }
