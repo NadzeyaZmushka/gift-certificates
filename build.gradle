@@ -71,4 +71,8 @@ subprojects {
 bootWar {
     mainClass = 'com.epam.esm.Application'
 }
+bootJar {
+    mainClass = 'com.epam.esm.Application'
+}
+
 
