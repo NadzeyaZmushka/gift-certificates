@@ -13,8 +13,8 @@ node {
         bat "./gradlew.bat bootJar"
 
    }
-   stage("Build") {
-        bat "copy C:/ProgramData/nssm-2.24/win64/nssm.exe C:/ProgramData/Jenkins/.jenkins/workspace/Certificates Pipeline"
+   stage("Deploy") {
+        bat "copy C:/ProgramData/nssm-2.24/win64/nssm.exe C:/ProgramData/Jenkins/.jenkins/workspace/CertificatesPipeline"
         //bat "cd C:/ProgramData/nssm-2.24/win64"
         bat "nssm start App"
    }
