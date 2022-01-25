@@ -15,7 +15,7 @@ node {
    }
    stage("Build") {
         bat "cd C:/ProgramData/nssm-2.24/win64"
-        bat "nssm restart App"
+        bat "nssm start App"
    }
 
 }
