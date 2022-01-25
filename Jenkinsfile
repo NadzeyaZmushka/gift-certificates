@@ -1,6 +1,6 @@
 node {
    stage('Test') {
-        bat "gradle clean"
+//         bat "gradle clean"
         bat "gradle test "
    }
    stage('SonarQube Analysis') {
